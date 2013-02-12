@@ -288,10 +288,11 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String generateInsert(Word w) {
-        String sqli = "INSERT INTO `dict_" + getTab(w.getLang()) + "` (`ID`, `word`, `meaningsfmt`, `idiomsfmt`) " +
+        String sqli = "INSERT INTO `dict_" + getTab(w.getLang()) + "` (`ID`, `word`, `nodiacr`, `meaningsfmt`, `idiomsfmt`) " +
                 "VALUES (" + counter++ + ", ";
 
         sqli += "'" + w.getOrig().toLowerCase() + "', ";
+        sqli += "'" + StringUtils.stripAccents(w.getOrig()).toLowerCase() + "', ";
         sqli += "'";
 
         //System.out.println(w.getOrig());

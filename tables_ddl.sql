@@ -3,6 +3,7 @@ delimiter $$
 CREATE TABLE IF NOT EXISTS `dict_portugal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `nodiacr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `meaningsfmt` varchar(5000) DEFAULT NULL,
   `idiomsfmt` varchar(5000) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `dict_portugal` (
 CREATE TABLE IF NOT EXISTS `dict_slovak` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `nodiacr` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `meaningsfmt` varchar(5000) DEFAULT NULL,
   `idiomsfmt` varchar(5000) DEFAULT NULL,
   PRIMARY KEY (`id`),
