@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:gwt='urn:import:com.google.gwt.user.client.ui'
+             xmlns:res='urn:with:sk.portugal.leksiwt.client.LoginResources'>
+    <ui:with type="sk.portugal.leksiwt.client.LoginResources" field="res">
+    </ui:with>
+    <gwt:HTMLPanel>
+        <div align="center">
+            <gwt:VerticalPanel res:styleName="style.background">
+                <gwt:Label text="Login" res:styleName="style.blackText" />
+                <gwt:TextBox ui:field="loginBox" res:styleName="style.box" />
+                <gwt:Label text="Password" res:styleName="style.blackText" />
+                <gwt:PasswordTextBox ui:field="passwordBox"
+                                     res:styleName="style.box" />
+                <gwt:HorizontalPanel verticalAlignment="middle">
+                    <gwt:Button ui:field="buttonSubmit" text="Submit"
+                                res:styleName="style.loginButton" />
+                    <gwt:CheckBox ui:field="myCheckBox" />
+                    <gwt:Label ui:field="myLabel" text="Remember me"
+                               res:styleName="style.blackText" />
+                </gwt:HorizontalPanel>
+                <gwt:Label ui:field="completionLabel1"
+                           res:styleName="style.blackText" />
+                <gwt:Label ui:field="completionLabel2"
+                           res:styleName="style.blackText" />
+            </gwt:VerticalPanel>
+        </div>
+    </gwt:HTMLPanel>
+</ui:UiBinder> 

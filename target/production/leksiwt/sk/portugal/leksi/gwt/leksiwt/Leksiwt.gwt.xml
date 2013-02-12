@@ -1,0 +1,15 @@
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
+        "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to="Leksiwt">
+
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+
+    <!-- Specify the app entry point class.                   -->
+    <entry-point class='sk.portugal.leksi.gwt.leksiwt.client.Leksiwt'/>
+
+
+    <!-- Specify the app servlets.                   -->
+    <servlet path='/leksi' class='sk.portugal.leksi.gwt.leksiwt.server.LeksiwtServiceImpl'/>
+
+</module>

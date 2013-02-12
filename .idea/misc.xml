@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
+  <component name="IdProvider" IDEtalkID="FC0097F4CA6B840441474A77866678F6" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/model/pom.xml" />
+        <option value="$PROJECT_DIR$/mirror/pom.xml" />
+        <option value="$PROJECT_DIR$/lexikon/pom.xml" />
+        <option value="$PROJECT_DIR$/leksiwt/pom.xml" />
+        <option value="$PROJECT_DIR$/leksiwt/pom.xml" />
+        <option value="$PROJECT_DIR$/leksivaa/pom.xml" />
+        <option value="$PROJECT_DIR$/gwted/pom.xml" />
+        <option value="$PROJECT_DIR$/wordex/pom.xml" />
+        <option value="$PROJECT_DIR$/kskimp/pom.xml" />
+        <option value="$PROJECT_DIR$/oldimp/pom.xml" />
+        <option value="$PROJECT_DIR$/loader/pom.xml" />
+        <option value="$PROJECT_DIR$/dictexp/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/leksivaa/pom.xml" />
+        <option value="$PROJECT_DIR$/leksiwt/pom.xml" />
+        <option value="$PROJECT_DIR$/lexikon/pom.xml" />
+        <option value="$PROJECT_DIR$/wordex/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="JDK 1.7" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/target" />
+  </component>
+</project>
+

@@ -1,0 +1,42 @@
+body {
+    color: #8b0000;
+}
+div.wrdsect {
+    background-color: #f8f8ff;
+    font-family: "MS";
+    position: relative;
+}
+span.wrddef {
+    color: #000000;
+    font-weight: bold;
+    font-size: larger;
+    margin-bottom: 30px;
+}
+span.clng {
+    color: #d3d3d3;
+}
+span.meaning {
+    margin-bottom: 30px;
+}
+span.meannum {
+    color: #000000;
+    font-weight: bold;
+}
+span.synonyms {
+    font-family: Arial;
+    font-size: small;
+}
+span.spec {
+    color: #9acd32;
+    font-style: oblique;
+}
+span.tran {
+    color: #2f4f4f;
+}
+span.aspect {
+    font-style: italic;
+    color: #555555;
+}
+span.fiesty {
+    font-style: italic;
+}
