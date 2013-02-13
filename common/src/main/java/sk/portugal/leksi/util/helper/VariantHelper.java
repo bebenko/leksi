@@ -6,6 +6,7 @@ import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.PhrasemeType;
+import sk.portugal.leksi.model.enums.WordClass;
 
 /**
  */
@@ -48,7 +49,8 @@ public class VariantHelper {
         } else if (StringUtils.isNotBlank(s)) {
             s = StringUtils.trimToEmpty(s);
             if (s.equals(StringHelper.PRONOMINAL)) {
-                wt.addForm(new Form(FormType.PRON, s));
+                //wt.addForm(new Form(FormType.PRON, s)); //TODO pronominal: not a form, but different word class
+                wt.setWordClass(WordClass.VPRON);
             } else {
                 wt.addForm(new Form(s));
             }

@@ -72,14 +72,6 @@ public class V2ExportServiceImpl implements ExportService {
         return addFmtStart("meannum") + escapeHtml(str) + addFmtEnd();
     }
 
-    /*private String addPluralMeaning(String str) {
-        String res = "<span class=\"obli\">" + escapeHtml("pl") + "</span> ";
-        String s = str.substring(5);
-        s = s.substring(3, StringHelper.findMatchingBracket(s) - 1);
-        res += "<span class=\"plmean\">" + escapeHtml(s) + "</span>";
-        return res;
-    }*/
-
     private String addFieldStyle(Field field, Style style) {
         if (field == null && style == null) return "";
 
@@ -93,7 +85,7 @@ public class V2ExportServiceImpl implements ExportService {
             if (fi) s += escapeHtml(StringHelper.COMMASPACE);
             s += escapeHtml(style.getKey());
         }
-        return s + addFmtEnd();
+        return s + StringHelper.SPACE + addFmtEnd();
     }
 
     private String addFormattedTran(String str) {
@@ -104,8 +96,6 @@ public class V2ExportServiceImpl implements ExportService {
         } else if (str.startsWith("(##")) {
             String s = str.substring(3, StringHelper.findMatchingBracket(str) - 1);
             return addFmtStart("obli") + escapeHtml(s) + addFmtEnd();
-        //} else if (str.matches("\\(pl\\) \\(@.*")) { //special condition for separate plural meaning
-            //return addPluralMeaning(str); //FIXME needs some workaround to modify also context around
         } else if (str.equals("(pl)")) {
             return addFmtStart("obli") + escapeHtml("pl") + addFmtEnd();
         } else if (str.startsWith("(@")) {
@@ -161,14 +151,14 @@ public class V2ExportServiceImpl implements ExportService {
     private String addForms(List<Form> forms) {
         String res = addFmtStart("forms") + StringHelper.SPACE + StringHelper.LEFTPARENTHESIS;
         for (Form v: forms) {
-            if (v.getType() != FormType.PRON && v.getType() != FormType.UNDEF) {
-                res += addVariant(v);
+            if (/*v.getType() != FormType.PRON &&*/ v.getType() != FormType.UNDEF) {
+                res += addVariant(v) + StringHelper.COMMASPACE;
             }
         }
-        return res + StringHelper.RIGHTPARENTHESIS + addFmtEnd();
+        return StringUtils.removeEnd(res, StringHelper.COMMASPACE) + StringHelper.RIGHTPARENTHESIS + addFmtEnd();
     }
 
-    private String addPronominal(String str) {
+    /*private String addPronominal(String str) {
         return addFmtStart("pronom") + escapeHtml(str) + addFmtEnd();
     }
 
@@ -180,7 +170,7 @@ public class V2ExportServiceImpl implements ExportService {
             }
         }
         return res; // + addFmtEnd();
-    }
+    }*/
 
     private String addPhrasemes(List<Phraseme> phrasemes) {
         String res = "";
@@ -228,7 +218,7 @@ public class V2ExportServiceImpl implements ExportService {
             //pp, f, pl, ...
             if (wt.hasForms()) {
                 str += addForms(wt.getForms());
-                str += addVerbPronominal(wt.getForms());
+                /*str += addVerbPronominal(wt.getForms());*/
             }
 
             //str += addBreak();
@@ -288,11 +278,11 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String generateInsert(Word w) {
-        String sqli = "INSERT INTO `dict_" + getTab(w.getLang()) + "` (`ID`, `word`, `nodiacr`, `meaningsfmt`, `idiomsfmt`) " +
+        String sqli = "INSERT INTO `dict_" + getTab(w.getLang()) + "` (`ID`, `word`, `meaningsfmt`, `idiomsfmt`) " + //`nodiacr`,
                 "VALUES (" + counter++ + ", ";
 
         sqli += "'" + w.getOrig().toLowerCase() + "', ";
-        sqli += "'" + StringUtils.stripAccents(w.getOrig()).toLowerCase() + "', ";
+        //sqli += "'" + StringUtils.stripAccents(w.getOrig()).toLowerCase() + "', ";
         sqli += "'";
 
         //System.out.println(w.getOrig());

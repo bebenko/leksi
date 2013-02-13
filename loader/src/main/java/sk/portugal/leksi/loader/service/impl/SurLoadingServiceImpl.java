@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = "";// " AND portugal in ('tal', 'todo')";
+    private static final String FILTER = ""; //" AND portugal in ('alemão')"; //, 'todo')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean DUPLICATEALTERNATIVES = true;
@@ -189,8 +189,9 @@ public class SurLoadingServiceImpl implements LoadingService {
                             word.setAlternative(alt);
                         }
                     } else {
-                        //EXCEPTIONS to accomodate for extra meanings of "tal" and "todo"
-                        if (word.getWordTypes().size() > 1 && (word2.getOrig().equals("tal") || word2.getOrig().equals("todo"))) {
+                        //EXCEPTIONS to accommodate for extra meanings of "tal", "todo", and "segundo"
+                        if (word.getWordTypes().size() > 1
+                                && (word2.getOrig().equals("tal") || word2.getOrig().equals("todo") || word2.getOrig().equals("segundo"))) {
                             word.addWordType(word2.getWordTypes().get(0));
                             List<Meaning> ms = word2.getWordTypes().get(0).getMeanings();
                             List<Integer> listToRemove = new ArrayList<>();

@@ -10,8 +10,6 @@ public enum FormType {
     PL (Integer.valueOf(3), "pl", "pl"),
     PLINV (Integer.valueOf(4), "pl inv", "pl inv"),
 
-    PRON (Integer.valueOf(9), "pron", ""),
-
     UNDEF (Integer.valueOf(99), "undef", "");
 
     private Integer id;

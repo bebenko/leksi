@@ -28,7 +28,7 @@ public enum WordClass implements Serializable {
     PP (Integer.valueOf(19), "pp"),
     PREP (Integer.valueOf(20), "prep"),
     PRON (Integer.valueOf(21), "pron"),
-    PT (Integer.valueOf(22), "pt"),
+    PT (Integer.valueOf(22), "part"),
     SUJ (Integer.valueOf(23), "suj"),
     SUB (Integer.valueOf(24), "sub"),
     SUPERL (Integer.valueOf(25), "superl"),
@@ -39,6 +39,7 @@ public enum WordClass implements Serializable {
     VT (Integer.valueOf(30), "v"), //vt
     INTER (Integer.valueOf(31), "inter"),
     BRAZ (Integer.valueOf(32), "braz"),
+    VPRON (Integer.valueOf(33), "pronominal"),
 
     UNDEF (Integer.valueOf(99), "undef");
 

@@ -192,23 +192,22 @@ public class DocxWrite {
                 boolean wc = false, numbering = false;
 
                 if (wt.hasForms()) {
+                    addSpace(p);
+                    addLeftParenthesis(p);
                     for (int i = 0; i < wt.getForms().size(); i++) {
-                        Form v = wt.getForms().get(i);
-                        if (v.getType() != FormType.PRON && v.getType() != FormType.UNDEF) {
-                            addSpace(p);
-                            addLeftParenthesis(p);
-                            addItalic(p, v.getType().getPrint());
-                            if (StringUtils.isNotBlank(v.getValues())) {
+                        Form f = wt.getForms().get(i);
+                        if (/*f.getType() != FormType.PRON &&*/ f.getType() != FormType.UNDEF) {
+                            addItalic(p, f.getType().getPrint());
+                            if (StringUtils.isNotBlank(f.getValues())) {
                                 addSpace(p);
-                                addBold(p, v.getValues());
+                                addBold(p, f.getValues());
                             }
                             if (i < wt.getForms().size() - 1) {
                                 addCommaSpace(p);
-                            } else {
-                                addRightParenthesis(p);
                             }
                         }
                     }
+                    addRightParenthesis(p);
                 }
 
                 if (wt.getWordClass() != null) {
@@ -221,7 +220,7 @@ public class DocxWrite {
                     addItalic(p, wt.getNumGend().getKey());
                 }
 
-                if (wt.hasForms()) {
+                /*if (wt.hasForms()) {
                     for (int i = 0; i < wt.getForms().size(); i++) {
                         Form v = wt.getForms().get(i);
                         if (v.getType() == FormType.PRON) { //pronominal only
@@ -229,7 +228,7 @@ public class DocxWrite {
                             addItalic(p, v.getValues());
                         }
                     }
-                }
+                }*/
 
                 //alternative spelling
                 if (w.getAlternative() != null) {

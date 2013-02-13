@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  */
 public enum Field implements Serializable {
+    //TODO should be language dependent (as should other enums)
 
     NONE (Integer.valueOf(0), ""),
     AFR (Integer.valueOf(59), "afr"),

@@ -78,7 +78,7 @@ public class WordType {
     public boolean hasForms() {
         if (this.forms == null) return false;
         for (Form v: getForms()) {
-            if (v.getType() != null && (v.getType() != FormType.PRON || v.getType() != FormType.UNDEF)) {
+            if (v.getType() != null && (/*v.getType() != FormType.PRON ||*/ v.getType() != FormType.UNDEF)) {
                 return true;
             }
         }
