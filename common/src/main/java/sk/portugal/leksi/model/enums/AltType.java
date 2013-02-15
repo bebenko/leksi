@@ -4,8 +4,8 @@ package sk.portugal.leksi.model.enums;
  */
 public enum AltType  {
 
-    ALTERNATIVE (Integer.valueOf(1), ""),
-    OLD_ORTOGRAPHY (Integer.valueOf(2), ""),
+    ALTERNATIVE (Integer.valueOf(1), "alt"),
+    OLD_ORTOGRAPHY (Integer.valueOf(2), "ort"),
 
     UNDEF (Integer.valueOf(99), "");
 
@@ -15,6 +15,14 @@ public enum AltType  {
     private AltType(Integer id, String key) {
         this.id = id;
         this.key = key;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     /**

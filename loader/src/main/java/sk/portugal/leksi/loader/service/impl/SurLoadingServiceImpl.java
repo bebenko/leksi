@@ -1,5 +1,6 @@
 package sk.portugal.leksi.loader.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +23,7 @@ public class SurLoadingServiceImpl implements LoadingService {
     private static final String FILTER = ""; //" AND portugal in ('alemão')"; //, 'todo')";
     private static final String SKPREFIX = "SK ";
 
-    private static final boolean DUPLICATEALTERNATIVES = true;
+    private static final boolean DUPLICATEALTERNATIVES = false;//true; //TODO
 
     private JdbcTemplate jdbcTemplate = null;
 
@@ -159,9 +160,37 @@ public class SurLoadingServiceImpl implements LoadingService {
 
         List<Word> result = getWords(lang);
 
+        mergeAlternatives(result);
+
         mergePhrasemes(result, getPhrasemes(lang));
 
         return result;
+    }
+
+    private void mergeAlternatives(List<Word> wordList) {
+        List<Word> wordsToRemove = new ArrayList<>();
+        for (Word word: wordList) {
+            //identify alternatives
+            if (word.getWordTypes().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
+                Alternative alt = new Alternative();
+                alt.setValue(word.getOrig());
+                alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
+                alt.setWordClass(word.getWordTypes().get(0).getWordClass());
+                alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTOGRAPHY : AltType.UNDEF);
+                Word x = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
+                        StringHelper.LINK + StringHelper.SPACE));
+                x.addAlternative(alt);
+                wordsToRemove.add(word);
+            }
+        }
+        wordList.removeAll(wordsToRemove);
+    }
+
+    private Word getWord(List<Word> wordList, String wrd) {
+        for (Word w: wordList) {
+            if (w.getOrig().equals(wrd)) return w;
+        }
+        return null;
     }
 
     private List<Word> mergeWordTypes(List<Word> wordList, List<Word> otherWordList) {
@@ -176,18 +205,17 @@ public class SurLoadingServiceImpl implements LoadingService {
 
                         if (DUPLICATEALTERNATIVES) {
                             //add alternative as new word
-                            Word alt = Word.createLinkedCopy(word2, word);
+                            Word altw = Word.createLinkedCopy(word2, word);
                             //alt.setOrig(word2.getWordTypes().get(0).getForms().get(0).getValues());
-                            result.add(alt);
-                        } else {
-                            //add alternative 'spelling' to word
-                            Alternative alt = new Alternative();
-                            alt.setValue(word2.getWordTypes().get(0).getForms().get(0).getValues());
-                            alt.setNumberGender(word2.getWordTypes().get(0).getNumGend());
-                            alt.setWordClass(word2.getWordTypes().get(0).getWordClass());
-                            alt.setType(AltType.ALTERNATIVE);
-                            word.setAlternative(alt);
+                            result.add(altw);
                         }
+                        //add alternative 'spelling' to word
+                        Alternative alt = new Alternative();
+                        alt.setValue(word2.getWordTypes().get(0).getForms().get(0).getValues());
+                        alt.setNumberGender(word2.getWordTypes().get(0).getNumGend());
+                        alt.setWordClass(word2.getWordTypes().get(0).getWordClass());
+                        alt.setType(AltType.ALTERNATIVE);
+                        word.addAlternative(alt);
                     } else {
                         //EXCEPTIONS to accommodate for extra meanings of "tal", "todo", and "segundo"
                         if (word.getWordTypes().size() > 1

@@ -18,7 +18,7 @@ public class Word implements Serializable {
     private Lang lang;
     private List<WordType> wordTypes = new ArrayList<>();
     private List<Phraseme> idioms;
-    private Alternative alternative;
+    private List<Alternative> alternatives;
 
     public Word() {}
 
@@ -98,6 +98,17 @@ public class Word implements Serializable {
         }
     }
 
+    public List<Alternative> getAlternatives() {
+        return alternatives;
+    }
+
+    public void addAlternative(Alternative alternative) {
+        if (this.alternatives == null) {
+            this.alternatives = new ArrayList<>();
+        }
+        this.alternatives.add(alternative);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,14 +127,6 @@ public class Word implements Serializable {
         int result = orig.hashCode();
         result = 31 * result + lang.hashCode();
         return result;
-    }
-
-    public Alternative getAlternative() {
-        return alternative;
-    }
-
-    public void setAlternative(Alternative alternative) {
-        this.alternative = alternative;
     }
 
     public static Word createLinkedCopy(Word word, Word orig) {

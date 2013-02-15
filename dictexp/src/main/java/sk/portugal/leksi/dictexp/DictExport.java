@@ -12,9 +12,6 @@ import java.util.List;
 //import sk.portugal.leksi.util.WordComparator;
 //import sk.portugal.leksi.util.write.Printer;
 
-//import java.util.Collections;
-//import java.util.List;
-
 public class DictExport {
 
     //private static final Lang lang = Lang.SK;

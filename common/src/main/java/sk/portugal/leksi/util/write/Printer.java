@@ -14,6 +14,15 @@ public class Printer {
         for (Word w: words) {
             System.out.print(w.getOrig());
             System.out.print((w.getPronunciation() != null ? " [" + w.getPronunciation() + "]" : ""));
+            if (w.getAlternatives() != null) {
+                for (Alternative alt: w.getAlternatives()) {
+                    System.out.print(" →" + alt.getType().getKey() + ":" + alt.getValue() + " «" +
+                            (alt.getNumberGender() != null ? "ng:" + alt.getNumberGender().getKey() + ";" : "") +
+                            (alt.getWordClass() != null ? "wc:" + alt.getWordClass().getKey() : "") +
+                            "»"
+                    );
+                }
+            }
             for (WordType wt : w.getWordTypes()) {
                 System.out.print(" {«" +
                         (wt.getParadigm() != null ? "pdg:" + wt.getParadigm() + ';' : "") +
@@ -21,8 +30,11 @@ public class Printer {
                         (wt.getWordClass() != null ? "wc:" + wt.getWordClass().getKey() : ""));
                 if (wt.getForms() != null) {
                     System.out.print(" /");
-                    for (Form v: wt.getForms()) {
-                        System.out.print("T:" + v.getType().getKey() + " V:" + v.getValues() + "/");
+                    if (w.getOrig().equals("correr")) {
+                        int i = 0;
+                    }
+                    for (Form f : wt.getForms()) {
+                        System.out.print("T:" + f.getType().getKey() + " V:" + f.getValues() + "/");
                     }
                 }
                 System.out.print("»");

@@ -12,6 +12,7 @@ public class Form {
     public Form() {}
 
     public Form(String values) {
+        this.type = FormType.UNDEF;
         this.values = values;
     }
 
