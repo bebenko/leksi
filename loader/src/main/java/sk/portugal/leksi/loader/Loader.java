@@ -19,7 +19,7 @@ public class Loader {
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
 
         List<Word> words = loadingService.loadAll(Lang.PT);
-        Printer.printAll(words);
+        //Printer.printAll(words);
         System.out.println("words: " + words.size());
     }
 }

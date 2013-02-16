@@ -231,20 +231,23 @@ public class DocxWrite {
                 }*/
 
                 //alternative spelling
-                if (w.getAlternatives() != null) {
-                    addCommaSpace(p);
-                    addBold(p, w.getAlternatives().getValue().trim());
+                if (w.getAlternatives() != null && !w.getAlternatives().isEmpty()) {
+                    for (Alternative alt: w.getAlternatives()) {
 
-                    if (w.getAlternatives().getWordClass() != null || w.getAlternatives().getNumberGender() != null) {
-                        addSpace(p);
-                        wc = false;
-                        if (w.getAlternatives().getWordClass() != null) {
-                            addItalic(p, w.getAlternatives().getWordClass().getKey());
-                            wc = true;
-                        }
-                        if (w.getAlternatives().getNumberGender() != null) {
-                            if (wc) addCommaSpace(p);
-                            addItalic(p, w.getAlternatives().getNumberGender().getKey());
+                        addCommaSpace(p);
+                        addBold(p, alt.getValue().trim());
+
+                        if (alt.getWordClass() != null || alt.getNumberGender() != null) {
+                            addSpace(p);
+                            wc = false;
+                            if (alt.getWordClass() != null) {
+                                addItalic(p, alt.getWordClass().getKey());
+                                wc = true;
+                            }
+                            if (alt.getNumberGender() != null) {
+                                if (wc) addCommaSpace(p);
+                                addItalic(p, alt.getNumberGender().getKey());
+                            }
                         }
                     }
                 }

@@ -49,8 +49,9 @@ public class VariantHelper {
         } else if (StringUtils.isNotBlank(s)) {
             s = StringUtils.trimToEmpty(s);
             if (s.equals(StringHelper.PRONOMINAL)) {
-                //wt.addForm(new Form(FormType.PRON, s)); //TODO pronominal: not a form, but different word class
                 wt.setWordClass(WordClass.VPRON);
+            } else if (s.equals("*") || s.equals(".") || s.equals("#")) {
+                //System.out.println(w.getOrig() + " " + s);
             } else {
                 wt.addForm(new Form(s));
             }

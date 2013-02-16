@@ -11,7 +11,7 @@ import sk.portugal.leksi.util.write.Printer;
 import java.util.Collections;
 import java.util.List;
 
-public class Export {
+public class WordExport {
 
     private static Lang lang = Lang.PT;
 
