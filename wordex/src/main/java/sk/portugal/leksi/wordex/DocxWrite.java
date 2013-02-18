@@ -19,6 +19,7 @@ package sk.portugal.leksi.wordex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import sk.portugal.leksi.model.*;
+import sk.portugal.leksi.model.enums.AltType;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.enums.PhrasemeType;
@@ -234,19 +235,22 @@ public class DocxWrite {
                 if (w.getAlternatives() != null && !w.getAlternatives().isEmpty()) {
                     for (Alternative alt: w.getAlternatives()) {
 
-                        addCommaSpace(p);
-                        addBold(p, alt.getValue().trim());
+                        if (alt.getType() == AltType.ALTERNATIVE) {
 
-                        if (alt.getWordClass() != null || alt.getNumberGender() != null) {
-                            addSpace(p);
-                            wc = false;
-                            if (alt.getWordClass() != null) {
-                                addItalic(p, alt.getWordClass().getKey());
-                                wc = true;
-                            }
-                            if (alt.getNumberGender() != null) {
-                                if (wc) addCommaSpace(p);
-                                addItalic(p, alt.getNumberGender().getKey());
+                            addCommaSpace(p);
+                            addBold(p, alt.getValue().trim());
+
+                            if (alt.getWordClass() != null || alt.getNumberGender() != null) {
+                                addSpace(p);
+                                wc = false;
+                                if (alt.getWordClass() != null) {
+                                    addItalic(p, alt.getWordClass().getKey());
+                                    wc = true;
+                                }
+                                if (alt.getNumberGender() != null) {
+                                    if (wc) addCommaSpace(p);
+                                    addItalic(p, alt.getNumberGender().getKey());
+                                }
                             }
                         }
                     }

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = ""; //" AND portugal in ('alemão')";
+    private static final String FILTER = "";// " AND portugal in ('projecto', 'projeto')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean ALTERNATIVESASEXTRAWORDS = true;
@@ -176,8 +176,11 @@ public class SurLoadingServiceImpl implements LoadingService {
                 alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
                 alt.setWordClass(word.getWordTypes().get(0).getWordClass());
                 alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTOGRAPHY : AltType.UNDEF);
-                getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
-                        StringHelper.LINK + StringHelper.SPACE)).addAlternative(alt);
+                Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
+                        StringHelper.LINK + StringHelper.SPACE));
+                if (ww != null) {
+                    ww.addAlternative(alt);
+                }
                 wordsToRemove.add(word);
             }
         }
