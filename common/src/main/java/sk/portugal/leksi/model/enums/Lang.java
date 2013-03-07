@@ -1,5 +1,8 @@
 package sk.portugal.leksi.model.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  */
 public enum Lang {
@@ -21,16 +24,18 @@ public enum Lang {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public static List<Lang> getAll() {
+        List<Lang> result = new ArrayList<>();
+        for (Lang lang: values()) {
+            if (lang != UNDEF) {
+                result.add(lang);
+            }
+        }
+        return result;
     }
 
     /**

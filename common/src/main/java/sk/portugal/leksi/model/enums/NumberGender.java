@@ -6,41 +6,48 @@ import java.io.Serializable;
  */
 public enum NumberGender implements Serializable {
 
-    NONE (Integer.valueOf(0), ""),
-    F (Integer.valueOf(1), "f"),
-    FPL (Integer.valueOf(2), "f/pl"),
-    M (Integer.valueOf(3), "m"),
-    MPL (Integer.valueOf(4), "m/pl"),
-    MF (Integer.valueOf(5), "m/f"),
-    MFPL (Integer.valueOf(6), "m/f/pl"),
-    PL (Integer.valueOf(7), "pl"),
-    N (Integer.valueOf(8), "n"),
-    NPL (Integer.valueOf(9), "n/pl"),
+    NONE (Integer.valueOf(0), "", "", ""),
+    F (Integer.valueOf(1), "f", "f.", "f."),
+    FPL (Integer.valueOf(2), "f/pl", "f./pl.", "f./pl."),
+    M (Integer.valueOf(3), "m", "m.", "m."),
+    MPL (Integer.valueOf(4), "m/pl", "m./pl.", "m./pl."),
+    MF (Integer.valueOf(5), "m/f", "m./f.", "m./f."),
+    MFPL (Integer.valueOf(6), "m/f/pl", "m./f./pl.", "m./f./pl."),
+    PL (Integer.valueOf(7), "pl", "pl.", "pl./množ.č."),
+    N (Integer.valueOf(8), "n", "n.", "n."),
+    NPL (Integer.valueOf(9), "n/pl", "n./pl.", "n./pl."),
 
-    UNDEF (Integer.valueOf(99), "undef");
+    SG (Integer.valueOf(50), "sg", "sing.", "sg./jedn.č."),
+    MSG (Integer.valueOf(51), "m/sg", "m./sing.", "m./sg."),
+    FSG (Integer.valueOf(52), "m/sg", "f./sing.", "f./sg."),
+    MFSG (Integer.valueOf(53), "m/f/sg", "m./f./sing.", "m./f./sg."),
+    INV (Integer.valueOf(54), "inv", "inv.", "inv."),
+
+    UNDEF (Integer.valueOf(99), "undef", "", "");
 
     private Integer id;
     private String key;
+    private String print_pt;
+    private String print_sk;
 
-    private NumberGender(Integer id, String key) {
+    private NumberGender(Integer id, String key, String print_sk, String print_pt) {
         this.id = id;
         this.key = key;
+        this.print_sk = print_sk;
+        this.print_pt = print_pt;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getPrint(Lang lang) {
+        if (lang == Lang.SK) return print_sk;
+        return print_pt;
     }
 
     /**
@@ -57,7 +64,18 @@ public enum NumberGender implements Serializable {
             if (value.id.intValue() == intValue.intValue()) { return value; }
         }
 
-        //throw new IllegalArgumentException("NumberGender constant with id " + intValue.intValue() + " doesn't exist.");
         return UNDEF;
     }
+
+    public static NumberGender valueOfKey(String strValue) {
+        if (strValue == null) { return null; }
+
+        NumberGender[] values = values();
+        for (NumberGender value: values) {
+            if (value.key.equals(strValue)) { return value; }
+        }
+
+        return UNDEF;
+    }
+
 }

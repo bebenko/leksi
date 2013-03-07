@@ -1,14 +1,16 @@
 package sk.portugal.leksi.model.enums;
 
-import sk.portugal.leksi.util.helper.StringHelper;
-
 /**
  */
-public enum AltType  {
+public enum CaseType {
 
     NONE (Integer.valueOf(0), "", "", ""),
-    ALTERNATIVE (Integer.valueOf(1), "alt", "", ""),
-    OLD_ORTHOGRAPHY(Integer.valueOf(2), "ort", StringHelper.GRAFANT, StringHelper.STPRAV),
+    NOM (Integer.valueOf(1), "nom", "nom.", "N"),
+    GEN (Integer.valueOf(2), "gen", "gen.", "G"),
+    DAT (Integer.valueOf(3), "dat", "dat.", "D"),
+    ACC (Integer.valueOf(4), "acc", "ac.", "A"),
+    LOC (Integer.valueOf(6), "loc", "loc.", "L"),
+    INST (Integer.valueOf(7), "inst", "inst.", "I"),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
@@ -17,7 +19,7 @@ public enum AltType  {
     private String print_pt;
     private String print_sk;
 
-    private AltType(Integer id, String key, String print_pt, String print_sk) {
+    private CaseType(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
         this.print_pt = print_pt;
@@ -43,22 +45,22 @@ public enum AltType  {
      * @param intValue Identifier.
      * @return Enum entity.
      */
-    public static AltType valueOf(Integer intValue) {
+    public static CaseType valueOf(Integer intValue) {
         if (intValue == null) { return null; }
 
-        AltType[] values = values();
-        for (AltType value: values) {
+        CaseType[] values = values();
+        for (CaseType value: values) {
             if (value.id.intValue() == intValue.intValue()) { return value; }
         }
 
         return UNDEF;
     }
 
-    public static AltType valueOfKey(String strValue) {
+    public static CaseType valueOfKey(String strValue) {
         if (strValue == null) { return null; }
 
-        AltType[] values = values();
-        for (AltType value: values) {
+        CaseType[] values = values();
+        for (CaseType value: values) {
             if (value.key.equals(strValue)) { return value; }
         }
 

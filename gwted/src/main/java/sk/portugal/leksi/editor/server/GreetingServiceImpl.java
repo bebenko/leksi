@@ -1,7 +1,7 @@
-package sk.portugal.leksiwt.server;
+package sk.portugal.leksi.editor.server;
 
-import sk.portugal.leksiwt.client.GreetingService;
-import sk.portugal.leksiwt.shared.FieldVerifier;
+import sk.portugal.leksi.editor.client.GreetingService;
+import sk.portugal.leksi.editor.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

@@ -1,4 +1,4 @@
-package sk.portugal.leksiwt.client;
+package sk.portugal.leksi.editor.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;

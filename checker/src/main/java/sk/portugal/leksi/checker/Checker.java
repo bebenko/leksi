@@ -1,14 +1,16 @@
 package sk.portugal.leksi.checker;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.loader.service.LoadingService;
 import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.AltType;
+import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Lang;
+import sk.portugal.leksi.util.FieldComparator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Checker {
 
@@ -19,7 +21,40 @@ public class Checker {
 
         List<Word> ptWords = loadingService.loadAll(Lang.PT);
 
-        checkOldOrthography(ptWords);
+        //checkOldOrthography(ptWords);
+
+        listFieldsUsed(ptWords);
+    }
+
+    private static void mapIns(Map<FieldType, List<Word>> map, FieldType f, Word w) {
+        if (map.containsKey(f)) {
+            map.get(f);
+        }
+    }
+
+    public static void listFieldsUsed(List<Word> words) {
+        Set<FieldType> fieldTypes = new TreeSet<>(new FieldComparator("ord"));
+        //Map<FieldType, List<Word>> map
+        //Map<FieldType, List<Word>> map = new HashMap<>();
+        for (Word w: words) {
+            for (WordType wt: w.getWordTypes()) {
+                for (Meaning m: wt.getMeanings()) {
+                    if (m.getFieldType() != null) {
+                        fieldTypes.add(m.getFieldType());
+                        //mapIns(map, m.getFieldType(), w);
+                        if (m.getFieldType() == FieldType.TECH) System.out.println("XXX: " + w.getOrig());
+                    }
+                }
+            }
+        }
+
+        int count = 0;
+        for (FieldType f: fieldTypes) {
+            count++;
+            System.out.println(StringUtils.leftPad(f.getId().toString(), 2) + " "
+                    + StringUtils.rightPad(f.getPrint(Lang.SK), 10));
+        }
+        System.out.println("count: " + count);
     }
 
     public static void checkOldOrthography(List<Word> words) {
@@ -63,7 +98,7 @@ public class Checker {
         for (Word w: words) {
             if (w.getAlternatives() != null) {
                 for (Alternative alt: w.getAlternatives()) {
-                    if (alt.getType() == AltType.OLD_ORTOGRAPHY) {
+                    if (alt.getType() == AltType.OLD_ORTHOGRAPHY) {
                         ortho.add(alt.getValue());
                     }
                 }

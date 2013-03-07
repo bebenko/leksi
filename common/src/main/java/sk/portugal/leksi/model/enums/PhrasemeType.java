@@ -6,44 +6,37 @@ import sk.portugal.leksi.util.helper.StringHelper;
  */
 public enum PhrasemeType {
 
-    NONE (Integer.valueOf(0), "", ""),
-    FIX (Integer.valueOf(1), StringHelper.EXPRFIX, StringHelper.EXPRFIX),
-    SEMIFIX (Integer.valueOf(2), StringHelper.EXPRSEMIFIX, StringHelper.EXPRSEMIFIX),
+    NONE (Integer.valueOf(0), "", "", ""),
+    FIX (Integer.valueOf(1), StringHelper.EXPRFIX, StringHelper.EXPRFIX, "ust. sl. sp."),
+    SEMIFIX (Integer.valueOf(2), StringHelper.EXPRSEMIFIX, StringHelper.EXPRSEMIFIX, "poloust. sl. sp."),
 
-    UNDEF (Integer.valueOf(99), "undef", "");
+    CONTR (Integer.valueOf(50), "contr.", "contr.", "kontr."),
+
+    UNDEF (Integer.valueOf(99), "undef", "", "");
 
     private Integer id;
     private String key;
-    private String print;
+    private String print_pt;
+    private String print_sk;
 
-    private PhrasemeType(Integer id, String key, String print) {
+    private PhrasemeType(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
-        this.print = print;
+        this.print_pt = print_pt;
+        this.print_sk = print_sk;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getPrint() {
-        return print;
-    }
-
-    public void setPrint(String print) {
-        this.print = print;
+    public String getPrint(Lang lang) {
+        if (lang == Lang.SK) return print_sk;
+        return print_pt;
     }
 
     /**
@@ -60,7 +53,6 @@ public enum PhrasemeType {
             if (value.id.intValue() == intValue.intValue()) { return value; }
         }
 
-        //throw new IllegalArgumentException("NumberGender constant with id " + intValue.intValue() + " doesn't exist.");
         return UNDEF;
     }
 
@@ -72,7 +64,6 @@ public enum PhrasemeType {
             if (value.key.equals(strValue)) { return value; }
         }
 
-        //throw new IllegalArgumentException("NumberGender constant with id " + intValue.intValue() + " doesn't exist.");
         return UNDEF;
     }
 }

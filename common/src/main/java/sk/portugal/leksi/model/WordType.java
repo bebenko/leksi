@@ -1,5 +1,6 @@
 package sk.portugal.leksi.model;
 
+import sk.portugal.leksi.model.enums.CaseType;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.NumberGender;
 import sk.portugal.leksi.model.enums.WordClass;
@@ -12,6 +13,7 @@ public class WordType {
     private List<Meaning> meanings;
     private NumberGender numGend;
     private WordClass wordClass;
+    private CaseType caseType;
     private List<Form> forms;
     private String paradigm;
 
@@ -39,6 +41,14 @@ public class WordType {
 
     public void setWordClass(WordClass wordClass) {
         this.wordClass = wordClass;
+    }
+
+    public CaseType getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(CaseType caseType) {
+        this.caseType = caseType;
     }
 
     public List<Form> getForms() {
@@ -78,7 +88,8 @@ public class WordType {
     public boolean hasForms() {
         if (this.forms == null) return false;
         for (Form v: getForms()) {
-            if (v.getType() != null && (/*v.getType() != FormType.PRON ||*/ v.getType() != FormType.UNDEF)) {
+            if (v.getType() != null && v.getType() != FormType.LINK && v.getType() != FormType.LINK_ORT
+                    && v.getType() != FormType.UNDEF) {
                 return true;
             }
         }

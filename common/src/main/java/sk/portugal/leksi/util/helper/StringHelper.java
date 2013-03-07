@@ -21,6 +21,9 @@ public class StringHelper {
     public static final String LEFTSQUAREBRACKET = "[";
     public static final String RIGHTSQUAREBRACKET = "]";
 
+    public static final String[] DELIMITERS = new String[] {DOT, COMMA, COLON, SEMICOLON};
+    public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)"};
+
     public static final char LEFTPARENTHESISCHAR = '(';
     public static final char RIGHTPARENTHESISCHAR = ')';
 
@@ -28,6 +31,8 @@ public class StringHelper {
     public static final String PERF = "(perf.)";
     public static final String EXPRFIX = "expr. fix.";
     public static final String EXPRSEMIFIX = "expr. semi-fix.";
+    public static final String GRAFANT = "graf. ant.";
+    public static final String STPRAV = "starý pravopis";
 
     public static final String PRONOMINAL = "pronominal";
 

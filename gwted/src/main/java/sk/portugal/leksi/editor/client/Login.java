@@ -1,4 +1,4 @@
-package sk.portugal.leksiwt.client;
+package sk.portugal.leksi.editor.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

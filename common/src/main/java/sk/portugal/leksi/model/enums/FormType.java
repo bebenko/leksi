@@ -1,49 +1,45 @@
 package sk.portugal.leksi.model.enums;
 
+import sk.portugal.leksi.util.helper.StringHelper;
+
 /**
  */
 public enum FormType {
 
-    NONE (Integer.valueOf(0), "", ""),
-    PP (Integer.valueOf(1), "pp", "p. p."),
-    F (Integer.valueOf(2), "f", "f"),
-    PL (Integer.valueOf(3), "pl", "pl"),
-    PLINV (Integer.valueOf(4), "pl inv", "pl inv"),
+    NONE (Integer.valueOf(0), "", "", ""),
+    PP (Integer.valueOf(1), "pp", "particip. pass.", "trp. príč."),
+    F (Integer.valueOf(2), "f", "f.", "f."),
+    PL (Integer.valueOf(3), "pl", "pl.", "pl."),
+    PLINV (Integer.valueOf(4), "pl inv", "pl. inv.", "pl. inv."),
 
-    UNDEF (Integer.valueOf(99), "undef", "");
+    LINK(Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
+    LINK_ORT(Integer.valueOf(91), StringHelper.LINK, StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK, StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
+
+    UNDEF (Integer.valueOf(99), "undef", "", "");
 
     private Integer id;
     private String key;
-    private String print;
+    private String print_pt;
+    private String print_sk;
 
-    private FormType(Integer id, String key, String print) {
+    private FormType(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
-        this.print = print;
+        this.print_pt = print_pt;
+        this.print_sk = print_sk;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getPrint() {
-        return print;
-    }
-
-    public void setPrint(String print) {
-        this.print = print;
+    public String getPrint(Lang lang) {
+        if (lang == Lang.SK) return print_sk;
+        return print_pt;
     }
 
     /**
@@ -60,7 +56,6 @@ public enum FormType {
             if (value.id.intValue() == intValue.intValue()) { return value; }
         }
 
-        //throw new IllegalArgumentException("NumberGender constant with id " + intValue.intValue() + " doesn't exist.");
         return UNDEF;
     }
 
@@ -72,7 +67,6 @@ public enum FormType {
             if (value.key.equals(strValue)) { return value; }
         }
 
-        //throw new IllegalArgumentException("NumberGender constant with id " + intValue.intValue() + " doesn't exist.");
         return UNDEF;
     }
 }

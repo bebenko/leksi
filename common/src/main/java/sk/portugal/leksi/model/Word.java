@@ -1,6 +1,7 @@
 package sk.portugal.leksi.model;
 
 import org.apache.commons.lang3.StringUtils;
+import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.util.helper.StringHelper;
 import sk.portugal.leksi.util.helper.VariantHelper;
@@ -91,7 +92,7 @@ public class Word implements Serializable {
             String[] tranSplits = StringUtils.splitByWholeSeparator(idiom.getTran(), "###");
             for (int i = 0; i < origSplits.length; i++) {
                 this.idioms.add(new Phraseme(StringHelper.removeExpr(origSplits[i].trim()), VariantHelper.getPhrasemeType(origSplits[i].trim()),
-                        tranSplits[i].trim(), idiom.getField(), idiom.getStyle()));
+                        tranSplits[i].trim(), idiom.getFieldType(), idiom.getStyle()));
             }
         } else {
             this.idioms.add(idiom);
@@ -135,6 +136,7 @@ public class Word implements Serializable {
 
         word.getWordTypes().get(0).clearVariants();
         word.getWordTypes().get(0).getMeanings().get(0).setSynonyms(StringHelper.LINK + StringHelper.SPACE + orig.getOrig());
+        word.getWordTypes().get(0).addForm(new Form(FormType.LINK, ""));
 
         return word;
     }

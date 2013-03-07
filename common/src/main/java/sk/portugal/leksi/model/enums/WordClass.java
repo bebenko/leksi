@@ -6,66 +6,82 @@ import java.io.Serializable;
  */
 public enum WordClass implements Serializable {
 
-    NONE (Integer.valueOf(0), ""),
-    ABR (Integer.valueOf(1), "abr"),
-    ADJ (Integer.valueOf(2), "adj"),
-    ADV (Integer.valueOf(3), "adv"),
-    ARTDEF (Integer.valueOf(4), "artdef"),
-    ARTINDEF (Integer.valueOf(5), "artindef"),
-    ATR (Integer.valueOf(6), "atr"),
-    AUX (Integer.valueOf(7), "aux"),
-    COMPAR (Integer.valueOf(8), "compar"),
-    CONJ (Integer.valueOf(9), "conj"),
-    ESP (Integer.valueOf(10), "esp"),
-    EXCL (Integer.valueOf(11), "excl"),
-    GER (Integer.valueOf(12), "ger"),
-    IMPESS (Integer.valueOf(13), "impess"),
-    INFIN (Integer.valueOf(14), "infin"),
-    INV (Integer.valueOf(15), "inv"),
-    IRREG (Integer.valueOf(16), "irreg"),
-    N (Integer.valueOf(17), "n"),
-    NUM (Integer.valueOf(18), "num"),
-    PP (Integer.valueOf(19), "pp"),
-    PREP (Integer.valueOf(20), "prep"),
-    PRON (Integer.valueOf(21), "pron"),
-    PT (Integer.valueOf(22), "part"),
-    SUJ (Integer.valueOf(23), "suj"),
-    SUB (Integer.valueOf(24), "sub"),
-    SUPERL (Integer.valueOf(25), "superl"),
-    TB (Integer.valueOf(26), "tb"),
-    VB (Integer.valueOf(27), "v"), //vb
-    VI (Integer.valueOf(28), "v"), //vi
-    VR (Integer.valueOf(29), "v"), //vr
-    VT (Integer.valueOf(30), "v"), //vt
-    INTER (Integer.valueOf(31), "inter"),
-    BRAZ (Integer.valueOf(32), "braz"),
-    VPRON (Integer.valueOf(33), "pronominal"),
+    NONE (Integer.valueOf(0), "", "", ""),    //
+    ABR (Integer.valueOf(1), "abr", "abr.", ""),
+    ADJ (Integer.valueOf(2), "adj", "adj.", "príd."),        //
+    ADV (Integer.valueOf(3), "adv", "adv.", "prísl."),       //
+    ARTDEF (Integer.valueOf(4), "artdef", "art def.", "urč. člen"), //
+    ARTINDEF (Integer.valueOf(5), "artindef", "art indef.", "neurč. člen"),
+    ATR (Integer.valueOf(6), "atr", "atr.", ""),
+    AUX (Integer.valueOf(7), "aux", "aux.", ""),
+    COMPAR (Integer.valueOf(8), "compar", "comp.", "komp."),
+    CONJ (Integer.valueOf(9), "conj", "conj.", "spoj."),      //
+    ESP (Integer.valueOf(10), "esp", "esp.", ""),
+    EXCL (Integer.valueOf(11), "excl", "excl.", "excl."),     //
+    GER (Integer.valueOf(12), "ger", "ger.", ""),
+    IMPESS (Integer.valueOf(13), "impess", "impess.",""),
+    INFIN (Integer.valueOf(14), "infin", "infin.", ""),
+    INV (Integer.valueOf(15), "inv", "inv.", "inv."),        //
+    IRREG (Integer.valueOf(16), "irreg", "irreg.", "nepr."),
+    N (Integer.valueOf(17), "n", "n.", "n."),              //
+    NUM (Integer.valueOf(18), "num", "num.", "čísl."),       //
+    PP (Integer.valueOf(19), "pp", "particip. pass.", "trp. príč."),   //
+    PREP (Integer.valueOf(20), "prep", "prep.", "predl."),    //
+    PRON (Integer.valueOf(21), "pron", "pron.", "pron."),     //
+    PT (Integer.valueOf(22), "pt", "part.", "čast."),       //
+    SUJ (Integer.valueOf(23), "suj", "suj.", ""),
+    SUB (Integer.valueOf(24), "sub", "sub.", ""),
+    SUPERL (Integer.valueOf(25), "superl", "sup.", "superl."),
+    TB (Integer.valueOf(26), "tb", "tb.", ""),              //
+    VB (Integer.valueOf(27), "vb", "v.", "v."), //vb        //
+    VI (Integer.valueOf(28), "vi", "v.", "v."), //vi        //
+    VR (Integer.valueOf(29), "vr", "v.", "v."), //vr        //
+    VT (Integer.valueOf(30), "vt", "v.", "v."), //vt        //
+    INTER (Integer.valueOf(31), "inter", "interj.", "cit."),   //
+    BRAZ (Integer.valueOf(32), "braz", "braz.", ""),
+    PORT (Integer.valueOf(33), "port", "port.", ""),
 
-    UNDEF (Integer.valueOf(99), "undef");
+    VPRON (Integer.valueOf(50), "pronominal", "v. pron.", "zám. s."),   //
+    PARTICIP (Integer.valueOf(51), "particip", "particip.", "príč."),
+    LOC (Integer.valueOf(52), "loc", "loc.", "sp."),
+    LOCPREP (Integer.valueOf(53), "locprep", "loc. prep.", "predl. sp."),
+    LOCADV (Integer.valueOf(54), "locadv", "loc. adv.", "prísl. sp."),
+    LOCCONJ (Integer.valueOf(55), "loccong", "loc. conj.", "spoj. sp."), //dvojčl. sp.
 
+    POSS (Integer.valueOf(56), "poss", "poss.", "privl."),
+    DEM (Integer.valueOf(57), "dem", "dem.", "ukaz."),
+    PRONPESS (Integer.valueOf(58), "pronpess", "pron. pess.", "osob. z."),
+    PRONREL (Integer.valueOf(59), "pronrel", "pron. rel.", "vzťaž. z."),
+    PRONINT (Integer.valueOf(60), "pronint", "pron. int.", "opyt. z."),
+    NUMORD (Integer.valueOf(61), "numord", "num. ord.", "zákl. č."),
+    NUMCARD (Integer.valueOf(62), "numcard", "num. card.", "rad. č."),
+    QUANT (Integer.valueOf(63), "quant", "quant.", "kvant."),
+
+    UNDEF (Integer.valueOf(99), "undef", "", "");
 
     private Integer id;
     private String key;
+    private String print_pt;
+    private String print_sk;
 
-    private WordClass(Integer id, String key) {
+    private WordClass(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
+        this.print_pt = print_pt;
+        this.print_sk = print_sk;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getPrint(Lang lang) {
+        if (lang == Lang.SK) return print_sk;
+        return print_pt;
     }
 
     public boolean isNoun() {

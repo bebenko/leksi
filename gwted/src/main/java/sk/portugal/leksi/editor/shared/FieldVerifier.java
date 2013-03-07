@@ -1,4 +1,4 @@
-package sk.portugal.leksiwt.shared;
+package sk.portugal.leksi.editor.shared;
 
 /**
  * <p>

@@ -13,23 +13,21 @@ import java.util.List;
 
 public class WordExport {
 
-    private static Lang lang = Lang.PT;
-
     public static void main(String[] args) {
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
 
-        List<Word> words = loadingService.loadAll(lang);
-        Collections.sort(words, new WordComparator());
-        DocxWrite.export(lang, words);
-        System.out.println("words: " + words.size());
+        List<Word> words;
 
-        lang = Lang.SK;
-        words = loadingService.loadAll(lang);
-        Collections.sort(words, new WordComparator());
-        DocxWrite.export(lang, words);
-        System.out.println("words: " + words.size());
+        for (Lang lang : Lang.getAll()) {
+            words = loadingService.loadAll(lang);
+            for (Lang explang : Lang.getAll()) {
+                Collections.sort(words, new WordComparator());
+                DocxWrite.export(lang, explang, words);
+                System.out.println("words (" + lang.getKey() + "/" + explang.getKey() + "): " + words.size());
+            }
+        }
 
 /*        PrintStream out = null;
         try {

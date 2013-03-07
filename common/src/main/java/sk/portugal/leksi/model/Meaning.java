@@ -1,7 +1,7 @@
 package sk.portugal.leksi.model;
 
 import org.apache.commons.lang3.StringUtils;
-import sk.portugal.leksi.model.enums.Field;
+import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Style;
 import sk.portugal.leksi.util.helper.StringHelper;
 import sk.portugal.leksi.util.helper.VariantHelper;
@@ -14,17 +14,17 @@ import java.util.List;
  */
 public class Meaning {
 
-    private Field field;
+    private FieldType fieldType;
     private Style style;
     private String synonyms;
     private List<Phraseme> expressions;
 
-    public Field getField() {
-        return field;
+    public FieldType getFieldType() {
+        return fieldType;
     }
 
-    public void setField(Field field) {
-        this.field = field;
+    public void setFieldType(FieldType fieldType) {
+        this.fieldType = fieldType;
     }
 
     public Style getStyle() {
@@ -65,7 +65,7 @@ public class Meaning {
             String[] tranSplits = StringUtils.splitByWholeSeparator(expr.getTran(), "###");
             for (int i = 0; i < origSplits.length; i++) {
                 this.expressions.add(new Phraseme(origSplits[i], VariantHelper.getPhrasemeType(origSplits[i]),
-                        tranSplits[i], expr.getField(), expr.getStyle()));
+                        tranSplits[i], expr.getFieldType(), expr.getStyle()));
             }
         } else {
             this.expressions.add(expr);

@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.dictexp.service.ExportService;
 import sk.portugal.leksi.loader.service.LoadingService;
-//import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.enums.Lang;
 
@@ -14,8 +13,6 @@ import java.util.List;
 
 public class DictExport {
 
-    //private static final Lang lang = Lang.SK;
-
     public static void main(String[] args) {
 
 
@@ -23,16 +20,17 @@ public class DictExport {
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
         ExportService exportService = (ExportService) ctx.getBean("exportService");
 
-        List<Word> words = loadingService.loadAll(Lang.PT);
+        List<Word> words;
 
+        for (Lang lang : Lang.getAll()) {
+            words = loadingService.loadAll(lang);
+            for (Lang explang : Lang.getAll()) {
+                //Collections.sort(words, new WordComparator());
+                exportService.generateV2Export(lang, explang, words);
+                System.out.println("words (" + lang.getKey() + "/" + explang.getKey() + "): " + words.size());
+            }
+        }
         //Collections.sort(words, new WordComparator());
-
-        exportService.generateV2Export(words);
-        System.out.println("words: " + words.size());
-
-        words = loadingService.loadAll(Lang.SK);
-        exportService.generateV2Export(words);
-        System.out.println("words: " + words.size());
 
         //Printer.printWordList(words, false);
     }

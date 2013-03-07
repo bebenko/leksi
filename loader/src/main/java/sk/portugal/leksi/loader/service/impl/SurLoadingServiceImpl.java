@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = "";// " AND portugal in ('projecto', 'projeto')";
+    private static final String FILTER = ""; // " AND portugal in ('detectar')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean ALTERNATIVESASEXTRAWORDS = true;
@@ -65,7 +65,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                 for (int i = 1; i <= 10; i++) {
                     s = new Meaning();
                     fi = rs.getString("skratka" + i);
-                    if (!isEmpty(fi)) s.setField(Field.valueOf(Integer.valueOf(fi.trim())));
+                    if (!isEmpty(fi)) s.setFieldType(FieldType.valueOf(Integer.valueOf(fi.trim())));
                     st = rs.getString("skratka" + i + "b");
                     if (!isEmpty(st)) s.setStyle(Style.valueOf(Integer.valueOf(st.trim())));
                     sy = rs.getString("slovak" + i);
@@ -133,7 +133,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                     st = rs.getString("skr" + i);
                     if (!isEmpty(st)) ph.setStyle(Style.valueOf(Integer.valueOf(st.trim())));
                     fi = rs.getString("2skr" + i);
-                    if (!isEmpty(fi)) ph.setField(Field.valueOf(Integer.valueOf(fi.trim())));
+                    if (!isEmpty(fi)) ph.setFieldType(FieldType.valueOf(Integer.valueOf(fi.trim())));
 
                     if (!isEmpty(ph)) {
                         phrasemes.add(ph);
@@ -163,7 +163,102 @@ public class SurLoadingServiceImpl implements LoadingService {
 
         mergePhrasemes(result, getPhrasemes(lang));
 
+        enrichForSpecifiedWords(result);
+
         return result;
+    }
+
+    private void enrichForSpecifiedWords(List<Word> wordList) {
+        for (Word word: wordList) {
+            switch (word.getOrig()) {
+                case "algum" :
+                case "nenhum" :
+                case "cada" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                    break;
+                }
+                case "o quê" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
+                    break;
+                }
+                case "aquilo" :
+                case "isto" :
+                case "isso" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.DEM);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.INV);
+                    break;
+                }
+                case "aquele" :
+                case "este" :
+                case "esse" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.DEM);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                    break;
+                }
+                case "meu" :
+                case "seu" :
+                case "teu" :
+                case "dele" :
+                case "nosso" :
+                case "vosso" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.POSS);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                    break;
+                }
+                case "minha" :
+                case "sua" :
+                case "tua" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.POSS);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.FSG);
+                    break;
+                }
+                case "me" :
+                case "nos" :
+                case "se" :
+                case "te" :
+                case "vos" :
+                case "lhe" : {
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                    break;
+                }
+                case "eu" :
+                case "nós" :
+                case "tu" :
+                case "você" :
+                case "vós" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                    word.getWordTypes().get(0).setCaseType(CaseType.NOM);
+                    break;
+                }
+                case "ele" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                    break;
+                }
+                case "o qual" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                    break;
+                }
+                case "quais" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.PL);
+                    break;
+                }
+                case "os quais" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.PL);
+                    break;
+                }
+                case "ambos" :
+                case "vários" :{
+                    word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                    word.getWordTypes().get(0).setNumGend(NumberGender.MPL);
+                    break;
+                }
+            }
+
+        }
     }
 
     private void mergeAlternatives(List<Word> wordList) {
@@ -171,17 +266,21 @@ public class SurLoadingServiceImpl implements LoadingService {
         for (Word word: wordList) {
             //identify alternatives
             if (word.getWordTypes().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
-                Alternative alt = new Alternative();
-                alt.setValue(word.getOrig());
-                alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
-                alt.setWordClass(word.getWordTypes().get(0).getWordClass());
-                alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTOGRAPHY : AltType.UNDEF);
-                Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
-                        StringHelper.LINK + StringHelper.SPACE));
-                if (ww != null) {
-                    ww.addAlternative(alt);
+                if (word.getWordTypes().get(0).getForms() == null) { //only old orthography satisfies
+                    word.getWordTypes().get(0).addForm(new Form(FormType.LINK_ORT, ""));
+
+                    Alternative alt = new Alternative();
+                    alt.setValue(word.getOrig());
+                    alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
+                    alt.setWordClass(word.getWordTypes().get(0).getWordClass());
+                    alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
+                    Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
+                            StringHelper.LINK + StringHelper.SPACE));
+                    if (ww != null) {
+                        ww.addAlternative(alt);
+                    }
+                    wordsToRemove.add(word);
                 }
-                wordsToRemove.add(word);
             }
         }
         if (!ALTERNATIVESASEXTRAWORDS) {
