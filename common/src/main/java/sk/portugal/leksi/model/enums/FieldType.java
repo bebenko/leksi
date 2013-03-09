@@ -6,7 +6,7 @@ import java.io.Serializable;
  */
 public enum FieldType implements Serializable {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     AFR (Integer.valueOf(59), "afr", "afric.", "afr."),
     ANAT (Integer.valueOf(1), "anat", "anat.", "anat."),
     ARCHEOL (Integer.valueOf(52), "archeol", "arqueol.", "archeol."),

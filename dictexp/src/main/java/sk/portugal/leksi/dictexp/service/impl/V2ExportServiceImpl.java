@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.dictexp.service.ExportService;
 import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.*;
+import sk.portugal.leksi.model.extra.Contraction;
 import sk.portugal.leksi.util.helper.StringHelper;
 
 import java.io.File;
@@ -112,22 +113,23 @@ public class V2ExportServiceImpl implements ExportService {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 1);
             return addFmtStart("capit") + escapeHtml(s) + addFmtEnd();
         }
-        String s = str; boolean gend = false;
-        //!FORMATTING
         if (StringUtils.startsWithAny(str, StringHelper.GENDERSTRINGS)) {
-            s = s.replace("/", "./").replace(")", ".)");
-            gend = true;
-        }
-        if (print || gend) {
+            String s = StringHelper.LEFTPARENTHESIS
+                    + NumberGender.valueOfKey(StringUtils.remove(str.substring(1, str.length() - 1), StringHelper.DOT)).getPrint(explang)
+                    + StringHelper.RIGHTPARENTHESIS;
             return addFmtStart("spec") + escapeHtml(s) + addFmtEnd();
+        }
+
+        if (print) {
+            return addFmtStart("spec") + escapeHtml(str) + addFmtEnd();
         }
         return "";
     }
 
     private String addSpecification(String str, boolean print, Lang explang) {
-        if (str.equals(StringHelper.PERF) || str.equals(StringHelper.IMP)) {
+        if (str.equals(StringHelper.PERF) || str.equals(StringHelper.IMP) || str.equals(StringHelper.IMPPERF)) {
             return addFmtStart("aspect") + escapeHtml(StringHelper.LEFTPARENTHESIS
-                    + SignificanceType.valueOfKey(str.substring(1, str.length() - 2)).getPrint(explang)
+                    + SignificanceType.valueOfKey(StringUtils.remove(str.substring(1, str.length() - 1), StringHelper.DOT)).getPrint(explang)
                     + StringHelper.RIGHTPARENTHESIS)
                     + addFmtEnd();
         } else {
@@ -139,7 +141,18 @@ public class V2ExportServiceImpl implements ExportService {
         return addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
     }
 
-    //TODO work on this
+    private String addSquareBracketsForLang(String str, Lang explang) {
+        if (str.indexOf(StringHelper.COLON) > 0) {
+            Lang lang = Lang.valueOfKey(StringUtils.substringBetween(str, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
+            if (lang == explang) {
+                return addTranslation(StringUtils.remove(str, lang.getKey() + StringHelper.COLON + StringHelper.SPACE));
+            }
+        } else {
+            return addTranslation(str);
+        }
+        return "";
+    }
+
     private String addFormattedLine(String str, Lang lang, Lang explang) {
         String res = "", s = str, ss; boolean first = true;
 
@@ -148,6 +161,10 @@ public class V2ExportServiceImpl implements ExportService {
                 String par = s.substring(0, StringHelper.findMatchingBracket(s));
                 s = StringUtils.substring(s, StringHelper.findMatchingBracket(s));
                 res += addSpecification(par, (first && lang == explang) || (!first && lang != explang), explang);
+            } else if (s.startsWith(StringHelper.LEFTSQUAREBRACKET)) {
+                String par = s.substring(0, StringHelper.findMatchingBracket(s, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
+                s = StringUtils.substring(s, StringHelper.findMatchingBracket(s, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
+                res += addSquareBracketsForLang(par, explang);
             } else {
                 ss = StringUtils.substringBefore(s, StringHelper.SPACE);
                 res += addTranslation(ss);
@@ -157,7 +174,7 @@ public class V2ExportServiceImpl implements ExportService {
             if (StringUtils.isNotBlank(s)) {
                 if (!StringUtils.startsWithAny(s, StringHelper.DELIMITERS)) {
                     if (StringUtils.startsWith(s, StringHelper.LEFTPARENTHESIS)) {
-                        if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP)
+                        if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP) || s.startsWith(StringHelper.IMPPERF)
                                 || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
                             res += StringHelper.SPACE;
                         }
@@ -168,18 +185,37 @@ public class V2ExportServiceImpl implements ExportService {
             }
 
             first = false;
-
-//            int endIndex = (str.indexOf(StringHelper.LEFTPARENTHESISCHAR) > 0) ? str.indexOf(StringHelper.LEFTPARENTHESISCHAR) : str.length();
-//            res += addTranslation(StringUtils.substring(str, 0, endIndex));
-
-//            str = StringUtils.removeStart(str, StringUtils.substring(str, 0, endIndex));
         }
 
         return res;
     }
 
+    private String addWordReference(String str) {
+        return addFmtStart("wrdref") + escapeHtml(str) + addFmtEnd();
+    }
+
+    private String addContraction(Contraction c, Lang explang) {
+        String str = PhrasemeType.CONTR.getPrint(explang) + StringHelper.SPACE
+                + c.getFirstWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
+        String res = addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
+        res += addWordReference(c.getFirstWord().getOrig());
+        str = StringHelper.SPACE + (explang == Lang.PT ? StringHelper.ANDPT : StringHelper.ANDSK) + StringHelper.SPACE
+                + c.getSecondWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
+        if (c.getSecondWordType().getCaseType() != null) {
+            str += c.getSecondWordType().getCaseType().getPrint(explang) + StringHelper.SPACE;
+        }
+        if (c.getSecondWordType().getNumGend() != null) {
+            str += c.getSecondWordType().getNumGend().getPrint(explang) + StringHelper.SPACE;
+        }
+        res += addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
+        res += addWordReference(c.getSecondWord().getOrig());
+        return res;
+    }
+
     private String addMeaning(Meaning m, Lang lang, Lang explang) {
-        return addFmtStart("synonyms") + addFieldStyle(m.getFieldType(), m.getStyle(), explang) + addFormattedLine(m.getSynonyms(), lang, explang) + addFmtEnd();
+        return addFmtStart("synonyms") + addFieldStyle(m.getFieldType(), m.getStyle(), explang)
+                + (m.isContraction() ? addContraction(m.getContraction(), explang) : addFormattedLine(m.getSynonyms(), lang, explang))
+                + addFmtEnd();
     }
 
     private String addForm(Form v, Lang explang) {
@@ -263,7 +299,7 @@ public class V2ExportServiceImpl implements ExportService {
                 str += addSectionStart("mean");
                 str += addSectionStart("meanln");
                 str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang), StringHelper.SPACE + StringHelper.LINK), true, explang);
-                str += addFmtStart("synonyms") + addFormattedLine(wt.getMeanings().get(0).getSynonyms(), lang, explang) + addFmtEnd();
+                str += addFmtStart("synonyms") + addWordReference(wt.getMeanings().get(0).getSynonyms()) + addFmtEnd();
                 str += addSectionEnd();
                 str += addSectionEnd();
 

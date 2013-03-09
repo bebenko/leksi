@@ -55,4 +55,15 @@ public enum Lang {
         return UNDEF;
     }
 
+    public static Lang valueOfKey(String strValue) {
+        if (strValue == null) { return null; }
+
+        Lang[] values = values();
+        for (Lang value: values) {
+            if (value.key.equals(strValue)) { return value; }
+        }
+
+        return UNDEF;
+    }
+
 }

@@ -8,6 +8,7 @@ import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.AltType;
 import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Lang;
+import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.util.FieldComparator;
 
 import java.util.*;

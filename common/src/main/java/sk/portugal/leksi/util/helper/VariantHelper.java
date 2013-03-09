@@ -5,6 +5,7 @@ import sk.portugal.leksi.model.Form;
 import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.FormType;
+import sk.portugal.leksi.model.enums.NumberGender;
 import sk.portugal.leksi.model.enums.PhrasemeType;
 import sk.portugal.leksi.model.enums.WordClass;
 
@@ -25,7 +26,9 @@ public class VariantHelper {
             w.setPronunciation(StringUtils.substringBefore(s.substring(1), "]"));
             s = StringUtils.trimToEmpty(StringUtils.removeStart(s, "[" + w.getPronunciation() + "]"));
         }
-        if (StringUtils.startsWithAny(s, "f ", "pl ", "pp ")) {
+        if (StringUtils.equals(s, StringHelper.PLINV)) {
+            wt.setNumGend(NumberGender.SGPL);
+        } else if (StringUtils.startsWithAny(s, "f ", "pl ", "pp ")) {
             Form v = new Form();
             String[] ss = StringUtils.split(s, ",");
 

@@ -6,11 +6,11 @@ import sk.portugal.leksi.util.helper.StringHelper;
  */
 public enum FormType {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     PP (Integer.valueOf(1), "pp", "particip. pass.", "trp. príč."),
-    F (Integer.valueOf(2), "f", "f.", "f."),
-    PL (Integer.valueOf(3), "pl", "pl.", "pl."),
-    PLINV (Integer.valueOf(4), "pl inv", "pl. inv.", "pl. inv."),
+    F (Integer.valueOf(2), "f", "f.", "ž."),
+    PL (Integer.valueOf(3), "pl", "pl.", "mn."),
+    PLINV (Integer.valueOf(4), "pl inv", "pl. inv.", "jedn./mn."),
 
     LINK(Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
     LINK_ORT(Integer.valueOf(91), StringHelper.LINK, StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK, StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),

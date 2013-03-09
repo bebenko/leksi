@@ -3,6 +3,7 @@ package sk.portugal.leksi.util.write;
 import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.Lang;
+import sk.portugal.leksi.model.extra.Alternative;
 
 import java.util.List;
 

@@ -26,17 +26,23 @@ public class StringHelper {
 
     public static final char LEFTPARENTHESISCHAR = '(';
     public static final char RIGHTPARENTHESISCHAR = ')';
+    public static final char LEFTSQUAREBRACKETCHAR = '[';
+    public static final char RIGHTSQUAREBRACKETCHAR = ']';
 
     public static final String IMP = "(imp.)";
     public static final String PERF = "(perf.)";
+    public static final String IMPPERF = "(imp./perf.)";
     public static final String EXPRFIX = "expr. fix.";
     public static final String EXPRSEMIFIX = "expr. semi-fix.";
     public static final String GRAFANT = "graf. ant.";
     public static final String STPRAV = "starý pravopis";
 
     public static final String PRONOMINAL = "pronominal";
+    public static final String PLINV = "pl inv";
 
     public static final String LINK = "→";
+    public static final String ANDSK = "+";
+    public static final String ANDPT = "e";
 
 
     public static String extractSpecification(String str) {
@@ -52,12 +58,16 @@ public class StringHelper {
     }
 
     public static int findMatchingBracket(String str) {
+        return findMatchingBracket(str, LEFTPARENTHESISCHAR, RIGHTPARENTHESISCHAR);
+    }
+
+    public static int findMatchingBracket(String str, char chr1, char chr2) {
         boolean foundMatching = false;
         int depthCounter = 0;
         int ind = 0;
         while (!foundMatching) {
-            if (str.charAt(ind) == LEFTPARENTHESISCHAR) depthCounter++;
-            else if (str.charAt(ind) == RIGHTPARENTHESISCHAR) depthCounter--;
+            if (str.charAt(ind) == chr1) depthCounter++;
+            else if (str.charAt(ind) == chr2) depthCounter--;
             ind++;
             if (depthCounter == 0) foundMatching = true;
         }

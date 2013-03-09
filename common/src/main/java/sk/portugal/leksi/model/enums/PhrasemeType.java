@@ -6,11 +6,11 @@ import sk.portugal.leksi.util.helper.StringHelper;
  */
 public enum PhrasemeType {
 
-    NONE (Integer.valueOf(0), "", "", ""),
-    FIX (Integer.valueOf(1), StringHelper.EXPRFIX, StringHelper.EXPRFIX, "ust. sl. sp."),
-    SEMIFIX (Integer.valueOf(2), StringHelper.EXPRSEMIFIX, StringHelper.EXPRSEMIFIX, "poloust. sl. sp."),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
+    FIX (Integer.valueOf(1), StringHelper.EXPRFIX, StringHelper.EXPRFIX, "u. sl. sp."),
+    SEMIFIX (Integer.valueOf(2), StringHelper.EXPRSEMIFIX, StringHelper.EXPRSEMIFIX, "p. sl. sp."),
 
-    CONTR (Integer.valueOf(50), "contr.", "contr.", "kontr."),
+    CONTR (Integer.valueOf(50), "contr.", "contr.", "stiah. tv."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

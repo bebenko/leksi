@@ -3,6 +3,7 @@ package sk.portugal.leksi.model;
 import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Style;
+import sk.portugal.leksi.model.extra.Contraction;
 import sk.portugal.leksi.util.helper.StringHelper;
 import sk.portugal.leksi.util.helper.VariantHelper;
 
@@ -18,6 +19,7 @@ public class Meaning {
     private Style style;
     private String synonyms;
     private List<Phraseme> expressions;
+    private Contraction contraction;
 
     public FieldType getFieldType() {
         return fieldType;
@@ -53,6 +55,19 @@ public class Meaning {
 
     public List<Phraseme> getExpressions() {
         return expressions;
+    }
+
+    public void setContraction(Contraction contraction) {
+        this.contraction = contraction;
+    }
+
+    public Contraction getContraction() {
+        return contraction;
+    }
+
+    public boolean isContraction() {
+        if (contraction != null) return true;
+        return false;
     }
 
     public void addExpression(Phraseme expr) {

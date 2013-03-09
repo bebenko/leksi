@@ -4,7 +4,7 @@ package sk.portugal.leksi.model.enums;
  */
 public enum CaseType {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     NOM (Integer.valueOf(1), "nom", "nom.", "N"),
     GEN (Integer.valueOf(2), "gen", "gen.", "G"),
     DAT (Integer.valueOf(3), "dat", "dat.", "D"),

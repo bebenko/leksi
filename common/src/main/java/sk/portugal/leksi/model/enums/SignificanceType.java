@@ -4,11 +4,12 @@ package sk.portugal.leksi.model.enums;
  */
 public enum SignificanceType {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     MASS (Integer.valueOf(1), "mass", "mass.", "nep."),
     PERF (Integer.valueOf(2), "perf", "perf.", "dok."),
     IMP (Integer.valueOf(3), "imp", "imp.", "nedok."),
-    FIG (Integer.valueOf(4), "fig", "fig.", "pren."),
+    IMPPERF (Integer.valueOf(4), "imp/perf", "imp./perf.", "nedok. i dok."),
+    FIG (Integer.valueOf(5), "fig", "fig.", "pren."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

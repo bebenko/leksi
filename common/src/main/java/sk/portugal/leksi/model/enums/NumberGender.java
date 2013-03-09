@@ -6,22 +6,23 @@ import java.io.Serializable;
  */
 public enum NumberGender implements Serializable {
 
-    NONE (Integer.valueOf(0), "", "", ""),
-    F (Integer.valueOf(1), "f", "f.", "f."),
-    FPL (Integer.valueOf(2), "f/pl", "f./pl.", "f./pl."),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
+    F (Integer.valueOf(1), "f", "f.", "ž."),
+    FPL (Integer.valueOf(2), "f/pl", "f. pl.", "f. mn."),
     M (Integer.valueOf(3), "m", "m.", "m."),
-    MPL (Integer.valueOf(4), "m/pl", "m./pl.", "m./pl."),
-    MF (Integer.valueOf(5), "m/f", "m./f.", "m./f."),
-    MFPL (Integer.valueOf(6), "m/f/pl", "m./f./pl.", "m./f./pl."),
-    PL (Integer.valueOf(7), "pl", "pl.", "pl./množ.č."),
-    N (Integer.valueOf(8), "n", "n.", "n."),
-    NPL (Integer.valueOf(9), "n/pl", "n./pl.", "n./pl."),
+    MPL (Integer.valueOf(4), "m/pl", "m. pl.", "m. mn."),
+    MF (Integer.valueOf(5), "m/f", "m./f.", "m./ž."),
+    MFPL (Integer.valueOf(6), "m/f/pl", "m./f. pl.", "m./ž. mn."),
+    PL (Integer.valueOf(7), "pl", "pl.", "mn."),
+    N (Integer.valueOf(8), "n", "n.", "s."),
+    NPL (Integer.valueOf(9), "n/pl", "n./pl.", "s. mn."),
 
-    SG (Integer.valueOf(50), "sg", "sing.", "sg./jedn.č."),
-    MSG (Integer.valueOf(51), "m/sg", "m./sing.", "m./sg."),
-    FSG (Integer.valueOf(52), "m/sg", "f./sing.", "f./sg."),
-    MFSG (Integer.valueOf(53), "m/f/sg", "m./f./sing.", "m./f./sg."),
-    INV (Integer.valueOf(54), "inv", "inv.", "inv."),
+    SG (Integer.valueOf(50), "sg", "sing.", "jedn."),
+    MSG (Integer.valueOf(51), "m/sg", "m. sing.", "m. jedn."),
+    FSG (Integer.valueOf(52), "m/sg", "f. sing.", "ž. jedn."),
+    MFSG (Integer.valueOf(53), "m/f/sg", "m./f. sing.", "m./ž. jedn."),
+    SGPL (Integer.valueOf(54), "sg/pl", "sing./pl.", "jedn./mn."),
+    INV (Integer.valueOf(55), "inv", "inv.", ""),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
@@ -30,7 +31,7 @@ public enum NumberGender implements Serializable {
     private String print_pt;
     private String print_sk;
 
-    private NumberGender(Integer id, String key, String print_sk, String print_pt) {
+    private NumberGender(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
         this.print_sk = print_sk;

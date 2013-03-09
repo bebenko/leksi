@@ -6,7 +6,7 @@ import java.io.Serializable;
  */
 public enum Style implements Serializable {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     HOVOR (Integer.valueOf(1), "col", "col.", "hovor."),
     COL (Integer.valueOf(2), "col(!)", "col.(!)", "col.(!)"),
     ZVOL (Integer.valueOf(3), "zvol", "zvol.", "zvol."),

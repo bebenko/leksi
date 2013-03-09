@@ -40,3 +40,7 @@ span.aspect {
 span.fiesty {
     font-style: italic;
 }
+span.wrdref {
+    font-weight: bold;
+    color: #e3b363;
+}

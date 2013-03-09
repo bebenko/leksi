@@ -3,6 +3,7 @@ package sk.portugal.leksi.model;
 import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.Lang;
+import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.util.helper.StringHelper;
 import sk.portugal.leksi.util.helper.VariantHelper;
 

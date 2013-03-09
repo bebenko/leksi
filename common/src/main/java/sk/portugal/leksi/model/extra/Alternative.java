@@ -1,4 +1,4 @@
-package sk.portugal.leksi.model;
+package sk.portugal.leksi.model.extra;
 
 import sk.portugal.leksi.model.enums.AltType;
 import sk.portugal.leksi.model.enums.NumberGender;

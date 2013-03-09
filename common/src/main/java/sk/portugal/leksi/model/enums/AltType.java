@@ -6,7 +6,7 @@ import sk.portugal.leksi.util.helper.StringHelper;
  */
 public enum AltType  {
 
-    NONE (Integer.valueOf(0), "", "", ""),
+    NONE (Integer.valueOf(0), "n/a", "", ""),
     ALTERNATIVE (Integer.valueOf(1), "alt", "", ""),
     OLD_ORTHOGRAPHY(Integer.valueOf(2), "ort", StringHelper.GRAFANT, StringHelper.STPRAV),
 
