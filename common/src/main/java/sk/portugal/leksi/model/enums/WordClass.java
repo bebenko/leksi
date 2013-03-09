@@ -8,7 +8,7 @@ public enum WordClass implements Serializable {
 
     NONE (Integer.valueOf(0), "n/a", "", ""),    //
     ABR (Integer.valueOf(1), "abr", "abr.", ""),
-    ADJ (Integer.valueOf(2), "adj", "adj.", "príd. m."),        //
+    ADJ (Integer.valueOf(2), "adj", "adj.", "príd."),        //
     ADV (Integer.valueOf(3), "adv", "adv.", "prísl."),       //
     ARTDEF (Integer.valueOf(4), "artdef", "art def.", "urč. člen"), //
     ARTINDEF (Integer.valueOf(5), "artindef", "art indef.", "neurč. člen"),
