@@ -8,7 +8,7 @@ public enum SignificanceType {
     MASS (Integer.valueOf(1), "mass", "mass.", "nep."),
     PERF (Integer.valueOf(2), "perf", "perf.", "dok."),
     IMP (Integer.valueOf(3), "imp", "imp.", "nedok."),
-    IMPPERF (Integer.valueOf(4), "imp/perf", "imp./perf.", "nedok. i dok."),
+    IMPPERF (Integer.valueOf(4), "imp/perf", "imp./perf.", "nedok./dok."),
     FIG (Integer.valueOf(5), "fig", "fig.", "pren."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");

@@ -6,6 +6,7 @@ import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.*;
 import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.model.extra.Contraction;
+import sk.portugal.leksi.util.helper.LangHelper;
 import sk.portugal.leksi.util.helper.StringHelper;
 
 import java.io.FileOutputStream;
@@ -19,95 +20,140 @@ public class DocxWrite {
     public static final String IDIOMDELIMITER = "♦";
     public static final String WORDTYPEDELIMITER = "●";
 
-    public static XWPFRun newRun(XWPFParagraph p) {
+    private static final String GRAY = "gray";
+    private static final String COL_GRAY = "989898";
+
+
+    private static XWPFRun newRun(XWPFParagraph p) {
         XWPFRun r = p.createRun();
         r.setFontFamily("Times New Roman");
         r.setFontSize(9);
         return r;
     }
 
-    public static void addSpace(XWPFParagraph p) {
+    private static void addSpace(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.SPACE);
     }
 
-    public static void addSemicolon(XWPFParagraph p) {
+    private static void addSemicolon(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.SEMICOLON);
     }
 
-    public static void addCommaSpace(XWPFParagraph p) {
+    private static void addCommaSpace(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.COMMASPACE);
     }
 
-    public static void addLeftParenthesis(XWPFParagraph p) {
+    private static void addLeftParenthesis(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.LEFTPARENTHESIS);
     }
 
-    public static void addRightParenthesis(XWPFParagraph p) {
+    private static void addRightParenthesis(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.RIGHTPARENTHESIS);
     }
 
-    public static void addLeftSquareBracket(XWPFParagraph p) {
+    private static void addLeftSquareBracket(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.LEFTSQUAREBRACKET);
     }
 
-    public static void addRightSquareBracket(XWPFParagraph p) {
+    private static void addRightSquareBracket(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(StringHelper.RIGHTSQUAREBRACKET);
     }
 
-    public static void addWordTypeDelimiter(XWPFParagraph p) {
+    private static void addWordTypeDelimiter(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(WORDTYPEDELIMITER);
     }
 
-    public static void addIdiomDelimiter(XWPFParagraph p) {
+    private static void addIdiomDelimiter(XWPFParagraph p) {
         XWPFRun r = newRun(p);
         r.setText(IDIOMDELIMITER);
     }
 
-    public static void addNormal(XWPFParagraph p, String str) {
-        XWPFRun r = newRun(p);
-        r.setText(str);
+    private static void setColor(XWPFRun r, String color) {
+        switch (color) {
+            case GRAY: {
+                r.setColor(COL_GRAY);
+                break;
+            }
+        }
     }
 
-    public static void addBold(XWPFParagraph p, String str) {
+    private static void addNormal(XWPFParagraph p, String str) {
+        addNormal(p, str, null);
+    }
+
+    private static void addNormal(XWPFParagraph p, String str, String color) {
+        XWPFRun r = newRun(p);
+        r.setText(str);
+        if (color != null) setColor(r, color);
+    }
+
+    private static void addBold(XWPFParagraph p, String str) {
+        addBold(p, str, null);
+    }
+
+    private static void addBold(XWPFParagraph p, String str, String color) {
         XWPFRun r = newRun(p);
         r.setBold(true);
         r.setText(str);
+        if (color != null) setColor(r, color);
     }
 
-    public static void addUnderline(XWPFParagraph p, String str) {
+    private static void addUnderline(XWPFParagraph p, String str) {
+        addUnderline(p, str, null);
+    }
+
+    private static void addUnderline(XWPFParagraph p, String str, String color) {
         XWPFRun r = newRun(p);
         r.setUnderline(UnderlinePatterns.SINGLE);
         r.setText(str);
+        if (color != null) setColor(r, color);
     }
 
-    public static void addSuper(XWPFParagraph p, String str) {
+    private static void addSuper(XWPFParagraph p, String str) {
         XWPFRun r = newRun(p);
         r.setSubscript(VerticalAlign.SUPERSCRIPT);
         r.setText(str);
     }
 
-    public static void addItalic(XWPFParagraph p, String str) {
+    private static void addItalic(XWPFParagraph p, String str) {
+        addItalic(p, str, null);
+    }
+
+    private static void addItalic(XWPFParagraph p, String str, String color) {
         XWPFRun r = newRun(p);
         r.setItalic(true);
         r.setText(str);
+        if (color != null) setColor(r, color);
     }
 
-    public static void addItalicWithParentheses(XWPFParagraph p, String str) {
+    private static void addItalicUnderline(XWPFParagraph p, String str) {
+        addItalicUnderline(p, str, null);
+    }
+
+    private static void addItalicUnderline(XWPFParagraph p, String str, String color) {
+        XWPFRun r = newRun(p);
+        r.setItalic(true);
+        r.setUnderline(UnderlinePatterns.SINGLE);
+        r.setText(str);
+        if (color != null) setColor(r, color);
+    }
+
+    private static void addItalicWithParentheses(XWPFParagraph p, String str) {
         XWPFRun r = newRun(p);
         r.setItalic(true);
         r.setText(StringHelper.LEFTPARENTHESIS + str + StringHelper.RIGHTPARENTHESIS);
     }
 
-    public static String addFormattedParentheses(XWPFParagraph p, String str, boolean print, Lang explang) {
-        if (str.startsWith("(-")) {
+    private static String addFormattedParentheses(XWPFParagraph p, String str, boolean print, Lang explang) {
+        if (str.startsWith(StringHelper.LEFTPARENDASH)) {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 2);
             addNormal(p, StringHelper.LEFTPARENTHESIS + s + StringHelper.RIGHTPARENTHESIS);
         } else if (str.startsWith("(##")) {
@@ -143,20 +189,47 @@ public class DocxWrite {
         return StringUtils.substring(str, StringHelper.findMatchingBracket(str));
     }
 
-    public static String addFormattedSquareBrackets(XWPFParagraph p, String str, Lang explang) {
+    private static void addParticip(XWPFParagraph p, String str, Lang explang) {
+        String s = str, ss; //, color = GRAY;
+        s = StringUtils.replaceEach(s, new String[] {FormType.P.getKey() + StringHelper.SPACE, FormType.PP.getKey() + StringHelper.SPACE},
+                new String[] {FormType.P.getPrint(explang) + StringHelper.SPACE, FormType.PP.getPrint(explang) + StringHelper.SPACE});
+        while (StringUtils.isNotBlank(s)) {
+            if (s.startsWith(StringHelper.LEFTPARENTHESIS + StringHelper.DOUBLEHASH)) {
+                //s = addFormattedParentheses(p, s, true, explang);
+                ss = s.substring(3, StringHelper.findMatchingBracket(s) - 1);
+                addItalic(p, ss.trim()); //, color);
+                s = StringUtils.substring(s, StringHelper.findMatchingBracket(s));
+            } else {
+                //TODO underline (linkify) particips
+                ss = StringUtils.substringBefore(s, StringHelper.SPACE);
+                addNormal(p, ss); //, color);
+                s = StringUtils.stripStart(StringUtils.removeStart(s, ss), null);
+            }
+
+            if (StringUtils.isNotBlank(s) && !StringUtils.startsWithAny(s, StringHelper.DELIMITERS)
+                    && !StringUtils.startsWith(s, StringHelper.RIGHTSQUAREBRACKET)) {
+                addSpace(p);
+            }
+        }
+    }
+
+    private static String addFormattedSquareBrackets(XWPFParagraph p, String str, Lang explang) {
         String s = StringUtils.substring(str, 0, StringHelper.findMatchingBracket(str, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
         if (s.indexOf(StringHelper.COLON) > 0) {
-            Lang lang = Lang.valueOfKey(StringUtils.substringBetween(s, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
-            if (lang == explang) {
-                addNormal(p, StringUtils.remove(s, lang.getKey() + StringHelper.COLON + StringHelper.SPACE));
+            Lang intflang = Lang.valueOfKey(StringUtils.substringBetween(s, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
+            if (intflang == explang) {
+                addNormal(p, StringUtils.remove(s, intflang.getKey() + StringHelper.COLON + StringHelper.SPACE));
             }
+        } else if (s.contains(FormType.P.getKey() + StringHelper.SPACE)
+                || s.contains(FormType.PP.getKey() + StringHelper.SPACE)) {
+            addParticip(p, s, explang);
         } else {
             addNormal(p, s);
         }
         return StringUtils.substring(str, StringHelper.findMatchingBracket(str, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
     }
 
-    public static void addFormatted(XWPFParagraph p, String str, Lang lang, Lang explang) {
+    private static void addFormatted(XWPFParagraph p, String str, Lang lang, Lang explang) {
         String s = str, ss; boolean first = true;
         while (StringUtils.isNotBlank(s)) {
             if (s.startsWith(StringHelper.LEFTPARENTHESIS)) {
@@ -178,6 +251,8 @@ public class DocxWrite {
                         if (Lang.valueOfKey(s.substring(1, 3)) == explang) {
                             addSpace(p);
                         }
+                    } else if (StringUtils.startsWith(s, StringHelper.LEFTPARENDASH)) {
+                        addSpace(p);
                     } else if (StringUtils.startsWith(s, StringHelper.LEFTPARENTHESIS)) {
                         if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP) || s.startsWith(StringHelper.IMPPERF)
                                 || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
@@ -198,7 +273,7 @@ public class DocxWrite {
                 + c.getFirstWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
         addNormal(p, str);
         addUnderline(p, c.getFirstWord().getOrig());
-        str = StringHelper.SPACE + (explang == Lang.PT ? StringHelper.ANDPT : StringHelper.ANDSK) + StringHelper.SPACE
+        str = StringHelper.SPACE + LangHelper.getAnd(explang) + StringHelper.SPACE
                 + c.getSecondWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
         if (c.getSecondWordType().getCaseType() != null) {
             str += c.getSecondWordType().getCaseType().getPrint(explang) + StringHelper.SPACE;
@@ -262,7 +337,7 @@ public class DocxWrite {
                         addLeftParenthesis(p);
                         for (int i = 0; i < wt.getForms().size(); i++) {
                             Form f = wt.getForms().get(i);
-                            if (f.getType() != FormType.UNDEF) {
+                            if (f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB) {
                                 addItalic(p, f.getType().getPrint(explang));
                                 if (StringUtils.isNotBlank(f.getValues())) {
                                     addSpace(p);
@@ -278,7 +353,13 @@ public class DocxWrite {
 
                     if (wt.getWordClass() != null) {
                         addSpace(p);
-                        addItalic(p, wt.getWordClass().getPrint(explang));
+                        if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
+                            //for particips
+                            addItalic(p, wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOf(explang) + StringHelper.SPACE );
+                            addItalicUnderline(p, wt.getForms().get(0).getValues());
+                        } else {
+                            addItalic(p, wt.getWordClass().getPrint(explang));
+                        }
                         wc = true;
                     }
                     if (wt.getCaseType() != null) {

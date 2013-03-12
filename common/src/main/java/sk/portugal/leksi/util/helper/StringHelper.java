@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class StringHelper {
 
+    public static final String EMPTY = "";
     public static final String SPACE = " ";
     public static final String DOT = ".";
     public static final String COMMA = ",";
@@ -20,6 +21,10 @@ public class StringHelper {
     public static final String RIGHTPARENTHESIS = ")";
     public static final String LEFTSQUAREBRACKET = "[";
     public static final String RIGHTSQUAREBRACKET = "]";
+    public static final String SLASH = "/";
+    public static final String DASH = "-";
+    public static final String DOUBLEHASH = "##";
+    public static final String LEFTPARENDASH = LEFTPARENTHESIS + DASH;
 
     public static final String[] DELIMITERS = new String[] {DOT, COMMA, COLON, SEMICOLON};
     public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)"};
@@ -41,8 +46,6 @@ public class StringHelper {
     public static final String PLINV = "pl inv";
 
     public static final String LINK = "→";
-    public static final String ANDSK = "+";
-    public static final String ANDPT = "e";
 
 
     public static String extractSpecification(String str) {

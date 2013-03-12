@@ -41,6 +41,9 @@ span.fiesty {
     font-style: italic;
 }
 span.wrdref {
-    font-weight: bold;
+    text-decoration: underline;
     color: #e3b363;
+}
+span.particip {
+    color: #989898;
 }

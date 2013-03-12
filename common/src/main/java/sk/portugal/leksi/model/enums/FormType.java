@@ -8,9 +8,12 @@ public enum FormType {
 
     NONE (Integer.valueOf(0), "n/a", "", ""),
     PP (Integer.valueOf(1), "pp", "particip. pass.", "trp. príč."),
-    F (Integer.valueOf(2), "f", "f.", "ž."),
-    PL (Integer.valueOf(3), "pl", "pl.", "mn."),
-    PLINV (Integer.valueOf(4), "pl inv", "pl. inv.", "jedn./mn."),
+    P (Integer.valueOf(2), "p", "particip.", "príč."),
+    F (Integer.valueOf(3), "f", "f.", "ž."),
+    PL (Integer.valueOf(4), "pl", "pl.", "mn."),
+    PLINV (Integer.valueOf(5), "pl inv", "pl. inv.", "jedn./mn."),
+
+    PARTVERB (Integer.valueOf(20), "partverb", "v.", "slov."),
 
     LINK(Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
     LINK_ORT(Integer.valueOf(91), StringHelper.LINK, StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK, StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),

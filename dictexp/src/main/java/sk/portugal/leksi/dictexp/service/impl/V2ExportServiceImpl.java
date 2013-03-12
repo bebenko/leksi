@@ -6,6 +6,8 @@ import sk.portugal.leksi.dictexp.service.ExportService;
 import sk.portugal.leksi.model.*;
 import sk.portugal.leksi.model.enums.*;
 import sk.portugal.leksi.model.extra.Contraction;
+import sk.portugal.leksi.util.helper.EscapeHelper;
+import sk.portugal.leksi.util.helper.LangHelper;
 import sk.portugal.leksi.util.helper.StringHelper;
 
 import java.io.File;
@@ -16,7 +18,8 @@ import java.util.List;
  */
 public class V2ExportServiceImpl implements ExportService {
 
-    private static final String EMPTY = "";
+    private static final boolean NBSP = true;
+
     private int counter = 1;
 
     private String escapeHtml(String str) {
@@ -49,7 +52,7 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String addPronunciation(String str) {
-        return addFmtStart("pronun") + StringHelper.SPACE + StringHelper.LEFTSQUAREBRACKET
+        return addFmtStart("pronun") + space() + StringHelper.LEFTSQUAREBRACKET
                 + escapeHtml(str) + StringHelper.RIGHTSQUAREBRACKET + addFmtEnd();
     }
 
@@ -57,19 +60,26 @@ public class V2ExportServiceImpl implements ExportService {
         String res = addFmtStart("clng");
         boolean wc = false, ct = false;
         if (wt.getWordClass() != null) {
-            res += escapeHtml(wt.getWordClass().getPrint(explang));
+            if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
+                //for particips
+                res += escapeHtml(wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOf(explang) + StringHelper.SPACE);
+                res += addWordReference(wt.getForms().get(0).getValues());
+            } else {
+                res += escapeHtml(wt.getWordClass().getPrint(explang));
+            }
+
             wc = true;
         }
         if (wt.getCaseType() != null) {
             if (wc) {
-                res += StringHelper.SPACE; //StringHelper.COMMASPACE;
+                res += space(); //StringHelper.COMMASPACE;
             }
             res += escapeHtml(wt.getCaseType().getPrint(explang));
             ct = true;
         }
         if (wt.getNumGend() != null) {
             if (wc || ct) {
-                res += StringHelper.SPACE; //StringHelper.COMMASPACE;
+                res += space(); //StringHelper.COMMASPACE;
             }
             res += escapeHtml(wt.getNumGend().getPrint(explang));
         }
@@ -81,19 +91,19 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String addFieldStyle(FieldType fieldType, Style style, Lang explang) {
-        if (fieldType == null && style == null) return "";
+        if (fieldType == null && style == null) return StringHelper.EMPTY;
 
         String s = addFmtStart("fiesty");
         boolean fi = false;
         if (fieldType != null) {
-            s += escapeHtml(Style.ODB.getPrint(explang) + StringHelper.SPACE + fieldType.getPrint(explang));
+            s += escapeHtml(Style.ODB.getPrint(explang) + space() + fieldType.getPrint(explang));
             fi = true;
         }
         if (style != null) {
-            if (fi) s += escapeHtml(StringHelper.SPACE); //StringHelper.COMMASPACE);
+            if (fi) s += escapeHtml(space()); //StringHelper.COMMASPACE);
             s += escapeHtml(style.getPrint(explang));
         }
-        return s + StringHelper.SPACE + addFmtEnd();
+        return s + space() + addFmtEnd();
     }
 
     private String addFormattedTran(String str, boolean print, Lang explang) {
@@ -106,7 +116,7 @@ public class V2ExportServiceImpl implements ExportService {
             if (print)
                 return addFmtStart("obli") + escapeHtml(s) + addFmtEnd();
             else
-                return EMPTY;
+                return StringHelper.EMPTY;
         } else if (str.equals("(pl)")) {
             return addFmtStart("obli") + escapeHtml(NumberGender.valueOfKey("pl").getPrint(explang)) + addFmtEnd();
         } else if (str.startsWith("(@")) {
@@ -123,7 +133,7 @@ public class V2ExportServiceImpl implements ExportService {
         if (print) {
             return addFmtStart("spec") + escapeHtml(str) + addFmtEnd();
         }
-        return "";
+        return StringHelper.EMPTY;
     }
 
     private String addSpecification(String str, boolean print, Lang explang) {
@@ -141,16 +151,42 @@ public class V2ExportServiceImpl implements ExportService {
         return addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
     }
 
+    private String addParticip(String str, Lang explang) {
+        String s = str, ss, res = "";
+        s = StringUtils.replaceEach(s, new String[] {FormType.P.getKey() + StringHelper.SPACE, FormType.PP.getKey() + StringHelper.SPACE},
+                new String[] {FormType.P.getPrint(explang) + StringHelper.SPACE, FormType.PP.getPrint(explang) + StringHelper.SPACE});
+        while (StringUtils.isNotBlank(s)) {
+            if (s.startsWith(StringHelper.LEFTPARENTHESIS + StringHelper.DOUBLEHASH)) {
+                //s = addFormattedParentheses(p, s, true, explang);
+                res += addFmtStart("particip obli") + escapeHtml(s.substring(3, StringHelper.findMatchingBracket(s) - 1).trim()) + addFmtEnd();
+                s = StringUtils.substring(s, StringHelper.findMatchingBracket(s));
+            } else {
+                ss = StringUtils.substringBefore(s, StringHelper.SPACE);
+                res += addFmtStart("particip tran") + escapeHtml(ss) + addFmtEnd();
+                s = StringUtils.stripStart(StringUtils.removeStart(s, ss), null);
+            }
+
+            if (StringUtils.isNotBlank(s) && !StringUtils.startsWithAny(s, StringHelper.DELIMITERS)
+                    && !StringUtils.startsWith(s, StringHelper.RIGHTSQUAREBRACKET)) {
+                res += space();
+            }
+        }
+        return res;
+    }
+
     private String addSquareBracketsForLang(String str, Lang explang) {
         if (str.indexOf(StringHelper.COLON) > 0) {
             Lang lang = Lang.valueOfKey(StringUtils.substringBetween(str, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
             if (lang == explang) {
                 return addTranslation(StringUtils.remove(str, lang.getKey() + StringHelper.COLON + StringHelper.SPACE));
             }
+        } else if (str.contains(FormType.P.getKey() + StringHelper.SPACE)
+                || str.contains(FormType.PP.getKey() + StringHelper.SPACE)) {
+            return addParticip(str, explang);
         } else {
             return addTranslation(str);
         }
-        return "";
+        return StringHelper.EMPTY;
     }
 
     private String addFormattedLine(String str, Lang lang, Lang explang) {
@@ -170,16 +206,18 @@ public class V2ExportServiceImpl implements ExportService {
                 res += addTranslation(ss);
                 s = StringUtils.stripStart(StringUtils.removeStart(s, ss), null);
             }
-            //add space
+            //add (non-breaking)space
             if (StringUtils.isNotBlank(s)) {
                 if (!StringUtils.startsWithAny(s, StringHelper.DELIMITERS)) {
-                    if (StringUtils.startsWith(s, StringHelper.LEFTPARENTHESIS)) {
+                    if (StringUtils.startsWith(s, StringHelper.LEFTPARENDASH)) {
+                        res += space();
+                    } else  if (StringUtils.startsWith(s, StringHelper.LEFTPARENTHESIS)) {
                         if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP) || s.startsWith(StringHelper.IMPPERF)
                                 || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
-                            res += StringHelper.SPACE;
+                            res += space();
                         }
                     } else if (!(str.startsWith(StringHelper.LEFTPARENTHESIS) && first && lang != explang)) { //just removed parentheses, (don't) add space
-                        res += StringHelper.SPACE;
+                        res += space();
                     }
                 }
             }
@@ -190,22 +228,29 @@ public class V2ExportServiceImpl implements ExportService {
         return res;
     }
 
+    private String space() {
+        if (NBSP) {
+            return EscapeHelper.NBSP;
+        }
+        return StringHelper.SPACE;
+    }
+
     private String addWordReference(String str) {
         return addFmtStart("wrdref") + escapeHtml(str) + addFmtEnd();
     }
 
     private String addContraction(Contraction c, Lang explang) {
-        String str = PhrasemeType.CONTR.getPrint(explang) + StringHelper.SPACE
-                + c.getFirstWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
+        String str = PhrasemeType.CONTR.getPrint(explang) + space()
+                + c.getFirstWordType().getWordClass().getPrint(explang) + space();
         String res = addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
         res += addWordReference(c.getFirstWord().getOrig());
-        str = StringHelper.SPACE + (explang == Lang.PT ? StringHelper.ANDPT : StringHelper.ANDSK) + StringHelper.SPACE
-                + c.getSecondWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
+        str = space() + LangHelper.getAnd(explang) + space()
+                + c.getSecondWordType().getWordClass().getPrint(explang) + space();
         if (c.getSecondWordType().getCaseType() != null) {
-            str += c.getSecondWordType().getCaseType().getPrint(explang) + StringHelper.SPACE;
+            str += c.getSecondWordType().getCaseType().getPrint(explang) + space();
         }
         if (c.getSecondWordType().getNumGend() != null) {
-            str += c.getSecondWordType().getNumGend().getPrint(explang) + StringHelper.SPACE;
+            str += c.getSecondWordType().getNumGend().getPrint(explang) + space();
         }
         res += addFmtStart("tran") + escapeHtml(str) + addFmtEnd();
         res += addWordReference(c.getSecondWord().getOrig());
@@ -221,13 +266,13 @@ public class V2ExportServiceImpl implements ExportService {
     private String addForm(Form v, Lang explang) {
         String res = addFmtStart("vartype") + v.getType().getPrint(explang) + addFmtEnd();
         if (StringUtils.isNotBlank(v.getValues())) {
-            res += StringHelper.SPACE + addFmtStart("varval") + v.getValues() + addFmtEnd();
+            res += space() + addFmtStart("varval") + v.getValues() + addFmtEnd();
         }
         return res;
     }
 
     private String addForms(List<Form> forms, Lang explang) {
-        String res = addFmtStart("forms") + StringHelper.SPACE + StringHelper.LEFTPARENTHESIS;
+        String res = addFmtStart("forms") + space() + StringHelper.LEFTPARENTHESIS;
         for (Form v: forms) {
             if (v.getType().getId() < 10) { //leaves out LINKs and UNDEF
                 res += addForm(v, explang) + StringHelper.COMMASPACE;
@@ -236,33 +281,18 @@ public class V2ExportServiceImpl implements ExportService {
         return StringUtils.removeEnd(res, StringHelper.COMMASPACE) + StringHelper.RIGHTPARENTHESIS + addFmtEnd();
     }
 
-    /*private String addPronominal(String str) {
-        return addFmtStart("pronom") + escapeHtml(str) + addFmtEnd();
-    }
-
-    private String addVerbPronominal(List<Form> forms) {
-        String res = ""; //addFmtStart("pron");
-        for (Form v: forms) {
-            if (v.getType()  == FormType.PRON) { //pronominal only
-                res += addPronominal(v.getValues());
-            }
-        }
-        return res; // + addFmtEnd();
-    }*/
-
     private String addPhrasemes(List<Phraseme> phrasemes, Lang lang, Lang explang) {
         String res = "";
         for (Phraseme ph : phrasemes) {
             res += addSectionStart("expr");
-            res += addFmtStart("exprleft") + escapeHtml(ph.getOrig()) + addFmtEnd() + StringHelper.SPACE;
+            res += addFmtStart("exprleft") + escapeHtml(ph.getOrig()) + addFmtEnd() + space();
             if (ph.getType() == PhrasemeType.FIX || ph.getType() == PhrasemeType.SEMIFIX) {
                 res += addFmtStart("exprtype") + StringHelper.LEFTPARENTHESIS +
                         escapeHtml(ph.getType().getPrint(explang)) + StringHelper.RIGHTPARENTHESIS +
-                        addFmtEnd() + StringHelper.SPACE;
+                        addFmtEnd() + space();
             }
             res += addFormattedLine(ph.getTran(), lang, explang);
             res += addSectionEnd();
-            //res += addBreak();
         }
         return res;
     }
@@ -310,8 +340,6 @@ public class V2ExportServiceImpl implements ExportService {
                     str += addForms(wt.getForms(), explang);
                 }
 
-                //str += addBreak();
-
                 if (wt.hasClassOrNumGend(wt)) {
                     str += addSectionStart("wrdclng");
                     str += addClassNumGend(wt, explang);
@@ -325,7 +353,7 @@ public class V2ExportServiceImpl implements ExportService {
                     str += addSectionStart("mean");
                     str += addSectionStart("meanln");
                     if (wt.getMeanings().size() > 1) {
-                        str += addNumber(number++ + ". ");
+                        str += addNumber(number++ + StringHelper.DOT + space());
                     }
 
                     str += addMeaning(m, lang, explang);
@@ -333,7 +361,7 @@ public class V2ExportServiceImpl implements ExportService {
                     //str += addBreak();
 
                     //expressions
-                    /* IGNORE
+                    /* IGNORE FOR NOW
                     if (m.getExpressions() != null && !m.getExpressions().isEmpty()) {
                         str += addExpressions(m.getExpressions(), explang);
                         //str += addBreak();
@@ -352,7 +380,7 @@ public class V2ExportServiceImpl implements ExportService {
         str += addSectionStart("idisect");
 
         //idioms
-        /* IGNORE
+        /* IGNORE FOR NOW
         if (w.getIdioms() != null && !w.getIdioms().isEmpty()) {
 
             str += addIdioms(w.getIdioms(), explang);
@@ -395,12 +423,6 @@ public class V2ExportServiceImpl implements ExportService {
         try {
             FileUtils.writeStringToFile(out, "", "UTF-8", false);
             for (Word word: words) {
-//                if (word.getOrig().equals("cabine") || word.getOrig().equals("cabina")
-//                        || word.getOrig().equals("racha") || word.getOrig().equals("rachadura"))
-//                if (word.getOrig().equals("aberto") || word.getOrig().equals("abrir") || word.getOrig().equals("anexo")
-//                        || word.getOrig().equals("cabo") || word.getOrig().equals("racha")
-//                        || word.getOrig().equals("agentúra") || word.getOrig().equals("asi") || word.getOrig().equals("cukor")
-//                        || word.getOrig().equals("hlavný"))
                     FileUtils.writeStringToFile(out, generateInsert(word, lang, explang) + "\n", "UTF-8", true);
             }
         } catch (IOException e) {

@@ -87,9 +87,9 @@ public class WordType {
 
     public boolean hasForms() {
         if (this.forms == null) return false;
-        for (Form v: getForms()) {
-            if (v.getType() != null && v.getType() != FormType.LINK && v.getType() != FormType.LINK_ORT
-                    && v.getType() != FormType.UNDEF) {
+        for (Form f : getForms()) {
+            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_ORT
+                    && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB) {
                 return true;
             }
         }

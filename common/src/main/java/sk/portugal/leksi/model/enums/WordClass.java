@@ -40,6 +40,7 @@ public enum WordClass implements Serializable {
     INTER (Integer.valueOf(31), "inter", "interj.", "cit."),   //
     BRAZ (Integer.valueOf(32), "braz", "braz.", "braz."),
     PORT (Integer.valueOf(33), "port", "port.", "port."),
+    P (Integer.valueOf(19), "p", "particip.", "príč."),
 
     VPRON (Integer.valueOf(50), "pronominal", "v. pron.", "zvrat. slov."),   //
     PARTICIP (Integer.valueOf(51), "particip", "particip.", "príč."),

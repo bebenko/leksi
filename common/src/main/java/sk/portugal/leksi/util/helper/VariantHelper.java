@@ -28,7 +28,7 @@ public class VariantHelper {
         }
         if (StringUtils.equals(s, StringHelper.PLINV)) {
             wt.setNumGend(NumberGender.SGPL);
-        } else if (StringUtils.startsWithAny(s, "f ", "pl ", "pp ")) {
+        } else if (StringUtils.startsWithAny(s, "f ", "pl ", "p ", "pp ")) {
             Form v = new Form();
             String[] ss = StringUtils.split(s, ",");
 
@@ -55,6 +55,8 @@ public class VariantHelper {
                 wt.setWordClass(WordClass.VPRON);
             } else if (s.equals("*") || s.equals(".") || s.equals("#")) {
                 //System.out.println(w.getOrig() + " " + s);
+            } else if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
+                wt.addForm(new Form(FormType.PARTVERB, s));
             } else {
                 wt.addForm(new Form(s));
             }
