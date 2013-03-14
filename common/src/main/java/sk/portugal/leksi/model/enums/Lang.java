@@ -28,6 +28,12 @@ public enum Lang {
         return key;
     }
 
+    public String getOtherLangKey() {
+        if (key.equals(PT.getKey())) return SK.getKey();
+        if (key.equals(SK.getKey())) return PT.getKey();
+        return UNDEF.getKey();
+    }
+
     public static List<Lang> getAll() {
         List<Lang> result = new ArrayList<>();
         for (Lang lang: values()) {

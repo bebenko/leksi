@@ -27,6 +27,11 @@ public class WordType {
         this.meanings = meanings;
     }
 
+    public void addMeaning(Meaning meaning) {
+        if (meanings == null) this.meanings = new ArrayList<>();
+        this.meanings.add(meaning);
+    }
+
     public NumberGender getNumGend() {
         return numGend;
     }
@@ -65,6 +70,7 @@ public class WordType {
     }
 
     public boolean isVerb() {
+        if (wordClass == null) return false;
         return wordClass.isVerb();
     }
 
@@ -89,7 +95,18 @@ public class WordType {
         if (this.forms == null) return false;
         for (Form f : getForms()) {
             if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_ORT
-                    && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB) {
+                    && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
+                    && f.getType() != FormType.LINK_SK_VERB_IMP && f.getType() != FormType.VERBFORM) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasVerbForm() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.VERBFORM) {
                 return true;
             }
         }
@@ -97,6 +114,6 @@ public class WordType {
     }
 
     public boolean hasClassOrNumGend(WordType wt) {
-        return this.getWordClass() != null || this.getNumGend() != null;
+        return this.getWordClass() != null || this.getCaseType() != null || this.getNumGend() != null;
     }
 }

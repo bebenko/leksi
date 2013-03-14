@@ -28,7 +28,7 @@ public enum WordClass implements Serializable {
     PP (Integer.valueOf(19), "pp", "particip. pass.", "trp. príč."),   //
     PREP (Integer.valueOf(20), "prep", "prep.", "predl."),    //
     PRON (Integer.valueOf(21), "pron", "pron.", "zám."),     //
-    PT (Integer.valueOf(22), "pt", "part.", "čast."),       //
+    PT (Integer.valueOf(22), "pt", "port.", "port."),       //
     SUJ (Integer.valueOf(23), "suj", "suj.", ""),
     SUB (Integer.valueOf(24), "sub", "sub.", ""),
     SUPERL (Integer.valueOf(25), "superl", "sup.", "superl."),
@@ -39,8 +39,8 @@ public enum WordClass implements Serializable {
     VT (Integer.valueOf(30), "vt", "v.", "slov."), //vt        //
     INTER (Integer.valueOf(31), "inter", "interj.", "cit."),   //
     BRAZ (Integer.valueOf(32), "braz", "braz.", "braz."),
-    PORT (Integer.valueOf(33), "port", "port.", "port."),
-    P (Integer.valueOf(19), "p", "particip.", "príč."),
+    PART (Integer.valueOf(33), "part", "", ""), //EXCEPTION: do not show! (for now)  PART (Integer.valueOf(33), "part", "part.", "čast.")
+    P (Integer.valueOf(34), "p", "particip.", "príč."),
 
     VPRON (Integer.valueOf(50), "pronominal", "v. pron.", "zvrat. slov."),   //
     PARTICIP (Integer.valueOf(51), "particip", "particip.", "príč."),
@@ -54,9 +54,10 @@ public enum WordClass implements Serializable {
     PRONPESS (Integer.valueOf(58), "pronpess", "pron. pess.", "osob. zám."),
     PRONREL (Integer.valueOf(59), "pronrel", "pron. rel.", "vzťaž. zám."),
     PRONINT (Integer.valueOf(60), "pronint", "pron. int.", "opyt. zám."),
-    NUMORD (Integer.valueOf(61), "numord", "num. ord.", "zákl. čísl."),
-    NUMCARD (Integer.valueOf(62), "numcard", "num. card.", "rad. čísl."),
-    QUANT (Integer.valueOf(63), "quant", "quant.", "kvant."),
+    NUMORD (Integer.valueOf(61), "numord", "num. ord.", "čísl. zákl."),
+    NUMCARD (Integer.valueOf(62), "numcard", "num. card.", "čísl. rad."),
+    NUMFRAC (Integer.valueOf(63), "numfrac", "num. fr.", "čísl. zlom."),
+    QUANT (Integer.valueOf(64), "quant", "quant.", "kvant."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
@@ -90,7 +91,7 @@ public enum WordClass implements Serializable {
     }
 
     public boolean isVerb() {
-        return this.equals(VB) || this.equals(VI) || this.equals(VR) || this.equals(VR);
+        return this.equals(VB) || this.equals(VI) || this.equals(VR) || this.equals(VT);
     }
 
     /**

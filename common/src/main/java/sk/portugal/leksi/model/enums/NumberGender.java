@@ -14,8 +14,8 @@ public enum NumberGender implements Serializable {
     MF (Integer.valueOf(5), "m/f", "m./f.", "m./ž."),
     MFPL (Integer.valueOf(6), "m/f/pl", "m./f. pl.", "m./ž. mn."),
     PL (Integer.valueOf(7), "pl", "pl.", "mn."),
-    N (Integer.valueOf(8), "n", "n.", "s."),
-    NPL (Integer.valueOf(9), "n/pl", "n./pl.", "s. mn."),
+    N (Integer.valueOf(8), "n", "nt.", "s."),
+    NPL (Integer.valueOf(9), "n/pl", "nt./pl.", "s. mn."),
 
     SG (Integer.valueOf(50), "sg", "sing.", "jedn."),
     MSG (Integer.valueOf(51), "m/sg", "m. sing.", "m. jedn."),

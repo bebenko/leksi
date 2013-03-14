@@ -10,6 +10,7 @@ import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.util.FieldComparator;
+import sk.portugal.leksi.util.helper.StringHelper;
 
 import java.util.*;
 
@@ -24,7 +25,36 @@ public class Checker {
 
         //checkOldOrthography(ptWords);
 
-        listFieldsUsed(ptWords);
+        //listFieldsUsed(ptWords);
+
+        listParentheses(ptWords);
+
+    }
+
+    private static void listParentheses(List<Word> wordList) {
+        String[] strings = new String[] {"(imp.)", "(perf.)", "(imp./perf.)", "(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(@ ", "(## ", "(-"};
+        for (Word w: wordList) {
+            for (WordType wt: w.getWordTypes()) {
+                if (wt.getMeanings() != null) {
+                    for (Meaning m: wt.getMeanings()) {
+                        String str = m.getSynonyms().substring(1), s;
+                        while (StringUtils.isNotEmpty(str)) {
+                            if (str.contains(StringHelper.LEFTPARENTHESIS)) {
+                                str = str.substring(str.indexOf(StringHelper.LEFTPARENTHESIS));
+                            } else {
+                                str = "";
+                                continue;
+                            }
+                            s = str.substring(0, StringHelper.findMatchingBracket(str));
+                            if (!StringUtils.startsWithAny(s, strings))
+                                System.out.println(w.getOrig() + " - " + s);
+                            str = StringUtils.removeStart(str, s);
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void mapIns(Map<FieldType, List<Word>> map, FieldType f, Word w) {

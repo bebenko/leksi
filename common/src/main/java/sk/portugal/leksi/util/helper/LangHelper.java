@@ -12,11 +12,18 @@ public class LangHelper {
     private static final String DEPT = "de";
     private static final String DESK = "slov.";
 
+    private static final String VERBFORMPT = "forma do verbo";
+    private static final String VERBFORMSK = "tvar slovesa";
+
     public static String getAnd(Lang explang) {
         return explang == Lang.PT ? ANDPT : ANDSK;
     }
 
     public static String getOf(Lang explang) {
         return explang == Lang.PT ? DEPT : DESK;
+    }
+
+    public static String getFormOfVerb(Lang explang) {
+        return explang == Lang.PT ? VERBFORMPT : VERBFORMSK;
     }
 }

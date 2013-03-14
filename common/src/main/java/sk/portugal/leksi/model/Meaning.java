@@ -57,19 +57,6 @@ public class Meaning {
         return expressions;
     }
 
-    public void setContraction(Contraction contraction) {
-        this.contraction = contraction;
-    }
-
-    public Contraction getContraction() {
-        return contraction;
-    }
-
-    public boolean isContraction() {
-        if (contraction != null) return true;
-        return false;
-    }
-
     public void addExpression(Phraseme expr) {
         if (this.expressions == null) {
             this.expressions = new ArrayList<>();
@@ -85,6 +72,19 @@ public class Meaning {
         } else {
             this.expressions.add(expr);
         }
+    }
+
+    public void setContraction(Contraction contraction) {
+        this.contraction = contraction;
+    }
+
+    public Contraction getContraction() {
+        return contraction;
+    }
+
+    public boolean isContraction() {
+        if (contraction != null) return true;
+        return false;
     }
 
 }

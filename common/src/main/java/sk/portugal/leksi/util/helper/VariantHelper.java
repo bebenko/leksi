@@ -28,26 +28,28 @@ public class VariantHelper {
         }
         if (StringUtils.equals(s, StringHelper.PLINV)) {
             wt.setNumGend(NumberGender.SGPL);
+        } else if (StringUtils.startsWith(s, "forma ")) {
+            wt.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
         } else if (StringUtils.startsWithAny(s, "f ", "pl ", "p ", "pp ")) {
-            Form v = new Form();
+            Form f = new Form();
             String[] ss = StringUtils.split(s, ",");
 
             //set first
-            v.setType(FormType.valueOfKey(StringUtils.substringBefore(ss[0], " ")));
-            v.setValues(StringUtils.substringAfter(ss[0], " "));
-            wt.addForm(v);
-            Form saveLast = v;
+            f.setType(FormType.valueOfKey(StringUtils.substringBefore(ss[0], " ")));
+            f.setValues(StringUtils.substringAfter(ss[0], " "));
+            wt.addForm(f);
+            Form saveLast = f;
 
             for (int i = 1; i < ss.length; i++) {
-                v = new Form();
+                f = new Form();
                 if (FormType.valueOfKey(StringUtils.substringBefore(StringUtils.trimToEmpty(ss[i]), " ")) != FormType.UNDEF) {
-                    v.setType(FormType.valueOfKey(StringUtils.substringBefore(StringUtils.trimToEmpty(ss[i]), " ")));
-                    v.setValues(StringUtils.substringAfter(StringUtils.trimToEmpty(ss[i]), " "));
-                    wt.addForm(v);
+                    f.setType(FormType.valueOfKey(StringUtils.substringBefore(StringUtils.trimToEmpty(ss[i]), " ")));
+                    f.setValues(StringUtils.substringAfter(StringUtils.trimToEmpty(ss[i]), " "));
+                    wt.addForm(f);
                 } else if (StringUtils.isNotBlank(StringUtils.trimToEmpty(ss[i]))) {
                     saveLast.setValues(saveLast.getValues() + ", " + StringUtils.substringAfter(ss[i], " "));
                 }
-                saveLast = v;
+                saveLast = f;
             }
         } else if (StringUtils.isNotBlank(s)) {
             s = StringUtils.trimToEmpty(s);

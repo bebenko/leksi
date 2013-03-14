@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = ""; // " AND portugal in ('aberto', 'eleito')";
+    private static final String FILTER = ""; //" AND portugal in ('behať')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean ALTERNATIVESASEXTRAWORDS = true;
@@ -165,6 +165,8 @@ public class SurLoadingServiceImpl implements LoadingService {
 
         mergePhrasemes(result, getPhrasemes(lang));
 
+        result.addAll(PostProcessor.addExtraWords(lang));
+
         if (lang == Lang.PT) {
             PostProcessor.updatePtWords(result);
         } else {
@@ -179,20 +181,28 @@ public class SurLoadingServiceImpl implements LoadingService {
         for (Word word: wordList) {
             //identify alternatives
             if (word.getWordTypes().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
-                if (word.getWordTypes().get(0).getForms() == null) { //only old orthography satisfies
-                    word.getWordTypes().get(0).addForm(new Form(FormType.LINK_ORT, ""));
 
-                    Alternative alt = new Alternative();
-                    alt.setValue(word.getOrig());
-                    alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
-                    alt.setWordClass(word.getWordTypes().get(0).getWordClass());
-                    alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
-                    Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
-                            StringHelper.LINK + StringHelper.SPACE));
-                    if (ww != null) {
-                        ww.addAlternative(alt);
+                if (word.getWordTypes().get(0).getForms() == null) { //only old orthography satisfies
+                    if (word.getLang() == Lang.PT) {
+                        word.getWordTypes().get(0).addForm(new Form(FormType.LINK_ORT, ""));
+
+                        Alternative alt = new Alternative();
+                        alt.setValue(word.getOrig());
+                        alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
+                        alt.setWordClass(word.getWordTypes().get(0).getWordClass());
+                        alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
+                        Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
+                                StringHelper.LINK + StringHelper.SPACE));
+                        if (ww != null) {
+                            ww.addAlternative(alt);
+                        }
+                        wordsToRemove.add(word);
+                    } else if (word.getLang() == Lang.SK && word.getWordTypes().get(0).isVerb()) {
+                        word.getWordTypes().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
+                        word.getWordTypes().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
+                                word.getWordTypes().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE
+                                        + StringHelper.LEFTPARENTHESIS + SignificanceType.PERF.getKey() + StringHelper.DOT + StringHelper.RIGHTPARENTHESIS);
                     }
-                    wordsToRemove.add(word);
                 }
             }
         }

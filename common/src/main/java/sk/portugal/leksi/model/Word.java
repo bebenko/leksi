@@ -22,9 +22,14 @@ public class Word implements Serializable {
     private List<Phraseme> idioms;
     private List<Alternative> alternatives;
 
-    public Word() {}
+    private boolean enabled;
+
+    public Word() {
+        this.enabled = true;
+    }
 
     public Word(String orig) {
+        this();
         this.orig = orig;
     }
 
@@ -111,6 +116,14 @@ public class Word implements Serializable {
         this.alternatives.add(alternative);
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,4 +154,5 @@ public class Word implements Serializable {
 
         return word;
     }
+
 }

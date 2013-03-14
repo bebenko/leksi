@@ -16,11 +16,18 @@ public class Contraction {
     private Word second;
     private int secondWordTypeIndex;
 
+    private String additionalText;
+
     public Contraction(Word first, int firstWordTypeIndex, Word second, int secondWordTypeIndex) {
         this.first = first;
         this.firstWordTypeIndex = firstWordTypeIndex;
         this.second = second;
         this.secondWordTypeIndex = secondWordTypeIndex;
+    }
+
+    public Contraction(Word first, int firstWordTypeIndex, Word second, int secondWordTypeIndex, String additionalText) {
+        this(first, firstWordTypeIndex, second, secondWordTypeIndex);
+        this.additionalText = additionalText;
     }
 
     public Word getFirstWord() {
@@ -37,6 +44,10 @@ public class Contraction {
 
     public WordType getSecondWordType() {
         return second.getWordTypes().get(secondWordTypeIndex);
+    }
+
+    public String getAdditionalText() {
+        return additionalText;
     }
 
 }

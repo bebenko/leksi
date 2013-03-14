@@ -14,9 +14,15 @@ public enum FormType {
     PLINV (Integer.valueOf(5), "pl inv", "pl. inv.", "jedn./mn."),
 
     PARTVERB (Integer.valueOf(20), "partverb", "v.", "slov."),
+    VERBFORM (Integer.valueOf(21), "forma", "forma do verbo", "tvar slovesa"),
 
-    LINK(Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
-    LINK_ORT(Integer.valueOf(91), StringHelper.LINK, StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK, StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
+    LINK (Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
+    LINK_ORT (Integer.valueOf(91), StringHelper.LINK,
+            StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK,
+            StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
+    LINK_SK_VERB_IMP (Integer.valueOf(92), StringHelper.LINK,
+            SignificanceType.IMP.getPrint(Lang.PT) + StringHelper.SPACE + StringHelper.LINK,
+            SignificanceType.IMP.getPrint(Lang.SK) + StringHelper.SPACE + StringHelper.LINK),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
