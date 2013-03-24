@@ -27,7 +27,7 @@ public class StringHelper {
     public static final String LEFTPARENDASH = LEFTPARENTHESIS + DASH;
 
     public static final String[] DELIMITERS = new String[] {DOT, COMMA, COLON, SEMICOLON};
-    public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)"};
+    public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)", "(n)", "(nt)", "(n/pl)"};
 
     public static final char LEFTPARENTHESISCHAR = '(';
     public static final char RIGHTPARENTHESISCHAR = ')';
@@ -42,7 +42,6 @@ public class StringHelper {
     public static final String GRAFANT = "graf. ant.";
     public static final String STPRAV = "starý pravopis";
 
-    public static final String PRONOMINAL = "pronominal";
     public static final String PLINV = "pl inv";
 
     public static final String LINK = "→";

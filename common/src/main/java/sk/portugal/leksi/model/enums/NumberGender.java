@@ -14,7 +14,7 @@ public enum NumberGender implements Serializable {
     MF (Integer.valueOf(5), "m/f", "m./f.", "m./ž."),
     MFPL (Integer.valueOf(6), "m/f/pl", "m./f. pl.", "m./ž. mn."),
     PL (Integer.valueOf(7), "pl", "pl.", "mn."),
-    N (Integer.valueOf(8), "n", "nt.", "s."),
+    N (Integer.valueOf(8), "n", "nt.", "s.", "nt"),
     NPL (Integer.valueOf(9), "n/pl", "nt./pl.", "s. mn."),
 
     SG (Integer.valueOf(50), "sg", "sing.", "jedn."),
@@ -30,12 +30,18 @@ public enum NumberGender implements Serializable {
     private String key;
     private String print_pt;
     private String print_sk;
+    private String altKey;
 
     private NumberGender(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
         this.key = key;
-        this.print_sk = print_sk;
         this.print_pt = print_pt;
+        this.print_sk = print_sk;
+    }
+
+    private NumberGender(Integer id, String key, String print_pt, String print_sk, String altKey) {
+        this(id, key, print_pt, print_sk);
+        this.altKey = altKey;
     }
 
     public Integer getId() {
@@ -73,7 +79,7 @@ public enum NumberGender implements Serializable {
 
         NumberGender[] values = values();
         for (NumberGender value: values) {
-            if (value.key.equals(strValue)) { return value; }
+            if (value.key.equals(strValue) || (value.altKey != null && value.altKey.equals(strValue))) { return value; }
         }
 
         return UNDEF;

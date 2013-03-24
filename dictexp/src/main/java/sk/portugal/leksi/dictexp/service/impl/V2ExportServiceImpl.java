@@ -259,15 +259,18 @@ public class V2ExportServiceImpl implements ExportService {
         }
         res += addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
         res += addWordReference(c.getSecondWord().getOrig());
+        if (c.getAdditionalText() != null) {
+            res += addTranslation(space() + c.getAdditionalText());
+        }
         return res;
     }
 
     private String addVerbForm(Form vf, Lang explang) {
-        String res = addFmtStart("tran") + escapeHtml(StringHelper.LEFTSQUAREBRACKET) + addFmtEnd();
+        String res = addTranslation(StringHelper.LEFTSQUAREBRACKET);
         res += addFmtStart("obli") + escapeHtml(LangHelper.getFormOfVerb(explang)) + addFmtEnd();
-        res += addFmtStart("tran") + escapeHtml(StringHelper.SPACE) + addFmtEnd();
+        res += addTranslation(space());
         res += addWordReference(vf.getValues());
-        res += addFmtStart("tran") + escapeHtml(StringHelper.RIGHTSQUAREBRACKET) + addFmtEnd();
+        res += addTranslation(StringHelper.RIGHTSQUAREBRACKET);
         return res;
     }
 

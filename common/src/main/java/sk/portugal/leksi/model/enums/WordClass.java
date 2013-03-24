@@ -48,16 +48,25 @@ public enum WordClass implements Serializable {
     LOCPREP (Integer.valueOf(53), "locprep", "loc. prep.", "predl. sp."),
     LOCADV (Integer.valueOf(54), "locadv", "loc. adv.", "prísl. sp."),
     LOCCONJ (Integer.valueOf(55), "loccong", "loc. conj.", "spoj. výr."),
+    VPRONSA (Integer.valueOf(56), "pronominal-sa", "v. pron. (-sa)", "zvrat. slov. (-sa)"),   //
+    VPRONSI (Integer.valueOf(57), "pronominal-si", "v. pron. (-si)", "zvrat. slov. (-si)"),   //
 
-    POSS (Integer.valueOf(56), "poss", "poss.", "privl."),
-    DEM (Integer.valueOf(57), "dem", "dem.", "ukaz."),
-    PRONPESS (Integer.valueOf(58), "pronpess", "pron. pess.", "osob. zám."),
-    PRONREL (Integer.valueOf(59), "pronrel", "pron. rel.", "vzťaž. zám."),
-    PRONINT (Integer.valueOf(60), "pronint", "pron. int.", "opyt. zám."),
-    NUMORD (Integer.valueOf(61), "numord", "num. ord.", "čísl. zákl."),
-    NUMCARD (Integer.valueOf(62), "numcard", "num. card.", "čísl. rad."),
-    NUMFRAC (Integer.valueOf(63), "numfrac", "num. fr.", "čísl. zlom."),
-    QUANT (Integer.valueOf(64), "quant", "quant.", "kvant."),
+    POSS (Integer.valueOf(60), "poss", "poss.", "privl."),
+    DEM (Integer.valueOf(61), "dem", "dem.", "ukaz."),
+    PRONPESS (Integer.valueOf(62), "pronpess", "pron. pess.", "osob. zám."),
+    PRONREL (Integer.valueOf(63), "pronrel", "pron. rel.", "vzťaž. zám."),
+    PRONINT (Integer.valueOf(64), "pronint", "pron. int.", "opyt. zám."),
+    NUMORD (Integer.valueOf(65), "numord", "num. ord.", "čísl. zákl."),
+    NUMCARD (Integer.valueOf(66), "numcard", "num. card.", "čísl. rad."),
+    NUMFRAC (Integer.valueOf(67), "numfrac", "num. fr.", "čísl. zlom."),
+    QUANT (Integer.valueOf(68), "quant", "quant.", "kvant."),
+
+    VIMP (Integer.valueOf(70), "vimp", "v. imp.", "slov. nedok."),
+    VPERF (Integer.valueOf(71), "vperf", "v. perf.", "slov. dok."),
+    VIMPPERF (Integer.valueOf(72), "vimpperf", "v. imp./perf.", "slov. nedok./dok."),
+    VPRONIMP (Integer.valueOf(73), "vpronimp", "v. pron. imp.", "zvrat. slov. nedok."),
+    VPRONPERF (Integer.valueOf(74), "vpronperf", "v. pron. perf.", "zvrat. slov. dok."),
+    VPRONIMPPERF (Integer.valueOf(75), "vpronimpperf", "v. pron. imp./perf.", "zvrat. slov. nedok./dok."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
@@ -91,7 +100,7 @@ public enum WordClass implements Serializable {
     }
 
     public boolean isVerb() {
-        return this.equals(VB) || this.equals(VI) || this.equals(VR) || this.equals(VT);
+        return this.equals(VB) || this.equals(VI) || this.equals(VR) || this.equals(VT) || this.equals(VPRON);
     }
 
     /**

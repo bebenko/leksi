@@ -53,8 +53,12 @@ public class VariantHelper {
             }
         } else if (StringUtils.isNotBlank(s)) {
             s = StringUtils.trimToEmpty(s);
-            if (s.equals(StringHelper.PRONOMINAL)) {
+            if (s.equals(WordClass.VPRON.getKey())) {
                 wt.setWordClass(WordClass.VPRON);
+            } else if (s.equals(WordClass.VPRONSA.getKey())) {
+                wt.setWordClass(WordClass.VPRONSA);
+            } else if (s.equals(WordClass.VPRONSI.getKey())) {
+                wt.setWordClass(WordClass.VPRONSI);
             } else if (s.equals("*") || s.equals(".") || s.equals("#")) {
                 //System.out.println(w.getOrig() + " " + s);
             } else if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {

@@ -20,9 +20,7 @@ public enum FormType {
     LINK_ORT (Integer.valueOf(91), StringHelper.LINK,
             StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK,
             StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
-    LINK_SK_VERB_IMP (Integer.valueOf(92), StringHelper.LINK,
-            SignificanceType.IMP.getPrint(Lang.PT) + StringHelper.SPACE + StringHelper.LINK,
-            SignificanceType.IMP.getPrint(Lang.SK) + StringHelper.SPACE + StringHelper.LINK),
+    LINK_SK_VERB_IMP (Integer.valueOf(92), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

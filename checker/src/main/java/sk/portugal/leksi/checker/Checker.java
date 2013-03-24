@@ -10,7 +10,9 @@ import sk.portugal.leksi.model.enums.FieldType;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.util.FieldComparator;
+import sk.portugal.leksi.util.WordComparator;
 import sk.portugal.leksi.util.helper.StringHelper;
+import sun.util.locale.LanguageTag;
 
 import java.util.*;
 
@@ -21,14 +23,27 @@ public class Checker {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
 
-        List<Word> ptWords = loadingService.loadAll(Lang.PT);
+        //List<Word> ptWords = loadingService.loadAll(Lang.PT);
 
         //checkOldOrthography(ptWords);
 
         //listFieldsUsed(ptWords);
 
-        listParentheses(ptWords);
+        //listParentheses(ptWords);
 
+        List<Word> skWords = loadingService.loadAll(Lang.SK);
+        Collections.sort(skWords, new WordComparator());
+        listSkVerbs(skWords);
+    }
+
+    private static void listSkVerbs(List<Word> wordList) {
+        for (Word w: wordList) {
+            for (WordType wt: w.getWordTypes()) {
+                if (wt.getWordClass() != null && wt.getWordClass().isVerb()) {
+                    System.out.println(w.getOrig());
+                }
+            }
+        }
     }
 
     private static void listParentheses(List<Word> wordList) {

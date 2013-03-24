@@ -283,10 +283,10 @@ public class DocxWrite {
         addItalicUnderline(p, c.getFirstWord().getOrig());
         str = StringHelper.SPACE + LangHelper.getAnd(explang) + StringHelper.SPACE
                 + c.getSecondWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
-        if (c.getSecondWordType().getCaseType() != null) {
+        if (c.getSecondWordType().getCaseType() != null && StringUtils.isNotBlank(c.getSecondWordType().getCaseType().getPrint(explang))) {
             str += c.getSecondWordType().getCaseType().getPrint(explang) + StringHelper.SPACE;
         }
-        if (c.getSecondWordType().getNumGend() != null) {
+        if (c.getSecondWordType().getNumGend() != null && StringUtils.isNotBlank(c.getSecondWordType().getNumGend().getPrint(explang))) {
             str += c.getSecondWordType().getNumGend().getPrint(explang) + StringHelper.SPACE;
         }
         addItalic(p, str);
@@ -371,7 +371,6 @@ public class DocxWrite {
                             && (wt.getForms().get(0).getType() == FormType.LINK_ORT || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
 
                         if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
-                            addSpace(p);
                             addClassCaseNumberGender(p, wt, explang);
                         }
                         addSpace(p);

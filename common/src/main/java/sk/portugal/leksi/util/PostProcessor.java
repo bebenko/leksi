@@ -1,5 +1,7 @@
 package sk.portugal.leksi.util;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.CaseType;
@@ -7,13 +9,18 @@ import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.enums.NumberGender;
 import sk.portugal.leksi.model.enums.WordClass;
 import sk.portugal.leksi.model.extra.Contraction;
+import sk.portugal.leksi.util.helper.StringHelper;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  */
 public class PostProcessor {
+
+    private static List<String> impList, perfList, impperfList, pronimpList, pronperfList;
 
     public static List<Word> addExtraWords(Lang lang) {
         List<Word> words = new ArrayList<>();
@@ -445,6 +452,12 @@ public class PostProcessor {
     }
 
     public static void updateSkWords(List<Word> wordList) {
+        impList = loadFile("imp");
+        perfList = loadFile("perf");
+        impperfList = loadFile("impperf");
+        pronimpList = loadFile("pronimp");
+        pronperfList = loadFile("pronperf");
+
         for (Word word: wordList) {
             if (word.getLang() == Lang.SK) {
                 switch (word.getOrig()) {
@@ -527,8 +540,42 @@ public class PostProcessor {
                         word.getWordTypes().get(0).setWordClass(WordClass.NUMORD);
                         break;
                     }
+                    default:
+                        if (word.getWordTypes().get(0).isVerb() ||
+                                (word.getWordTypes().size() > 1 && word.getWordTypes().get(1).isVerb())) {
+                            updateSkVerb(word);
+                        }
                 }
             }
+        }
+    }
+
+    private static List<String> loadFile(String filename) {
+        List<String> result = new ArrayList<>(), lines = null;
+        try {
+            lines = FileUtils.readLines(new File(filename + ".txt"), "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (String line: lines) {
+            if (!StringHelper.EMPTY.equals(line))
+                result.add(line);
+        }
+        return result;
+    }
+
+    private static void updateSkVerb(Word verb) {
+        //TODO exceptions - 2nd word type (strip numbers?)
+        if (impList.contains(verb.getOrig())) {
+            verb.getWordTypes().get(0).setWordClass(WordClass.VIMP);
+        } else if (perfList.contains(verb.getOrig())) {
+            verb.getWordTypes().get(0).setWordClass(WordClass.VPERF);
+        } else if (impperfList.contains(verb.getOrig())) {
+            verb.getWordTypes().get(0).setWordClass(WordClass.VIMPPERF);
+        } else if (pronimpList.contains(verb.getOrig())) {
+            verb.getWordTypes().get(0).setWordClass(WordClass.VPRONIMP);
+        } else if (pronperfList.contains(verb.getOrig())) {
+            verb.getWordTypes().get(0).setWordClass(WordClass.VPRONPERF);
         }
     }
 
