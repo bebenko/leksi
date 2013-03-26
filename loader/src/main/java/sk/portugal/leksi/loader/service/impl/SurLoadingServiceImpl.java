@@ -57,7 +57,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                 String wc = rs.getString("popis");
                 if (!isEmpty(wc)) wordType.setWordClass(PostProcessor.updateWordClass(tran, wordType, WordClass.valueOf(Integer.valueOf(wc.trim()))));
                 String ng = rs.getString("popis2");
-                if (!isEmpty(ng)) wordType.setNumGend(NumberGender.valueOf(Integer.valueOf(ng.trim())));
+                if (!isEmpty(ng)) wordType.setNumberGender(NumberGender.valueOf(Integer.valueOf(ng.trim())));
                 String va = rs.getString("tvar");
                 if (!isEmpty(va)) VariantHelper.processVariants(tran, wordType, va);
 
@@ -188,7 +188,7 @@ public class SurLoadingServiceImpl implements LoadingService {
 
                         Alternative alt = new Alternative();
                         alt.setValue(word.getOrig());
-                        alt.setNumberGender(word.getWordTypes().get(0).getNumGend());
+                        alt.setNumberGender(word.getWordTypes().get(0).getNumberGender());
                         alt.setWordClass(word.getWordTypes().get(0).getWordClass());
                         alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
                         Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
@@ -200,8 +200,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                     } else if (word.getLang() == Lang.SK && word.getWordTypes().get(0).isVerb()) {
                         word.getWordTypes().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
                         word.getWordTypes().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
-                                word.getWordTypes().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE
-                                        + StringHelper.LEFTPARENTHESIS + SignificanceType.PERF.getKey() + StringHelper.DOT + StringHelper.RIGHTPARENTHESIS);
+                                word.getWordTypes().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE + StringHelper.PERF);
                     }
                 }
             }
@@ -231,7 +230,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                         //add alternative 'spelling' to word
                         Alternative alt = new Alternative();
                         alt.setValue(word2.getWordTypes().get(0).getForms().get(0).getValues());
-                        alt.setNumberGender(word2.getWordTypes().get(0).getNumGend());
+                        alt.setNumberGender(word2.getWordTypes().get(0).getNumberGender());
                         alt.setWordClass(word2.getWordTypes().get(0).getWordClass());
                         alt.setType(AltType.ALTERNATIVE);
                         word.addAlternative(alt);

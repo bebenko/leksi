@@ -152,7 +152,7 @@ public class DocxWrite {
         r.setText(StringHelper.LEFTPARENTHESIS + str + StringHelper.RIGHTPARENTHESIS);
     }
 
-    private static String addFormattedParentheses(XWPFParagraph p, String str, boolean print, Lang explang) {
+    private static String addFormattedParentheses(XWPFParagraph p, String str, boolean print, Lang explang, NumberGender ng) {
         if (str.startsWith(StringHelper.LEFTPARENDASH)) {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 2);
             addNormal(p, StringHelper.LEFTPARENTHESIS + s + StringHelper.RIGHTPARENTHESIS);
@@ -174,15 +174,32 @@ public class DocxWrite {
             String s = str.substring(0, StringHelper.findMatchingBracket(str));
             //!FORMATTING
             if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
-                s = StringHelper.LEFTPARENTHESIS
-                        + NumberGender.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT)).getPrint(explang)
-                        + StringHelper.RIGHTPARENTHESIS;
-                addItalic(p, s);
+                NumberGender nng = NumberGender.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT));
+                if (ng != nng) {
+                    s = StringHelper.LEFTPARENTHESIS + nng.getPrint(explang) + StringHelper.RIGHTPARENTHESIS;
+                    addItalic(p, s);
+                }
+            } else if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGSLEFT) && s.contains(StringHelper.DASH)) {
+                s = StringUtils.removeStart(StringUtils.removeEnd(s, StringHelper.RIGHTPARENTHESIS), StringHelper.LEFTPARENTHESIS);
+                addNormal(p, StringHelper.LEFTPARENTHESIS);
+
+                String sxx; NumberGender sng;
+                String[] sx = s.split(StringHelper.COMMA);
+                for (int i = 0; i < sx.length; i++) {
+                    sxx = StringUtils.substringBefore(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
+                    if ((sng = NumberGender.valueOfKey(sxx.trim())) != NumberGender.UNDEF) sxx = sng.getPrint(explang);
+                    addNormal(p, sxx + StringHelper.SPACE);
+                    sxx = StringUtils.substringAfter(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
+                    sxx = StringUtils.removeStart(StringUtils.removeEnd(sxx, StringHelper.DASH), StringHelper.DASH);
+                    addItalic(p, sxx);
+                    if (i < sx.length - 1) addCommaSpace(p);
+                }
+                addNormal(p, StringHelper.RIGHTPARENTHESIS);
             } else if (s.equals(StringHelper.PERF) || s.equals(StringHelper.IMP) || s.equals(StringHelper.IMPPERF)) {
                 addItalic(p, StringHelper.LEFTPARENTHESIS
                         + SignificanceType.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT)).getPrint(explang)
                         + StringHelper.RIGHTPARENTHESIS);
-            } else if (s.indexOf(StringHelper.COLON) > 0) {
+            } else if (s.contains(StringHelper.COLON)) {
                 if (s.startsWith(StringHelper.LEFTPARENTHESIS + explang.getKey() + StringHelper.COLON)) {
                     addItalic(p, StringHelper.LEFTPARENTHESIS + StringUtils.stripStart(StringUtils.substringAfter(s, StringHelper.COLON), null));
                 }
@@ -233,13 +250,13 @@ public class DocxWrite {
         return StringUtils.substring(str, StringHelper.findMatchingBracket(str, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
     }
 
-    private static void addFormatted(XWPFParagraph p, String str, Lang lang, Lang explang) {
+    private static void addFormatted(XWPFParagraph p, String str, Lang lang, Lang explang, NumberGender ng) {
         String s = str, ss; boolean first = true;
         while (StringUtils.isNotBlank(s)) {
             if (s.startsWith(StringHelper.LEFTPARENTHESIS)) {
                 //intf.-lang.-based content
                 s = StringUtils.stripStart(addFormattedParentheses(p, s,
-                        (first && lang == explang) || (!first && lang != explang), explang), null);
+                        (first && lang == explang) || (!first && lang != explang), explang, ng), null);
             } else if (s.startsWith(StringHelper.LEFTSQUAREBRACKET)) {
                 s = StringUtils.stripStart(addFormattedSquareBrackets(p, s, lang, explang), null);
             } else {
@@ -262,8 +279,13 @@ public class DocxWrite {
                             addSpace(p);
                         } else if (s.startsWith(StringHelper.LEFTPARENTHESIS + explang.getOtherLangKey() + StringHelper.COLON)) {
                             //don't add space
+                        } else if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
+                            if (ng != NumberGender.valueOfKey(StringUtils.removeEnd(StringUtils.removeStart(StringUtils.removeEnd(StringUtils.substringBefore(s, StringHelper.SPACE),
+                                    StringHelper.DOT), StringHelper.LEFTPARENTHESIS), StringHelper.RIGHTPARENTHESIS + StringHelper.COMMA))) {
+                                addSpace(p);
+                            }
                         } else if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP) || s.startsWith(StringHelper.IMPPERF)
-                                || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
+                                || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGSLEFT)) {
                             addSpace(p);
                         }
                     } else if (!(str.startsWith(StringHelper.LEFTPARENTHESIS) && first && lang != explang)) { //just removed parentheses, (don't) add space
@@ -286,8 +308,8 @@ public class DocxWrite {
         if (c.getSecondWordType().getCaseType() != null && StringUtils.isNotBlank(c.getSecondWordType().getCaseType().getPrint(explang))) {
             str += c.getSecondWordType().getCaseType().getPrint(explang) + StringHelper.SPACE;
         }
-        if (c.getSecondWordType().getNumGend() != null && StringUtils.isNotBlank(c.getSecondWordType().getNumGend().getPrint(explang))) {
-            str += c.getSecondWordType().getNumGend().getPrint(explang) + StringHelper.SPACE;
+        if (c.getSecondWordType().getNumberGender() != null && StringUtils.isNotBlank(c.getSecondWordType().getNumberGender().getPrint(explang))) {
+            str += c.getSecondWordType().getNumberGender().getPrint(explang) + StringHelper.SPACE;
         }
         addItalic(p, str);
         addItalicUnderline(p, c.getSecondWord().getOrig());
@@ -322,9 +344,9 @@ public class DocxWrite {
             addItalic(p, wt.getCaseType().getPrint(explang));
             ct = true;
         }
-        if (wt.getNumGend() != null && StringUtils.isNotBlank(wt.getNumGend().getPrint(explang))) {
+        if (wt.getNumberGender() != null && StringUtils.isNotBlank(wt.getNumberGender().getPrint(explang))) {
             if (wc || ct) addSpace(p);
-            addItalic(p, wt.getNumGend().getPrint(explang));
+            addItalic(p, wt.getNumberGender().getPrint(explang));
         }
     }
 
@@ -469,7 +491,7 @@ public class DocxWrite {
                             if (m.isContraction()) {
                                 addContraction(p, m.getContraction(), explang);
                             } else {
-                                addFormatted(p, m.getSynonyms(), lang, explang);
+                                addFormatted(p, m.getSynonyms(), lang, explang, wt.getNumberGender());
                             }
 
                             //expressions

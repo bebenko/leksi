@@ -28,7 +28,7 @@ public class Printer {
             for (WordType wt : w.getWordTypes()) {
                 System.out.print(" {«" +
                         (wt.getParadigm() != null ? "pdg:" + wt.getParadigm() + ';' : "") +
-                        (wt.getNumGend() != null ? "ng:" + wt.getNumGend().getPrint(lang) + ";" : "") +
+                        (wt.getNumberGender() != null ? "ng:" + wt.getNumberGender().getPrint(lang) + ";" : "") +
                         (wt.getWordClass() != null ? "wc:" + wt.getWordClass().getPrint(lang) + ";" : "") +
                         (wt.getCaseType() != null ? "ct:" + wt.getCaseType().getPrint(lang) : ""));
                 if (wt.getForms() != null) {

@@ -77,11 +77,11 @@ public class V2ExportServiceImpl implements ExportService {
             res += escapeHtml(wt.getCaseType().getPrint(explang));
             ct = true;
         }
-        if (wt.getNumGend() != null && StringUtils.isNotBlank(wt.getNumGend().getPrint(explang))) {
+        if (wt.getNumberGender() != null && StringUtils.isNotBlank(wt.getNumberGender().getPrint(explang))) {
             if (wc || ct) {
                 res += space(); //StringHelper.COMMASPACE;
             }
-            res += escapeHtml(wt.getNumGend().getPrint(explang));
+            res += escapeHtml(wt.getNumberGender().getPrint(explang));
         }
         return res + addFmtEnd();
     }
@@ -254,8 +254,8 @@ public class V2ExportServiceImpl implements ExportService {
         if (c.getSecondWordType().getCaseType() != null) {
             str += c.getSecondWordType().getCaseType().getPrint(explang) + space();
         }
-        if (c.getSecondWordType().getNumGend() != null) {
-            str += c.getSecondWordType().getNumGend().getPrint(explang) + space();
+        if (c.getSecondWordType().getNumberGender() != null) {
+            str += c.getSecondWordType().getNumberGender().getPrint(explang) + space();
         }
         res += addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
         res += addWordReference(c.getSecondWord().getOrig());

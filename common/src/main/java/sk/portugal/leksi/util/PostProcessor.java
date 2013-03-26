@@ -1,7 +1,6 @@
 package sk.portugal.leksi.util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.Word;
 import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.CaseType;
@@ -32,7 +31,7 @@ public class PostProcessor {
             as.setEnabled(false);
             WordType aswt = new WordType();
             aswt.setWordClass(WordClass.PRONPESS);
-            aswt.setNumGend(NumberGender.FPL);
+            aswt.setNumberGender(NumberGender.FPL);
             aswt.setCaseType(CaseType.ACC);
             as.addWordType(aswt);
             words.add(as);
@@ -70,7 +69,7 @@ public class PostProcessor {
                         break;
                     }
                     case "certo": { //4
-                        word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "o quê": {
@@ -81,7 +80,7 @@ public class PostProcessor {
                     case "isto":
                     case "isso": {
                         word.getWordTypes().get(0).setWordClass(WordClass.DEM);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.INV);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.INV);
                         break;
                     }
                     case "aquele":
@@ -89,12 +88,12 @@ public class PostProcessor {
                     case "esse":
                     case "outro": { //2
                         word.getWordTypes().get(0).setWordClass(WordClass.DEM);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "tal": { //5
                         word.getWordTypes().get(0).setWordClass(WordClass.DEM);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
                         word.getWordTypes().get(2).setWordClass(WordClass.QUANT);
                         break;
                     }
@@ -105,32 +104,32 @@ public class PostProcessor {
                     case "nosso":
                     case "vosso": {
                         word.getWordTypes().get(0).setWordClass(WordClass.POSS);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "a": { //4
-                        word.getWordTypes().get(0).setNumGend(NumberGender.FSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
                         word.getWordTypes().get(2).setWordClass(WordClass.PRONPESS);
                         word.getWordTypes().get(2).setCaseType(CaseType.ACC);
-                        word.getWordTypes().get(2).setNumGend(NumberGender.FSG);
+                        word.getWordTypes().get(2).setNumberGender(NumberGender.FSG);
                         word.getWordTypes().get(3).setWordClass(WordClass.DEM);
-                        word.getWordTypes().get(3).setNumGend(NumberGender.FSG);
+                        word.getWordTypes().get(3).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "o": { //3
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         word.getWordTypes().get(1).setWordClass(WordClass.PRONPESS);
                         word.getWordTypes().get(1).setCaseType(CaseType.ACC);
-                        word.getWordTypes().get(1).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(1).setNumberGender(NumberGender.MSG);
                         word.getWordTypes().get(2).setWordClass(WordClass.DEM);
-                        word.getWordTypes().get(2).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(2).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "minha":
                     case "sua":  //2
                     case "tua": {
                         word.getWordTypes().get(0).setWordClass(WordClass.POSS);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.FSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "me":
@@ -159,7 +158,7 @@ public class PostProcessor {
                     }
                     case "ele": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "aonde": //2
@@ -177,33 +176,33 @@ public class PostProcessor {
                     }
                     case "cujo": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "qual": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "o qual": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "quais": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.PL);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
                         break;
                     }
                     case "os quais": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.PL);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
                         break;
                     }
                     case "ambos":
                     case "vários": {
                         word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MPL);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
                         break;
                     }
                     case "muito": //2
@@ -211,12 +210,12 @@ public class PostProcessor {
                     case "todo": //4
                     case "tanto": { //3
                         word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.MSG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "bastante": { //2
                         word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
-                        word.getWordTypes().get(0).setNumGend(NumberGender.SG);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "abaixo de":

@@ -27,7 +27,7 @@ public class VariantHelper {
             s = StringUtils.trimToEmpty(StringUtils.removeStart(s, "[" + w.getPronunciation() + "]"));
         }
         if (StringUtils.equals(s, StringHelper.PLINV)) {
-            wt.setNumGend(NumberGender.SGPL);
+            wt.setNumberGender(NumberGender.SGPL);
         } else if (StringUtils.startsWith(s, "forma ")) {
             wt.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
         } else if (StringUtils.startsWithAny(s, "f ", "pl ", "p ", "pp ")) {

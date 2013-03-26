@@ -11,7 +11,7 @@ import java.util.List;
 public class WordType {
 
     private List<Meaning> meanings;
-    private NumberGender numGend;
+    private NumberGender numberGender;
     private WordClass wordClass;
     private CaseType caseType;
     private List<Form> forms;
@@ -32,12 +32,12 @@ public class WordType {
         this.meanings.add(meaning);
     }
 
-    public NumberGender getNumGend() {
-        return numGend;
+    public NumberGender getNumberGender() {
+        return numberGender;
     }
 
-    public void setNumGend(NumberGender numGend) {
-        this.numGend = numGend;
+    public void setNumberGender(NumberGender numberGender) {
+        this.numberGender = numberGender;
     }
 
     public WordClass getWordClass() {
@@ -114,6 +114,6 @@ public class WordType {
     }
 
     public boolean hasClassOrNumGend(WordType wt) {
-        return this.getWordClass() != null || this.getCaseType() != null || this.getNumGend() != null;
+        return this.getWordClass() != null || this.getCaseType() != null || this.getNumberGender() != null;
     }
 }
