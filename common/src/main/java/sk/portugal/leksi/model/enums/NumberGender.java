@@ -20,9 +20,13 @@ public enum NumberGender implements Serializable {
     SG (Integer.valueOf(50), "sg", "sing.", "jedn."),
     MSG (Integer.valueOf(51), "m/sg", "m. sing.", "m. jedn."),
     FSG (Integer.valueOf(52), "m/sg", "f. sing.", "ž. jedn."),
-    MFSG (Integer.valueOf(53), "m/f/sg", "m./f. sing.", "m./ž. jedn."),
-    SGPL (Integer.valueOf(54), "sg/pl", "sing./pl.", "jedn./mn."),
-    INV (Integer.valueOf(55), "inv", "inv.", ""),
+    NSG (Integer.valueOf(53), "n/sg", "nt. sing.", "s. jedn."),
+    MFSG (Integer.valueOf(54), "m/f/sg", "m./f. sing.", "m./ž. jedn."),
+    MNSG (Integer.valueOf(55), "m/n/sg", "m./nt. sing.", "m./s. jedn."),
+    FNSG (Integer.valueOf(56), "f/n/sg", "f./nt. sing.", "ž./s. jedn."),
+    SGPL (Integer.valueOf(59), "sg/pl", "sing./pl.", "jedn./mn."),
+
+    INV (Integer.valueOf(60), "inv", "inv.", ""),
 
     CF (Integer.valueOf(70), "cf.", "cf.", "cf."),
 
@@ -55,6 +59,7 @@ public enum NumberGender implements Serializable {
     }
 
     public String getPrint(Lang lang) {
+        if (lang == Lang.NONE) return key;
         if (lang == Lang.SK) return print_sk;
         return print_pt;
     }

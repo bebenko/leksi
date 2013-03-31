@@ -35,6 +35,7 @@ public enum PhrasemeType {
     }
 
     public String getPrint(Lang lang) {
+        if (lang == Lang.NONE) return key;
         if (lang == Lang.SK) return print_sk;
         return print_pt;
     }

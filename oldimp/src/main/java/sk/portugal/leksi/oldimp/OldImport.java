@@ -3,8 +3,11 @@ package sk.portugal.leksi.oldimp;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.oldimp.service.OldImportService;
+import sk.portugal.leksi.util.helper.EscapeHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class OldImport {
 
@@ -731,12 +734,165 @@ public class OldImport {
 
     };
 
+    private static String[] vprons = {
+            "baviť sa",
+            "biť sa",
+            "brániť sa",
+            "česať sa",
+            "chváliť sa",
+            "cítiť sa",
+            "deliť sa",
+            "dostať sa",
+            "držať sa",
+            "hnevať sa",
+            "holiť sa",
+            "hrať sa",
+            "konať sa",
+            "lámať sa",
+            "maľovať sa",
+            "milovať sa",
+            "minúť sa",
+            "myslieť si",
+            "nadchnúť sa",
+            "nahnevať sa",
+            "nalíčiť sa",
+            "namaľovať sa",
+            "naučiť sa",
+            "nechať si",
+            "obesiť sa",
+            "objaviť sa",
+            "obliecť sa",
+            "obrátiť sa",
+            "oholiť sa",
+            "oprieť sa",
+            "otočiť sa",
+            "ozvať sa",
+            "pohnúť sa",
+            "pokaziť sa",
+            "postaviť sa",
+            "požičať si",
+            "prebudiť sa",
+            "prejaviť sa",
+            "prejsť sa",
+            "prepadnúť sa",
+            "presťahovať sa",
+            "presunúť sa",
+            "presvedčiť sa",
+            "prevrhnúť sa",
+            "priať si",
+            "priblížiť sa",
+            "pričleniť sa",
+            "pridať sa",
+            "prihlásiť sa",
+            "prilepiť sa",
+            "prinútiť sa",
+            "pripojiť sa",
+            "pripomenúť si",
+            "pripraviť sa",
+            "pripútať sa",
+            "prispôsobiť sa",
+            "priznať sa",
+            "protirečiť si",
+            "pustiť sa",
+            "realizovať sa",
+            "rozbiť sa",
+            "rozčúliť sa",
+            "rozhnevať sa",
+            "rozhodnúť sa",
+            "rozložiť sa",
+            "rozmnožovať sa",
+            "rozniesť sa",
+            "rozprávať sa",
+            "rozptýliť sa",
+            "rozpustiť sa",
+            "roztaviť sa",
+            "roztopiť sa",
+            "rozvíjať sa",
+            "rozvinúť sa",
+            "rozzúriť sa",
+            "sadnúť si",
+            "schovať sa",
+            "skomplikovať sa",
+            "škriabať sa",
+            "skryť sa",
+            "skrývať sa",
+            "spáliť sa",
+            "spomenúť si",
+            "sťažovať sa",
+            "stiahnuť sa",
+            "stretnúť sa",
+            "tešiť sa",
+            "točiť sa",
+            "topiť sa",
+            "trápiť sa",
+            "triasť sa",
+            "ubytovať sa",
+            "učesať sa",
+            "učiť sa",
+            "uctiť si",
+            "udobriť sa",
+            "udusiť sa",
+            "uistiť sa",
+            "unaviť sa",
+            "upokojiť sa",
+            "uraziť sa",
+            "usadiť sa",
+            "uskutočniť sa",
+            "vážiť si",
+            "venovať sa",
+            "vidieť sa",
+            "volať sa",
+            "vrátiť sa",
+            "vrhnúť sa",
+            "vydať sa",
+            "vyjadriť sa",
+            "vyjasniť sa",
+            "vyliečiť sa",
+            "vymyslieť si",
+            "vyrovnať sa",
+            "vysvetliť sa",
+            "vyvinúť sa",
+            "vyzliecť sa",
+            "vyzuť sa",
+            "vziať si",
+            "zabávať sa",
+            "zabaviť sa",
+            "zabiť sa",
+            "zadusiť sa",
+            "zamestnať sa",
+            "zapísať sa",
+            "zapojiť sa",
+            "zaregistrovať sa",
+            "zatvoriť sa",
+            "zaujímať sa",
+            "zaviazať sa",
+            "zdržať sa",
+            "zdvihnúť sa",
+            "želať si",
+            "zhoršiť sa",
+            "zísť sa",
+            "zmeniť sa",
+            "zobudiť sa",
+            "zodvihnúť sa",
+            "zoznámiť sa",
+            "zraniť sa",
+            "zraziť sa",
+            "zúžiť sa",
+            "zveriť sa"
+    };
+
 
     public static void main(String[] args) {
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         OldImportService importService = (OldImportService) ctx.getBean("importService");
 
-        importService.generateImport(Arrays.asList(words));
+        //importService.generateImport(Arrays.asList(words));
+
+        List<String> vpronsList = new ArrayList();
+        for (String s: vprons) {
+            vpronsList.add("SK " + EscapeHelper.escapeSql(s));
+        }
+        importService.generateVPronMerge(vpronsList);
     }
 }

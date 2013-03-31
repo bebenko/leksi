@@ -55,7 +55,11 @@ public class SurLoadingServiceImpl implements LoadingService {
                 //System.out.print(tran.getOrig());
 
                 String wc = rs.getString("popis");
-                if (!isEmpty(wc)) wordType.setWordClass(PostProcessor.updateWordClass(tran, wordType, WordClass.valueOf(Integer.valueOf(wc.trim()))));
+                if (!isEmpty(wc)) {
+                    wordType.setWordClass(PostProcessor.updateWordClass(tran, wordType, WordClass.valueOf(Integer.valueOf(wc.trim()))));
+                } else {
+                    wordType.setWordClass(WordClass.NONE);
+                }
                 String ng = rs.getString("popis2");
                 if (!isEmpty(ng)) wordType.setNumberGender(NumberGender.valueOf(Integer.valueOf(ng.trim())));
                 String va = rs.getString("tvar");
@@ -242,7 +246,8 @@ public class SurLoadingServiceImpl implements LoadingService {
                         //EXCEPTIONS to accommodate for extra meanings of few words listed
                         if (word.getWordTypes().size() > 1
                                 && (word2.getOrig().equals("tal") || word2.getOrig().equals("todo") || word2.getOrig().equals("segundo")
-                                || word2.getOrig().equals("certo") || word2.getOrig().equals("que") || word2.getOrig().equals("a"))) {
+                                || word2.getOrig().equals("certo") || word2.getOrig().equals("que") || word2.getOrig().equals("a")
+                                || word2.getOrig().equals("um"))) {
                             word.addWordType(word2.getWordTypes().get(0));
                             List<Meaning> ms = word2.getWordTypes().get(0).getMeanings();
                             List<Integer> listToRemove = new ArrayList<>();

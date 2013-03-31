@@ -65,7 +65,7 @@ public class PostProcessor {
                     case "algum":
                     case "nenhum":
                     case "cada": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
                     case "certo": { //4
@@ -79,22 +79,32 @@ public class PostProcessor {
                     case "aquilo":
                     case "isto":
                     case "isso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.DEM);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.INV);
                         break;
                     }
                     case "aquele":
-                    case "este":
                     case "esse":
-                    case "outro": { //2
-                        word.getWordTypes().get(0).setWordClass(WordClass.DEM);
+                    case "outro": //2
+                    case "mesmo": { //2
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
+                    case "este": { //2
+                        word.getWordTypes().get(1).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(1).setNumberGender(NumberGender.MSG);
+                        break;
+                    }
+                    case "essa": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        break;
+                    }
                     case "tal": { //5
-                        word.getWordTypes().get(0).setWordClass(WordClass.DEM);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
-                        word.getWordTypes().get(2).setWordClass(WordClass.QUANT);
+                        word.getWordTypes().get(2).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
                     case "meu":
@@ -103,8 +113,13 @@ public class PostProcessor {
                     case "dele":
                     case "nosso":
                     case "vosso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.POSS);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        break;
+                    }
+                    case "dela": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "a": { //4
@@ -112,7 +127,7 @@ public class PostProcessor {
                         word.getWordTypes().get(2).setWordClass(WordClass.PRONPESS);
                         word.getWordTypes().get(2).setCaseType(CaseType.ACC);
                         word.getWordTypes().get(2).setNumberGender(NumberGender.FSG);
-                        word.getWordTypes().get(3).setWordClass(WordClass.DEM);
+                        word.getWordTypes().get(3).setWordClass(WordClass.PRONDEM);
                         word.getWordTypes().get(3).setNumberGender(NumberGender.FSG);
                         break;
                     }
@@ -121,14 +136,14 @@ public class PostProcessor {
                         word.getWordTypes().get(1).setWordClass(WordClass.PRONPESS);
                         word.getWordTypes().get(1).setCaseType(CaseType.ACC);
                         word.getWordTypes().get(1).setNumberGender(NumberGender.MSG);
-                        word.getWordTypes().get(2).setWordClass(WordClass.DEM);
+                        word.getWordTypes().get(2).setWordClass(WordClass.PRONDEM);
                         word.getWordTypes().get(2).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "minha":
                     case "sua":  //2
                     case "tua": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.POSS);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
@@ -161,6 +176,11 @@ public class PostProcessor {
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
+                    case "ela": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        break;
+                    }
                     case "aonde": //2
                     case "onde": //2
                     case "quem": //2
@@ -171,6 +191,10 @@ public class PostProcessor {
                     }
                     case "que": { //4
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
+                        word.getWordTypes().get(1).setWordClass(WordClass.PRONINT);
+                        break;
+                    }
+                    case "quê": { //2
                         word.getWordTypes().get(1).setWordClass(WordClass.PRONINT);
                         break;
                     }
@@ -201,7 +225,7 @@ public class PostProcessor {
                     }
                     case "ambos":
                     case "vários": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
                         break;
                     }
@@ -209,13 +233,31 @@ public class PostProcessor {
                     case "pouco": //2
                     case "todo": //4
                     case "tanto": { //3
-                        word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "bastante": { //2
-                        word.getWordTypes().get(0).setWordClass(WordClass.QUANT);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
+                        break;
+                    }
+
+                    case "algo":
+                    case "alguém":
+                    case "determinado":
+                    case "nada":
+                    case "ninguém":
+                    case "qualquer":
+                    case "tudo":
+                    case "outrem": {
+                        //word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
+                        word.getWordTypes().get(0).setWordClass(WordClass.NONE);
+                        break;
+                    }
+                    case "um": { //4
+                        //word.getWordTypes().get(3).setWordClass(WordClass.PRONINDEF);
+                        word.getWordTypes().get(3).setWordClass(WordClass.NONE);
                         break;
                     }
                     case "abaixo de":
@@ -231,215 +273,221 @@ public class PostProcessor {
 
                     //CONTRACTIONS
                     case "comigo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "eu"), 0,
                                 "so mnou"));
                         break;
                     }
                     case "connosco": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "nós"), 0,
                                 "s nami"));
                         break;
                     }
                     case "consigo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "ele"), 0,
                                 "so sebou, s vami (vykanie)"));
                         break;
                     }
                     case "contigo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "tu"), 0,
                                 "s tebou"));
                         break;
                     }
                     case "convosco": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "vós"), 0,
                                 "s vami"));
                         break;
                     }
                     case "à": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, a, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, a, 3));
                         break;
                     }
                     case "ao": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, o, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, o, 2));
                         break;
                     }
                     case "na": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, a, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, a, 3));
                         break;
                     }
                     case "no": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, o, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, o, 2));
                         break;
                     }
                     case "da": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, a, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, a, 3));
                         break;
                     }
                     case "do": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, o, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, o, 2));
                         break;
                     }
                     case "pela": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(por, 0, a, 0));
                         word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(por, 0, a, 3));
                         break;
                     }
                     case "pelo": { //2
-                        word.getWordTypes().get(1).setWordClass(null);
+                        word.getWordTypes().get(1).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(1).getMeanings().get(0).setContraction(new Contraction(por, 0, o, 0));
                         word.getWordTypes().get(1).getMeanings().get(1).setContraction(new Contraction(por, 0, o, 2));
                         break;
                     }
                     case "nisso": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isso, 0));
                         break;
                     }
                     case "nisto": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isto, 0));
                         break;
                     }
                     case "naquilo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquilo, 0));
                         break;
                     }
                     case "nesse": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, esse, 0));
                         break;
                     }
                     case "neste": {
-                        word.getWordTypes().get(0).setWordClass(null);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, este, 0));
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
+                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, este, 1));
                         break;
                     }
                     case "naquele": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquele, 0));
                         break;
                     }
                     case "nalgum": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, algum, 0));
                         break;
                     }
                     case "disso": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isso, 0));
                         break;
                     }
                     case "disto": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isto, 0));
                         break;
                     }
                     case "daquilo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquilo, 0));
                         break;
                     }
                     case "desse": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, esse, 0));
                         break;
                     }
                     case "deste": {
-                        word.getWordTypes().get(0).setWordClass(null);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, este, 0));
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
+                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, este, 1));
                         break;
                     }
                     case "daquele": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquele, 0));
                         break;
                     }
                     case "dalgum": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, algum, 0));
                         break;
                     }
+                    case "dali": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
+                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0,
+                                getWord(wordList, "ali"), 0, "odtiaľ"));
+                        break;
+                    }
                     case "ma": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 1,
                                 "mi ho, mi ju"));
                         break;
                     }
                     case "ta": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, a, 1,
                                 "ti ho, ti ju"));
                         break;
                     }
                     case "lha": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 1,
                                 "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
                         break;
                     }
                     case "no-la": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, a, 1,
                                 "nám ju, nám ho"));
                         break;
                     }
                     case "vo-la": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, a, 1,
                                 "vám ju, vám ho"));
                         break;
                     }
                     case "mo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, o, 1,
                                 "mi ho, mi ju"));
                         break;
                     }
                     case "to": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, o, 1,
                                 "ti ho, ti ju"));
                         break;
                     }
                     case "lho": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, o, 1,
                                 "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
                         break;
                     }
                     case "no-lo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, o, 1,
                                 "nám ho, nám ju"));
                         break;
                     }
                     case "vo-lo": {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, o, 1,
                                 "vám ho, vám ju"));
                         break;
                     }
                     case "mas": { //remove plural contraction (only singular are included)
-                        word.getWordTypes().get(1).setWordClass(null);
+                        word.getWordTypes().get(1).setWordClass(WordClass.CONTR);
                         word.getWordTypes().get(1).getMeanings().get(0).setContraction(new Contraction(me, 0, as, 0,
                                 "mi ich"));
                         break;
@@ -460,8 +508,14 @@ public class PostProcessor {
         for (Word word: wordList) {
             if (word.getLang() == Lang.SK) {
                 switch (word.getOrig()) {
-                    case "ako":
-                    case "aký": {
+                    case "ako": //2
+                    case "aký":
+                    case "kedy":
+                    case "ktorý":
+                    case "koľko":
+                    case "kto":
+                    case "čo":
+                    case "kde": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
                         break;
                     }
@@ -469,9 +523,139 @@ public class PostProcessor {
                     case "ktorýkoľvek":
                     case "ktokoľvek":
                     {
-                        word.getWordTypes().get(0).setWordClass(null);
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
                         break;
                     }
+                    case "každý":
+                    case "nikto":
+                    case "nič":
+                    case "nijaký":
+                    case "žiadny":
+                    case "vždy":
+                    case "všetko":
+                    case "všetci":
+                    case "sám": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
+                        break;
+                    }
+                    case "niekto":
+                    case "niektorý":
+                    case "niečo":
+                    case "niečí":
+                    case "nejaký":
+                    case "ktosi": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
+                        break;
+
+                    }
+                    case "ja":
+                    case "ty":
+                    case "on":
+                    case "my":
+                    case "vy":
+                    case "oni": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        word.getWordTypes().get(0).setCaseType(CaseType.NOM);
+                        break;
+                    }
+                    case "sebe": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        word.getWordTypes().get(0).setCaseType(CaseType.LOC);
+                        break;
+                    }
+                    case "ony": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        word.getWordTypes().get(0).setCaseType(CaseType.NOM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        break;
+                    }
+                    case "môj":
+                    case "tvoj": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        break;
+                    }
+                    case "jeho": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MNSG);
+                        break;
+                    }
+                    case "moja":
+                    case "tvoja":
+                    case "jej": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        break;
+                    }
+                    case "moje":
+                    case "tvoje": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSG);
+                        break;
+                    }
+                    case "náš":
+                    case "váš": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
+                        break;
+                    }
+                    case "naša":
+                    case "vaša": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        break;
+                    }
+                    case "naše":
+                    case "vaše": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.NPL);
+                        break;
+                    }
+                    case "ich": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
+                        break;
+                    }
+
+                    case "ten":
+                    case "tento":
+                    case "tamten":
+                    case "taký": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        break;
+                    }
+                    case "tá":
+                    case "táto": { //case "tamtá":
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        break;
+                    }
+                    case "to":
+                    case "toto":
+                    case "tamto": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSG);
+                        break;
+                    }
+                    case "tí":
+                    case "títo": { //case "tamtí":
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
+                        break;
+                    }
+                    case "tie":
+                    case "tieto": { //case "tamtie":
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        break;
+                    }
+                    case "vás": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        word.getWordTypes().get(0).setCaseType(CaseType.GAL);
+                        break;
+                    }
+
 
                     //NUMBERS
                     case "nula":
@@ -564,7 +748,6 @@ public class PostProcessor {
     }
 
     private static void updateSkVerb(Word verb) {
-        //TODO exceptions - 2nd word type (strip numbers?)
         if (impList.contains(verb.getOrig())) {
             verb.getWordTypes().get(0).setWordClass(WordClass.VIMP);
         } else if (perfList.contains(verb.getOrig())) {

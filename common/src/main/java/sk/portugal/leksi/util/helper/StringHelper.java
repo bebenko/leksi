@@ -91,4 +91,10 @@ public class StringHelper {
         if (str.startsWith(SEMICOLON)) return true;
         return false;
     }
+
+    public static boolean containsTwo(String str, String cont) {
+        int i1;
+        if ((i1 = StringUtils.indexOf(str, cont)) > 0 && StringUtils.indexOf(str, cont, i1 + 1) > 0) return true;
+        return false;
+    }
 }

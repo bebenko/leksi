@@ -12,6 +12,8 @@ public enum CaseType {
     LOC (Integer.valueOf(6), "loc", "loc.", "L"),
     INST (Integer.valueOf(7), "inst", "inst.", "I"),
 
+    GAL (Integer.valueOf(10), "gal", "gen., acc., loc.", "G, A, L"),
+
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
     private Integer id;
@@ -35,6 +37,7 @@ public enum CaseType {
     }
 
     public String getPrint(Lang lang) {
+        if (lang == Lang.NONE) return key;
         if (lang == Lang.SK) return print_sk;
         return print_pt;
     }

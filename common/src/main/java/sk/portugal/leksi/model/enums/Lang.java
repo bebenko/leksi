@@ -10,6 +10,7 @@ public enum Lang {
     PT (Integer.valueOf(0), "PT"),
     SK (Integer.valueOf(1), "SK"),
 
+    NONE (Integer.valueOf(998), "NONE"),
     UNDEF (Integer.valueOf(999), "undef");
 
     private Integer id;
@@ -37,7 +38,7 @@ public enum Lang {
     public static List<Lang> getAll() {
         List<Lang> result = new ArrayList<>();
         for (Lang lang: values()) {
-            if (lang != UNDEF) {
+            if (lang != UNDEF && lang != NONE) {
                 result.add(lang);
             }
         }
