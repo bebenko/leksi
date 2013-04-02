@@ -570,7 +570,8 @@ public class PostProcessor {
                         break;
                     }
                     case "môj":
-                    case "tvoj": {
+                    case "tvoj":
+                    case "svoj": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
                         break;
@@ -582,6 +583,7 @@ public class PostProcessor {
                     }
                     case "moja":
                     case "tvoja":
+                    case "svoja":
                     case "jej": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
@@ -591,6 +593,11 @@ public class PostProcessor {
                     case "tvoje": {
                         word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
                         word.getWordTypes().get(0).setNumberGender(NumberGender.NSG);
+                        break;
+                    }
+                    case "svoje": {
+                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
+                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSGPL);
                         break;
                     }
                     case "náš":

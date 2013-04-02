@@ -201,17 +201,20 @@ public class DocxWrite {
     private static String addFormattedParentheses(XWPFParagraph p, String str, String color, boolean print, Lang explang, NumberGender ng) {
         if (str.startsWith(StringHelper.LEFTPARENDASH)) {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 2);
+            addSpace(p);
             addNormal(p, StringHelper.LEFTPARENTHESIS + s + StringHelper.RIGHTPARENTHESIS, color);
         } else if (str.startsWith("(##")) {
-            //TODO add
             String s = str.substring(3, StringHelper.findMatchingBracket(str) - 1).trim();
             NumberGender sng;
             if ((sng = NumberGender.valueOfKey(s)) != NumberGender.UNDEF) {
+                addSpace(p);
                 addItalic(p, sng.getPrint(explang), color);
             } else if (print) {
+                addSpace(p);
                 addItalic(p, s.trim(), color);
             }
         } else if (str.matches("\\(pl\\) \\(@.*")) { //extra condition for separate plural meaning
+            addSpace(p);
             addItalic(p, NumberGender.valueOfKey("pl").getPrint(explang), color);
             addSpace(p);
             String s = str.substring(5);
@@ -220,21 +223,21 @@ public class DocxWrite {
             return StringUtils.substring(str, StringHelper.findMatchingBracket(StringUtils.removeStart(str, "(pl) ")) + 5);
         } else if (str.startsWith("(@")) {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 1);
+            addSpace(p);
             addBold(p, s.trim(), color);
         } else {
             String s = str.substring(0, StringHelper.findMatchingBracket(str));
-            //!FORMATTING
-            //TODO add
             if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
                 NumberGender nng = NumberGender.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT));
                 if (ng != nng) {
                     s = StringHelper.LEFTPARENTHESIS + nng.getPrint(explang) + StringHelper.RIGHTPARENTHESIS;
+                    addSpace(p);
                     addItalic(p, s, color);
                 }
-            //TODO add
             } else if (StringHelper.containsTwo(s, StringHelper.DASH)) {
                 if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGSLEFT)) {
                     s = StringUtils.removeStart(StringUtils.removeEnd(s, StringHelper.RIGHTPARENTHESIS), StringHelper.LEFTPARENTHESIS);
+                    addSpace(p);
                     addNormal(p, StringHelper.LEFTPARENTHESIS, color);
 
                     String sxx; NumberGender sng;
@@ -250,20 +253,23 @@ public class DocxWrite {
                     }
                     addNormal(p, StringHelper.RIGHTPARENTHESIS, color);
                 } else if (print) { //works only for two dashes
-                    //TODO add
+                    addSpace(p);
                     addItalic(p, StringUtils.substringBefore(s, StringHelper.DASH), color);
                     addNormal(p, StringUtils.substringBetween(s, StringHelper.DASH), color);
                     addItalic(p, StringUtils.substringAfterLast(s, StringHelper.DASH), color);
                 }
             } else if (s.equals(StringHelper.PERF) || s.equals(StringHelper.IMP) || s.equals(StringHelper.IMPPERF)) {
+                addSpace(p);
                 addItalic(p, StringHelper.LEFTPARENTHESIS
                         + SignificanceType.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT)).getPrint(explang)
                         + StringHelper.RIGHTPARENTHESIS, color);
             } else if (s.contains(StringHelper.COLON)) {
                 if (s.startsWith(StringHelper.LEFTPARENTHESIS + explang.getKey() + StringHelper.COLON)) {
+                    addSpace(p);
                     addItalic(p, StringHelper.LEFTPARENTHESIS + StringUtils.stripStart(StringUtils.substringAfter(s, StringHelper.COLON), null), color);
                 }
             } else if (print) {
+                addSpace(p);
                 addItalic(p, s, color);
             }
         }
@@ -276,7 +282,6 @@ public class DocxWrite {
                 new String[] {FormType.P.getPrint(explang) + StringHelper.SPACE, FormType.PP.getPrint(explang) + StringHelper.SPACE});
         while (StringUtils.isNotBlank(s)) {
             if (s.startsWith(StringHelper.LEFTPARENTHESIS + StringHelper.DOUBLEHASH)) {
-                //s = addFormattedParentheses(p, s, true, explang);
                 ss = s.substring(3, StringHelper.findMatchingBracket(s) - 1);
                 addItalic(p, ss.trim(), color);
                 s = StringUtils.substring(s, StringHelper.findMatchingBracket(s));
@@ -299,12 +304,15 @@ public class DocxWrite {
         if (s.indexOf(StringHelper.COLON) > 0) {
             Lang intflang = Lang.valueOfKey(StringUtils.substringBetween(s, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
             if (intflang == explang) {
+                addSpace(p);
                 addNormal(p, StringUtils.remove(s, intflang.getKey() + StringHelper.COLON + StringHelper.SPACE), color);
             }
         } else if (s.contains(FormType.P.getKey() + StringHelper.SPACE)
                 || s.contains(FormType.PP.getKey() + StringHelper.SPACE)) {
+            addSpace(p);
             addParticip(p, s, color, explang);
         } else {
+            addSpace(p);
             addNormal(p, s, color);
         }
         return StringUtils.substring(str, StringHelper.findMatchingBracket(str, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
@@ -321,40 +329,9 @@ public class DocxWrite {
                 s = StringUtils.stripStart(addFormattedSquareBrackets(p, s, color, lang, explang), null);
             } else {
                 ss = StringUtils.substringBefore(s, StringHelper.SPACE);
+                if (!StringUtils.startsWithAny(s, StringHelper.DELIMITERS)) addSpace(p);
                 addNormal(p, ss, color);
                 s = StringUtils.stripStart(StringUtils.removeStart(s, ss), null);
-            }
-
-            //add space
-            if (StringUtils.isNotBlank(s)) {
-                if (!StringUtils.startsWithAny(s, StringHelper.DELIMITERS)) {
-                    if (StringUtils.startsWith(s, StringHelper.LEFTSQUAREBRACKET) && s.indexOf(StringHelper.COLON) > 0) {
-                        if (Lang.valueOfKey(s.substring(1, 3)) == explang) {
-                            addSpace(p);
-                        }
-                    } else if (StringUtils.startsWith(s, StringHelper.LEFTPARENDASH)) {
-                        addSpace(p);
-                    } else if (StringUtils.startsWith(s, StringHelper.LEFTPARENTHESIS)) {
-                        if (s.startsWith(StringHelper.LEFTPARENTHESIS + explang.getKey() + StringHelper.COLON)) {
-                            addSpace(p);
-                        } else if (s.startsWith(StringHelper.LEFTPARENTHESIS + explang.getOtherLangKey() + StringHelper.COLON)) {
-                            //don't add space
-                        } else if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
-                            if (ng != NumberGender.valueOfKey(StringUtils.removeEnd(StringUtils.removeStart(StringUtils.removeEnd(StringUtils.substringBefore(s, StringHelper.SPACE),
-                                    StringHelper.DOT), StringHelper.LEFTPARENTHESIS), StringHelper.RIGHTPARENTHESIS + StringHelper.COMMA))) {
-                                addSpace(p);
-                            }
-                        } else if (lang != explang || s.startsWith(StringHelper.PERF) || s.startsWith(StringHelper.IMP) || s.startsWith(StringHelper.IMPPERF)
-                                || StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGSLEFT)) {
-                            addSpace(p);
-                        //TODO add
-                        } else if (s.startsWith("(##") && NumberGender.valueOfKey(s.substring(3, StringHelper.findMatchingBracket(s) - 1).trim()) != NumberGender.UNDEF) {
-                            addSpace(p);
-                        }
-                    } else if (!(str.startsWith(StringHelper.LEFTPARENTHESIS) && first && lang != explang)) { //just removed parentheses, (don't) add space
-                        addSpace(p);
-                    }
-                }
             }
 
             first = false;
@@ -364,6 +341,7 @@ public class DocxWrite {
     private static void addContraction(XWPFParagraph p, Contraction c, String color, Lang lang, Lang explang, NumberGender ng) {
         String str = PhrasemeType.CONTR.getPrint(explang) + StringHelper.SPACE
                 + c.getFirstWordType().getWordClass().getPrint(explang) + StringHelper.SPACE;
+        addSpace(p);
         addItalic(p, str, color);
         addItalicUnderline(p, c.getFirstWord().getOrig(), color);
         str = StringHelper.SPACE + LangHelper.getAnd(explang) + StringHelper.SPACE
@@ -377,9 +355,6 @@ public class DocxWrite {
         addItalic(p, str, color);
         addItalicUnderline(p, c.getSecondWord().getOrig(), color);
         if (c.getAdditionalText() != null) {
-            //TODO add
-            //addNormal(p, StringHelper.SPACE + c.getAdditionalText(), color);
-            addNormal(p, StringHelper.SPACE);
             addFormatted(p, c.getAdditionalText(), color, lang, explang, ng);
         }
     }
@@ -422,7 +397,15 @@ public class DocxWrite {
         return false;
     }
 
+    public static int fullExport(Lang lang, Lang explang, List<Word> words, WordClass[] wcs) {
+        return genDocx(lang, explang, words, wcs, true);
+    }
+
     public static int export(Lang lang, Lang explang, List<Word> words, WordClass[] wcs) {
+        return genDocx(lang, explang, words, wcs, false);
+    }
+
+    private static int genDocx(Lang lang, Lang explang, List<Word> words, WordClass[] wcs, boolean full) {
         XWPFDocument doc = new XWPFDocument();
 
         XWPFParagraph p;
@@ -446,10 +429,12 @@ public class DocxWrite {
                 //System.out.println(w.getOrig());
                 addBold(p, w.getOrig());
 
-                //paradigm
-                //if (StringUtils.isNotBlank(w.getWordTypes().get(0).getParadigm())){
-                //    addSuper(p, w.getWordTypes().get(0).getParadigm());
-                //}
+                if (full) {
+                    //paradigm
+                    if (StringUtils.isNotBlank(w.getWordTypes().get(0).getParadigm())){
+                        addSuper(p, w.getWordTypes().get(0).getParadigm());
+                    }
+                }
 
                 //pronunciation
                 if (StringUtils.isNotBlank(w.getPronunciation())) {
@@ -567,34 +552,35 @@ public class DocxWrite {
                                 addItalic(p, m.getStyle().getPrint(explang), color);
                             }
 
-                            addSpace(p);
+                            //addSpace(p);
                             if (m.isContraction()) {
                                 addContraction(p, m.getContraction(), color, lang, explang, wt.getNumberGender());
                             } else {
                                 addFormatted(p, m.getSynonyms(), color, lang, explang, wt.getNumberGender());
                             }
 
-                            //expressions
-                            /* IGNORE EXAMPLES
-                            if (m.getExpressions() != null && !m.getExpressions().isEmpty()) {
-                                addSemicolon(p, color);
-                                addSpace(p);
-                                for (int j = 0; j < m.getExpressions().size(); j++) {
-                                    Phraseme ph = m.getExpressions().get(j);
-                                    //specifics for phrasemes
-                                    addBold(p, ph.getOrig(), color);
-                                    if (ph.getType() == PhrasemeType.FIX || ph.getType() == PhrasemeType.SEMIFIX) {
-                                        addSpace(p);
-                                        addItalicWithParentheses(p, ph.getType().getPrint(explang), color);
-                                    }
+                            if (full) {
+                                //expressions
+                                if (m.getExpressions() != null && !m.getExpressions().isEmpty()) {
+                                    addSemicolon(p, color);
                                     addSpace(p);
-                                    addFormatted(p, ph.getTran(), color, lang, explang, wt.getNumberGender());
-                                    if (j < m.getExpressions().size() - 1) {
-                                        addSemicolon(p, color);
-                                        addSpace(p);
+                                    for (int j = 0; j < m.getExpressions().size(); j++) {
+                                        Phraseme ph = m.getExpressions().get(j);
+                                        //specifics for phrasemes
+                                        addBold(p, ph.getOrig(), color);
+                                        if (ph.getType() == PhrasemeType.FIX || ph.getType() == PhrasemeType.SEMIFIX) {
+                                            addSpace(p);
+                                            addItalicWithParentheses(p, ph.getType().getPrint(explang), color);
+                                        }
+                                        //addSpace(p);
+                                        addFormatted(p, ph.getTran(), color, lang, explang, wt.getNumberGender());
+                                        if (j < m.getExpressions().size() - 1) {
+                                            addSemicolon(p, color);
+                                            addSpace(p);
+                                        }
                                     }
                                 }
-                            } */
+                            }
                         }
 
                         //next word type delimiter
@@ -605,35 +591,36 @@ public class DocxWrite {
                     }
                 }
 
-                //idioms
-                /* IGNORE EXAMPLES
-                if (w.getIdioms() != null && !w.getIdioms().isEmpty()) {
-                    addSpace(p);
-                    addIdiomDelimiter(p);
-
-                    for (int i = 0; i < w.getIdioms().size(); i++) {
-                        Phraseme idiom = w.getIdioms().get(i);
+                if (full) {
+                    //idioms
+                    if (w.getIdioms() != null && !w.getIdioms().isEmpty()) {
                         addSpace(p);
-                        addBold(p, idiom.getOrig());
-                        if (idiom.getType() == PhrasemeType.FIX || idiom.getType() == PhrasemeType.SEMIFIX) {
+                        addIdiomDelimiter(p);
+
+                        for (int i = 0; i < w.getIdioms().size(); i++) {
+                            Phraseme idiom = w.getIdioms().get(i);
                             addSpace(p);
-                            addItalicWithParentheses(p, idiom.getType().getPrint(explang));
-                        }
-                        addSpace(p);
-                        addFormatted(p, idiom.getTran(), null, lang, explang, null);
+                            addBold(p, idiom.getOrig());
+                            if (idiom.getType() == PhrasemeType.FIX || idiom.getType() == PhrasemeType.SEMIFIX) {
+                                addSpace(p);
+                                addItalicWithParentheses(p, idiom.getType().getPrint(explang));
+                            }
+                            //addSpace(p);
+                            addFormatted(p, idiom.getTran(), null, lang, explang, null);
 
-                        if (i < w.getIdioms().size() - 1) {
-                            addSemicolon(p);
+                            if (i < w.getIdioms().size() - 1) {
+                                addSemicolon(p);
+                            }
                         }
                     }
-                } */
+                }
             }
         }
 
         FileOutputStream out;
         if (counter > 0) {
             try {
-                out = new FileOutputStream("_exports\\export_" + wcs[0].getGroup() + "_" + lang.getKey() + "_ver_" + explang.getKey() + ".docx");
+                out = new FileOutputStream("_wordexports\\" + (full ? "full_" : "") + "export_" + wcs[0].getGroup() + "_" + lang.getKey() + "_ver_" + explang.getKey() + ".docx");
                 doc.write(out);
                 out.close();
             } catch (IOException e) {

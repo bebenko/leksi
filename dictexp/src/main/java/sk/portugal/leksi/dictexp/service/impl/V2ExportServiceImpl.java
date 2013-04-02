@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class V2ExportServiceImpl implements ExportService {
 
-    private static final boolean NBSP = true;
+    private static final boolean USE_NBSP = true;
 
     private int counter = 1;
 
@@ -106,16 +106,19 @@ public class V2ExportServiceImpl implements ExportService {
         return s + space() + addFmtEnd();
     }
 
-    private String addFormattedTran(String str, boolean print, Lang explang) {
+    private String addFormattedTran(String str, boolean print, Lang explang, NumberGender ng) {
 
         if (str.startsWith("(-")) {
             String s = str.substring(2, StringHelper.findMatchingBracket(str) - 2);
             return addTranslation(StringHelper.LEFTPARENTHESIS + s + StringHelper.RIGHTPARENTHESIS);
         } else if (str.startsWith("(##")) {
             String s = str.substring(3, StringHelper.findMatchingBracket(str) - 1);
-            if (print)
+            NumberGender sng;
+            if ((sng = NumberGender.valueOfKey(s.trim())) != NumberGender.UNDEF) {
+                return addFmtStart("obli") + escapeHtml(sng.getPrint(explang)) + addFmtEnd();
+            } else if (print) {
                 return addFmtStart("obli") + escapeHtml(s) + addFmtEnd();
-            else
+            } else
                 return StringHelper.EMPTY;
         } else if (str.equals("(pl)")) {
             return addFmtStart("obli") + escapeHtml(NumberGender.valueOfKey("pl").getPrint(explang)) + addFmtEnd();
@@ -124,10 +127,35 @@ public class V2ExportServiceImpl implements ExportService {
             return addFmtStart("capit") + escapeHtml(s) + addFmtEnd();
         }
         if (StringUtils.startsWithAny(str, StringHelper.GENDERSTRINGS)) {
-            String s = StringHelper.LEFTPARENTHESIS
-                    + NumberGender.valueOfKey(StringUtils.remove(str.substring(1, str.length() - 1), StringHelper.DOT)).getPrint(explang)
-                    + StringHelper.RIGHTPARENTHESIS;
-            return addFmtStart("spec") + escapeHtml(s) + addFmtEnd();
+            NumberGender nng = NumberGender.valueOfKey(StringUtils.remove(str.substring(1, str.length() - 1), StringHelper.DOT));
+            if (ng != nng) {
+                return addFmtStart("spec") + escapeHtml(StringHelper.LEFTPARENTHESIS + nng.getPrint(explang) + StringHelper.RIGHTPARENTHESIS) + addFmtEnd();
+            }
+        } else if (StringHelper.containsTwo(str, StringHelper.DASH)) {
+            String res = "";
+            if (StringUtils.startsWithAny(str, StringHelper.GENDERSTRINGSLEFT)) {
+                String s = StringUtils.removeStart(StringUtils.removeEnd(str, StringHelper.RIGHTPARENTHESIS), StringHelper.LEFTPARENTHESIS);
+                res += addTranslation(StringHelper.LEFTPARENTHESIS);
+
+                String sxx; NumberGender sng;
+                String[] sx = s.split(StringHelper.COMMA);
+                for (int i = 0; i < sx.length; i++) {
+                    sxx = StringUtils.substringBefore(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
+                    if ((sng = NumberGender.valueOfKey(sxx.trim())) != NumberGender.UNDEF) sxx = sng.getPrint(explang);
+                    res += addTranslation(sxx + StringHelper.SPACE);
+                    sxx = StringUtils.substringAfter(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
+                    sxx = StringUtils.removeStart(StringUtils.removeEnd(sxx, StringHelper.DASH), StringHelper.DASH);
+                    res += addFmtStart("spec") + escapeHtml(sxx) + addFmtEnd();
+                    if (i < sx.length - 1) res += addTranslation(StringHelper.COMMASPACE);
+                }
+                res += addTranslation(StringHelper.RIGHTPARENTHESIS);
+                return res;
+            } else if (print) { //works only for two dashes
+                res += addFmtStart("spec") + escapeHtml(StringUtils.substringBefore(str, StringHelper.DASH)) + addFmtEnd();
+                res += addTranslation(StringUtils.substringBetween(str, StringHelper.DASH));
+                res += addFmtStart("spec") + escapeHtml(StringUtils.substringAfterLast(str, StringHelper.DASH)) + addFmtEnd();
+                return res;
+            }
         } else if (str.indexOf(StringHelper.COLON) > 0) {
             if (str.startsWith(StringHelper.LEFTPARENTHESIS + explang.getKey() + StringHelper.COLON)) {
                 String s = StringHelper.LEFTPARENTHESIS + StringUtils.trim(StringUtils.substringAfter(str, StringHelper.COLON));
@@ -141,14 +169,14 @@ public class V2ExportServiceImpl implements ExportService {
         return StringHelper.EMPTY;
     }
 
-    private String addSpecification(String str, boolean print, Lang explang) {
+    private String addSpecification(String str, boolean print, Lang explang, NumberGender ng) {
         if (str.equals(StringHelper.PERF) || str.equals(StringHelper.IMP) || str.equals(StringHelper.IMPPERF)) {
             return addFmtStart("aspect") + escapeHtml(StringHelper.LEFTPARENTHESIS
                     + SignificanceType.valueOfKey(StringUtils.remove(str.substring(1, str.length() - 1), StringHelper.DOT)).getPrint(explang)
                     + StringHelper.RIGHTPARENTHESIS)
                     + addFmtEnd();
         } else {
-            return addFormattedTran(str, print, explang);
+            return addFormattedTran(str, print, explang, ng);
         }
     }
 
@@ -194,14 +222,14 @@ public class V2ExportServiceImpl implements ExportService {
         return StringHelper.EMPTY;
     }
 
-    private String addFormattedLine(String str, Lang lang, Lang explang) {
+    private String addFormattedLine(String str, Lang lang, Lang explang, NumberGender ng) {
         String res = "", s = str, ss; boolean first = true;
 
         while (StringUtils.isNotEmpty(s)) {
             if (s.startsWith(StringHelper.LEFTPARENTHESIS)) {
                 String par = s.substring(0, StringHelper.findMatchingBracket(s));
                 s = StringUtils.substring(s, StringHelper.findMatchingBracket(s));
-                res += addSpecification(par, (first && lang == explang) || (!first && lang != explang), explang);
+                res += addSpecification(par, (first && lang == explang) || (!first && lang != explang), explang, ng);
             } else if (s.startsWith(StringHelper.LEFTSQUAREBRACKET)) {
                 String par = s.substring(0, StringHelper.findMatchingBracket(s, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
                 s = StringUtils.substring(s, StringHelper.findMatchingBracket(s, StringHelper.LEFTSQUAREBRACKETCHAR, StringHelper.RIGHTSQUAREBRACKETCHAR));
@@ -234,7 +262,7 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String space() {
-        if (NBSP) {
+        if (USE_NBSP) {
             return EscapeHelper.NBSP;
         }
         return StringHelper.SPACE;
@@ -244,7 +272,7 @@ public class V2ExportServiceImpl implements ExportService {
         return addFmtStart("wrdref") + escapeHtml(str) + addFmtEnd();
     }
 
-    private String addContraction(Contraction c, Lang explang) {
+    private String addContraction(Contraction c, Lang lang, Lang explang, NumberGender ng) {
         String str = PhrasemeType.CONTR.getPrint(explang) + space()
                 + c.getFirstWordType().getWordClass().getPrint(explang) + space();
         String res = addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
@@ -261,6 +289,7 @@ public class V2ExportServiceImpl implements ExportService {
         res += addWordReference(c.getSecondWord().getOrig());
         if (c.getAdditionalText() != null) {
             res += addTranslation(space() + c.getAdditionalText());
+            res += addFormattedLine(c.getAdditionalText(), lang, explang, ng);
         }
         return res;
     }
@@ -275,9 +304,9 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
 
-    private String addMeaning(Meaning m, Lang lang, Lang explang) {
+    private String addMeaning(Meaning m, Lang lang, Lang explang, NumberGender ng) {
         return addFmtStart("synonyms") + addFieldStyle(m.getFieldType(), m.getStyle(), explang)
-                + (m.isContraction() ? addContraction(m.getContraction(), explang) : addFormattedLine(m.getSynonyms(), lang, explang))
+                + (m.isContraction() ? addContraction(m.getContraction(), lang, explang, ng) : addFormattedLine(m.getSynonyms(), lang, explang, ng))
                 + addFmtEnd();
     }
 
@@ -299,7 +328,7 @@ public class V2ExportServiceImpl implements ExportService {
         return StringUtils.removeEnd(res, StringHelper.COMMASPACE) + StringHelper.RIGHTPARENTHESIS + addFmtEnd();
     }
 
-    private String addPhrasemes(List<Phraseme> phrasemes, Lang lang, Lang explang) {
+    private String addPhrasemes(List<Phraseme> phrasemes, Lang lang, Lang explang, NumberGender ng) {
         String res = "";
         for (Phraseme ph : phrasemes) {
             res += addSectionStart("expr");
@@ -309,18 +338,18 @@ public class V2ExportServiceImpl implements ExportService {
                         escapeHtml(ph.getType().getPrint(explang)) + StringHelper.RIGHTPARENTHESIS +
                         addFmtEnd() + space();
             }
-            res += addFormattedLine(ph.getTran(), lang, explang);
+            res += addFormattedLine(ph.getTran(), lang, explang, ng);
             res += addSectionEnd();
         }
         return res;
     }
 
-    private String addExpressions(List<Phraseme> expressions, Lang lang, Lang explang) {
-        return addSectionStart("expressions") + addPhrasemes(expressions, lang, explang) + addSectionEnd();
+    private String addExpressions(List<Phraseme> expressions, Lang lang, Lang explang, NumberGender ng) {
+        return addSectionStart("expressions") + addPhrasemes(expressions, lang, explang, ng) + addSectionEnd();
     }
 
-    private String addIdioms(List<Phraseme> idioms, Lang lang, Lang explang) {
-        return addSectionStart("idioms") + addPhrasemes(idioms, lang, explang) + addSectionEnd();
+    private String addIdioms(List<Phraseme> idioms, Lang lang, Lang explang, NumberGender ng) {
+        return addSectionStart("idioms") + addPhrasemes(idioms, lang, explang, ng) + addSectionEnd();
     }
 
     private String getFormattedWordWithTranslation(Word w, Lang lang, Lang explang) {
@@ -352,7 +381,7 @@ public class V2ExportServiceImpl implements ExportService {
 
                 str += addSectionStart("mean");
                 str += addSectionStart("meanln");
-                str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang), StringHelper.SPACE + StringHelper.LINK), true, explang);
+                str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang), StringHelper.SPACE + StringHelper.LINK), true, explang, wt.getNumberGender());
 
                 String s;
                 if (wt.getForms().get(0).getType() == FormType.LINK_ORT) {
@@ -370,7 +399,7 @@ public class V2ExportServiceImpl implements ExportService {
                     k = StringUtils.removeEnd(k.substring(1, k.length() - 1), StringHelper.DOT);
                     str += addSpecification(StringHelper.LEFTPARENTHESIS
                             + SignificanceType.valueOfKey(k).getPrint(explang)
-                            + StringHelper.RIGHTPARENTHESIS, true, explang);
+                            + StringHelper.RIGHTPARENTHESIS, true, explang, wt.getNumberGender());
                 }
 
 
@@ -405,7 +434,7 @@ public class V2ExportServiceImpl implements ExportService {
                         str += addNumber(number++ + StringHelper.DOT + space());
                     }
 
-                    str += addMeaning(m, lang, explang);
+                    str += addMeaning(m, lang, explang, wt.getNumberGender());
                     str += addSectionEnd();
                     //str += addBreak();
 
@@ -467,7 +496,7 @@ public class V2ExportServiceImpl implements ExportService {
     public void generateV2Export(Lang lang, Lang explang, List<Word> words) {
         if (words == null || words.isEmpty()) return;
 
-        File out = new File("export_" + getTab(words.get(0).getLang(), explang) + ".sql");
+        File out = new File("_sqlexports\\export_" + getTab(words.get(0).getLang(), explang) + ".sql");
 
         try {
             FileUtils.writeStringToFile(out, "", "UTF-8", false);

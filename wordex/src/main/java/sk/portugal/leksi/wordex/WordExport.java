@@ -19,7 +19,8 @@ public class WordExport {
 
     static {
         wcGroups.add(WordClass.all());
-        wcGroups.add(WordClass.nouns());
+        //wcGroups.add(new WordClass[] {WordClass.PRONPOSS});
+        /*wcGroups.add(WordClass.nouns());
         wcGroups.add(WordClass.verbs());
         wcGroups.add(WordClass.adjectives());
         wcGroups.add(WordClass.adverbs());
@@ -32,7 +33,7 @@ public class WordExport {
         wcGroups.add(WordClass.conjunctions());
         wcGroups.add(WordClass.ejaculations());
         wcGroups.add(WordClass.articles());
-        wcGroups.add(WordClass.others());
+        wcGroups.add(WordClass.others());*/
     }
 
     public static void main(String[] args) {
@@ -49,6 +50,7 @@ public class WordExport {
 
                 for (WordClass[] wcg: wcGroups) {
                     count = DocxWrite.export(lang, explang, words, wcg);
+                    //count = DocxWrite.fullExport(lang, explang, words, wcg);
                     System.out.println(wcg[0].getGroup() + " (" + lang.getKey() + "/" + explang.getKey() + "): " + count);
                 }
             }

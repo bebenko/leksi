@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = ""; // " AND portugal in ('abacate')";
+    private static final String FILTER = ""; // " AND portugal in ('outrem')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean ALTERNATIVESASEXTRAWORDS = true;
