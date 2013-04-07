@@ -1,158 +1,120 @@
 package sk.portugal.leksi.model;
 
-import org.apache.commons.lang3.StringUtils;
+import sk.portugal.leksi.model.enums.CaseType;
 import sk.portugal.leksi.model.enums.FormType;
-import sk.portugal.leksi.model.enums.Lang;
-import sk.portugal.leksi.model.extra.Alternative;
-import sk.portugal.leksi.util.helper.StringHelper;
-import sk.portugal.leksi.util.helper.VariantHelper;
+import sk.portugal.leksi.model.enums.NumberGender;
+import sk.portugal.leksi.model.enums.WordClass;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- */
-public class Word implements Serializable {
-    private int id;
-    private String orig;
-    private String pronunciation;
-    private Lang lang;
-    private List<WordType> wordTypes = new ArrayList<>();
-    private List<Phraseme> idioms;
-    private List<Alternative> alternatives;
+public class Word {
 
-    private boolean enabled;
+    private List<Meaning> meanings;
+    private NumberGender numberGender;
+    private WordClass wordClass;
+    private CaseType caseType;
+    private List<Form> forms;
+    private String paradigm;
 
-    public Word() {
-        this.enabled = true;
+    public Word() {}
+
+    public List<Meaning> getMeanings() {
+        return meanings;
     }
 
-    public Word(String orig) {
-        this();
-        this.orig = orig;
+    public void setMeanings(List<Meaning> meanings) {
+        this.meanings = meanings;
     }
 
-    public int getId() {
-        return id;
+    public void addMeaning(Meaning meaning) {
+        if (meanings == null) this.meanings = new ArrayList<>();
+        this.meanings.add(meaning);
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public NumberGender getNumberGender() {
+        return numberGender;
     }
 
-    public String getOrig() {
-        return orig;
+    public void setNumberGender(NumberGender numberGender) {
+        this.numberGender = numberGender;
     }
 
-    public void setOrig(String orig) {
-        this.orig = orig.trim();
+    public WordClass getWordClass() {
+        return wordClass;
     }
 
-    public String getPronunciation() {
-        return pronunciation;
+    public void setWordClass(WordClass wordClass) {
+        this.wordClass = wordClass;
     }
 
-    public void setPronunciation(String pronunciation) {
-        this.pronunciation = pronunciation;
+    public CaseType getCaseType() {
+        return caseType;
     }
 
-    public Lang getLang() {
-        return lang;
+    public void setCaseType(CaseType caseType) {
+        this.caseType = caseType;
     }
 
-    public void setLang(Lang lang) {
-        this.lang = lang;
+    public List<Form> getForms() {
+        return forms;
     }
 
-    public List<WordType> getWordTypes() {
-        return wordTypes;
+    public void addForm(Form form) {
+        if (this.forms == null) this.forms = new ArrayList<>();
+        this.forms.add(form);
     }
 
-    private void setWordTypes(List<WordType> wordTypes) {
-        this.wordTypes = wordTypes;
+    public void clearVariants() {
+        forms.clear();
     }
 
-    public void addWordType(WordType wordType) {
-        if (this.wordTypes == null) {
-            this.wordTypes = new ArrayList<>();
-        }
-        this.wordTypes.add(wordType);
+    public boolean isVerb() {
+        if (wordClass == null) return false;
+        return wordClass.isVerb();
     }
 
-    public List<Phraseme> getIdioms() {
-        return idioms;
+    public String getParadigm() {
+        return paradigm;
     }
 
-    private void setIdioms(List<Phraseme> idioms) {
-        this.idioms = idioms;
+    public void setParadigm(String paradigm) {
+        this.paradigm = paradigm;
     }
 
-    public void addIdiom(Phraseme idiom) {
-        if (this.idioms == null) {
-            this.idioms = new ArrayList<>();
-        }
-
-        if (idiom.getOrig().contains("###")) {
-            String[] origSplits = StringUtils.splitByWholeSeparator(idiom.getOrig(), "###");
-            String[] tranSplits = StringUtils.splitByWholeSeparator(idiom.getTran(), "###");
-            for (int i = 0; i < origSplits.length; i++) {
-                this.idioms.add(new Phraseme(StringHelper.removeExpr(origSplits[i].trim()), VariantHelper.getPhrasemeType(origSplits[i].trim()),
-                        tranSplits[i].trim(), idiom.getFieldType(), idiom.getStyle()));
+    public boolean hasNonEmptyMeanings() {
+        for (Meaning m: getMeanings()) {
+            if (!m.getSynonyms().isEmpty() && !m.getSynonyms().trim().equals("")) {
+                return true;
             }
-        } else {
-            this.idioms.add(idiom);
         }
+        return false;
     }
 
-    public List<Alternative> getAlternatives() {
-        return alternatives;
-    }
-
-    public void addAlternative(Alternative alternative) {
-        if (this.alternatives == null) {
-            this.alternatives = new ArrayList<>();
+    public boolean hasForms() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_ORT
+                    && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
+                    && f.getType() != FormType.LINK_SK_VERB_IMP
+                    && f.getType() != FormType.VERBFORM && f.getType() != FormType.VREFLSA && f.getType() != FormType.VREFLSI) {
+                return true;
+            }
         }
-        this.alternatives.add(alternative);
+        return false;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean hasVerbForm() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.VERBFORM || f.getType() == FormType.VREFLSA || f.getType() == FormType.VREFLSI) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public boolean hasClassOrNumGend(Word wt) {
+        return this.getWordClass() != null || this.getCaseType() != null || this.getNumberGender() != null;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Word word = (Word) o;
-
-        if (lang != word.lang) return false;
-        if (!orig.equals(word.orig)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = orig.hashCode();
-        result = 31 * result + lang.hashCode();
-        return result;
-    }
-
-    public static Word createLinkedCopy(Word word, Word orig) {
-        word.setOrig(word.getWordTypes().get(0).getForms().get(0).getValues());
-        word.setLang(orig.getLang());
-
-        word.getWordTypes().get(0).clearVariants();
-        word.getWordTypes().get(0).getMeanings().get(0).setSynonyms(StringHelper.LINK + StringHelper.SPACE + orig.getOrig());
-        word.getWordTypes().get(0).addForm(new Form(FormType.LINK, ""));
-
-        return word;
-    }
-
 }

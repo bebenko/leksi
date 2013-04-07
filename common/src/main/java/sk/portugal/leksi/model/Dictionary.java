@@ -11,18 +11,18 @@ import java.util.Map;
 public class Dictionary {
 
     private Lang primaryLanguage;
-    private Map<Word, Meaning> translations;
+    private Map<Homonym, Meaning> translations;
 
     private Dictionary(Lang primaryLanguage) {
         this.primaryLanguage = primaryLanguage;
         this.translations = new HashMap<>();
     }
 
-    public void addTranslation(Word word, Meaning meaning) {
-        if (!primaryLanguage.equals(word.getLang())) {
+    public void addTranslation(Homonym homonym, Meaning meaning) {
+        if (!primaryLanguage.equals(homonym.getLang())) {
             throw new UnsupportedLanguageException();
         }
-        this.translations.put(word, meaning);
+        this.translations.put(homonym, meaning);
     }
 
     //public getAll()

@@ -12,7 +12,6 @@ import sk.portugal.leksi.model.extra.Alternative;
 import sk.portugal.leksi.util.FieldComparator;
 import sk.portugal.leksi.util.WordComparator;
 import sk.portugal.leksi.util.helper.StringHelper;
-import sun.util.locale.LanguageTag;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class Checker {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
 
-        //List<Word> ptWords = loadingService.loadAll(Lang.PT);
+        //List<Homonym> ptWords = loadingService.loadAll(Lang.PT);
 
         //checkOldOrthography(ptWords);
 
@@ -31,14 +30,14 @@ public class Checker {
 
         //listParentheses(ptWords);
 
-        List<Word> skWords = loadingService.loadAll(Lang.SK);
-        Collections.sort(skWords, new WordComparator());
-        listSkVerbs(skWords);
+        List<Homonym> skHomonyms = loadingService.loadAll(Lang.SK);
+        Collections.sort(skHomonyms, new WordComparator());
+        listSkVerbs(skHomonyms);
     }
 
-    private static void listSkVerbs(List<Word> wordList) {
-        for (Word w: wordList) {
-            for (WordType wt: w.getWordTypes()) {
+    private static void listSkVerbs(List<Homonym> homonymList) {
+        for (Homonym w: homonymList) {
+            for (Word wt: w.getWords()) {
                 if (wt.getWordClass() != null && wt.getWordClass().isVerb()) {
                     System.out.println(w.getOrig());
                 }
@@ -46,10 +45,10 @@ public class Checker {
         }
     }
 
-    private static void listParentheses(List<Word> wordList) {
+    private static void listParentheses(List<Homonym> homonymList) {
         String[] strings = new String[] {"(imp.)", "(perf.)", "(imp./perf.)", "(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(@ ", "(## ", "(-"};
-        for (Word w: wordList) {
-            for (WordType wt: w.getWordTypes()) {
+        for (Homonym w: homonymList) {
+            for (Word wt: w.getWords()) {
                 if (wt.getMeanings() != null) {
                     for (Meaning m: wt.getMeanings()) {
                         String str = m.getSynonyms().substring(1), s;
@@ -72,18 +71,18 @@ public class Checker {
         }
     }
 
-    private static void mapIns(Map<FieldType, List<Word>> map, FieldType f, Word w) {
+    private static void mapIns(Map<FieldType, List<Homonym>> map, FieldType f, Homonym w) {
         if (map.containsKey(f)) {
             map.get(f);
         }
     }
 
-    public static void listFieldsUsed(List<Word> words) {
+    public static void listFieldsUsed(List<Homonym> homonyms) {
         Set<FieldType> fieldTypes = new TreeSet<>(new FieldComparator("ord"));
-        //Map<FieldType, List<Word>> map
-        //Map<FieldType, List<Word>> map = new HashMap<>();
-        for (Word w: words) {
-            for (WordType wt: w.getWordTypes()) {
+        //Map<FieldType, List<Homonym>> map
+        //Map<FieldType, List<Homonym>> map = new HashMap<>();
+        for (Homonym w: homonyms) {
+            for (Word wt: w.getWords()) {
                 for (Meaning m: wt.getMeanings()) {
                     if (m.getFieldType() != null) {
                         fieldTypes.add(m.getFieldType());
@@ -103,11 +102,11 @@ public class Checker {
         System.out.println("count: " + count);
     }
 
-    public static void checkOldOrthography(List<Word> words) {
-        List<String> oldOrtho = getOldOrtho(words);
+    public static void checkOldOrthography(List<Homonym> homonyms) {
+        List<String> oldOrtho = getOldOrtho(homonyms);
 
         //check idioms
-        for (Word w: words) {
+        for (Homonym w: homonyms) {
             if (w.getIdioms() != null) {
                 for (Phraseme id: w.getIdioms()) {
                     for (String ortho: oldOrtho) {
@@ -121,8 +120,8 @@ public class Checker {
 
         //check examples
         System.out.println("expressions");
-        for (Word w: words) {
-            for (WordType wt: w.getWordTypes()) {
+        for (Homonym w: homonyms) {
+            for (Word wt: w.getWords()) {
                 for (Meaning m: wt.getMeanings()) {
                     if (m.getExpressions() != null) {
                         for (Phraseme ex : m.getExpressions()) {
@@ -139,9 +138,9 @@ public class Checker {
 
     }
 
-    private static List<String> getOldOrtho(List<Word> words) {
+    private static List<String> getOldOrtho(List<Homonym> homonyms) {
         List<String> ortho = new ArrayList<String>();
-        for (Word w: words) {
+        for (Homonym w: homonyms) {
             if (w.getAlternatives() != null) {
                 for (Alternative alt: w.getAlternatives()) {
                     if (alt.getType() == AltType.OLD_ORTHOGRAPHY) {

@@ -3,11 +3,10 @@ package sk.portugal.leksi.wordex;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.loader.service.LoadingService;
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.enums.WordClass;
 import sk.portugal.leksi.util.WordComparator;
-import sk.portugal.leksi.util.write.Printer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,16 +40,16 @@ public class WordExport {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
 
-        List<Word> words; int count;
+        List<Homonym> homonyms; int count;
 
         for (Lang lang : Lang.getAll()) {
-            words = loadingService.loadAll(lang);
+            homonyms = loadingService.loadAll(lang);
             for (Lang explang : Lang.getAll()) {
-                Collections.sort(words, new WordComparator());
+                Collections.sort(homonyms, new WordComparator());
 
                 for (WordClass[] wcg: wcGroups) {
-                    count = DocxWrite.export(lang, explang, words, wcg);
-                    //count = DocxWrite.fullExport(lang, explang, words, wcg);
+                    count = DocxWrite.export(lang, explang, homonyms, wcg);
+                    //count = DocxWrite.fullExport(lang, explang, homonyms, wcg);
                     System.out.println(wcg[0].getGroup() + " (" + lang.getKey() + "/" + explang.getKey() + "): " + count);
                 }
             }
@@ -64,7 +63,7 @@ public class WordExport {
         }
         System.setOut(out);*/
 
-        //Printer.printAll(words);
+        //Printer.printAll(homonyms);
     }
 
 }

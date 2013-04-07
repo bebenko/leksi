@@ -1,8 +1,8 @@
 package sk.portugal.leksi.util;
 
 import org.apache.commons.io.FileUtils;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.Word;
-import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.CaseType;
 import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.model.enums.NumberGender;
@@ -21,90 +21,90 @@ public class PostProcessor {
 
     private static List<String> impList, perfList, impperfList, pronimpList, pronperfList;
 
-    public static List<Word> addExtraWords(Lang lang) {
-        List<Word> words = new ArrayList<>();
+    public static List<Homonym> addExtraWords(Lang lang) {
+        List<Homonym> homonyms = new ArrayList<>();
 
         if (lang == Lang.PT) {
 
             //as
-            Word as = new Word("as");
+            Homonym as = new Homonym("as");
             as.setEnabled(false);
-            WordType aswt = new WordType();
+            Word aswt = new Word();
             aswt.setWordClass(WordClass.PRONPESS);
             aswt.setNumberGender(NumberGender.FPL);
             aswt.setCaseType(CaseType.ACC);
             as.addWordType(aswt);
-            words.add(as);
+            homonyms.add(as);
 
         }
 
-        return words;
+        return homonyms;
     }
 
-    private static Word getWord(List<Word> wordList, String wrd) {
-        for (Word w: wordList) {
+    private static Homonym getWord(List<Homonym> homonymList, String wrd) {
+        for (Homonym w: homonymList) {
             if (w.getOrig().equals(wrd)) return w;
         }
         return null;
     }
 
-    public static void updatePtWords(List<Word> wordList) {
+    public static void updatePtWords(List<Homonym> homonymList) {
 
         //words used in contractions
-        Word com = getWord(wordList, "com"), a = getWord(wordList, "a"), o = getWord(wordList, "o"),
-        em = getWord(wordList, "em"), por = getWord(wordList, "por"), de = getWord(wordList, "de"),
-        isso = getWord(wordList, "isso"), isto = getWord(wordList, "isto"), aquilo = getWord(wordList, "aquilo"),
-        esse = getWord(wordList, "esse"), este = getWord(wordList, "este"), aquele = getWord(wordList, "aquele"),
-        algum = getWord(wordList, "algum"), me = getWord(wordList, "me"), te = getWord(wordList, "te"),
-        lhe = getWord(wordList, "lhe"), nos = getWord(wordList, "nos"), vos = getWord(wordList, "vos"),
-        as = getWord(wordList, "as");
+        Homonym com = getWord(homonymList, "com"), a = getWord(homonymList, "a"), o = getWord(homonymList, "o"),
+        em = getWord(homonymList, "em"), por = getWord(homonymList, "por"), de = getWord(homonymList, "de"),
+        isso = getWord(homonymList, "isso"), isto = getWord(homonymList, "isto"), aquilo = getWord(homonymList, "aquilo"),
+        esse = getWord(homonymList, "esse"), este = getWord(homonymList, "este"), aquele = getWord(homonymList, "aquele"),
+        algum = getWord(homonymList, "algum"), me = getWord(homonymList, "me"), te = getWord(homonymList, "te"),
+        lhe = getWord(homonymList, "lhe"), nos = getWord(homonymList, "nos"), vos = getWord(homonymList, "vos"),
+        as = getWord(homonymList, "as");
 
-        for (Word word: wordList) {
-            if (word.getLang() == Lang.PT) {
-                switch (word.getOrig()) {
+        for (Homonym homonym : homonymList) {
+            if (homonym.getLang() == Lang.PT) {
+                switch (homonym.getOrig()) {
                     case "algum":
                     case "nenhum":
                     case "cada": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
                     case "certo": { //4
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "o quê": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
                         break;
                     }
                     case "aquilo":
                     case "isto":
                     case "isso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.INV);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.INV);
                         break;
                     }
                     case "aquele":
                     case "esse":
                     case "outro": //2
                     case "mesmo": { //2
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "este": { //2
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(1).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(1).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "essa": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "tal": { //5
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
-                        word.getWordTypes().get(2).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(2).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
                     case "meu":
@@ -113,38 +113,38 @@ public class PostProcessor {
                     case "dele":
                     case "nosso":
                     case "vosso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "dela": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "a": { //4
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
-                        word.getWordTypes().get(2).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(2).setCaseType(CaseType.ACC);
-                        word.getWordTypes().get(2).setNumberGender(NumberGender.FSG);
-                        word.getWordTypes().get(3).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(3).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(2).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(2).setCaseType(CaseType.ACC);
+                        homonym.getWords().get(2).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(3).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(3).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "o": { //3
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(1).setCaseType(CaseType.ACC);
-                        word.getWordTypes().get(1).setNumberGender(NumberGender.MSG);
-                        word.getWordTypes().get(2).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(2).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(1).setCaseType(CaseType.ACC);
+                        homonym.getWords().get(1).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(2).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(2).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "minha":
                     case "sua":  //2
                     case "tua": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "me":
@@ -155,11 +155,11 @@ public class PostProcessor {
                     case "ti":
                     case "vos":
                     case "lhe": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
                         break;
                     }
                     case "se": {
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONPESS);
                         break;
                     }
                     case "eu":
@@ -167,79 +167,79 @@ public class PostProcessor {
                     case "tu":
                     case "você":
                     case "vós": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setCaseType(CaseType.NOM);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setCaseType(CaseType.NOM);
                         break;
                     }
                     case "ele": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "ela": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "aonde": //2
                     case "onde": //2
                     case "quem": //2
                     case "quanto": { //3
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONREL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONREL);
                         break;
                     }
                     case "que": { //4
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONREL);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONINT);
                         break;
                     }
                     case "quê": { //2
-                        word.getWordTypes().get(1).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONINT);
                         break;
                     }
                     case "cujo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONREL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "qual": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "o qual": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONREL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "quais": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.PL);
                         break;
                     }
                     case "os quais": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONREL);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONREL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.PL);
                         break;
                     }
                     case "ambos":
                     case "vários": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MPL);
                         break;
                     }
                     case "muito": //2
                     case "pouco": //2
                     case "todo": //4
                     case "tanto": { //3
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "bastante": { //2
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
                         break;
                     }
 
@@ -251,244 +251,244 @@ public class PostProcessor {
                     case "qualquer":
                     case "tudo":
                     case "outrem": {
-                        //word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
-                        word.getWordTypes().get(0).setWordClass(WordClass.NONE);
+                        //homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
+                        homonym.getWords().get(0).setWordClass(WordClass.NONE);
                         break;
                     }
                     case "um": { //4
-                        //word.getWordTypes().get(3).setWordClass(WordClass.PRONINDEF);
-                        word.getWordTypes().get(3).setWordClass(WordClass.NONE);
+                        //homonym.getWords().get(3).setWordClass(WordClass.PRONINDEF);
+                        homonym.getWords().get(3).setWordClass(WordClass.NONE);
                         break;
                     }
                     case "abaixo de":
                     case "acima de": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.LOCPREP);
+                        homonym.getWords().get(0).setWordClass(WordClass.LOCPREP);
                         break;
                     }
                     case "por acaso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.LOCADV);
+                        homonym.getWords().get(0).setWordClass(WordClass.LOCADV);
                         break;
                     }
 
 
                     //CONTRACTIONS
                     case "comigo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "eu"), 0,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(homonymList, "eu"), 0,
                                 "so mnou"));
                         break;
                     }
                     case "connosco": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "nós"), 0,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(homonymList, "nós"), 0,
                                 "s nami"));
                         break;
                     }
                     case "consigo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "ele"), 0,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(homonymList, "ele"), 0,
                                 "so sebou, s vami (vykanie)"));
                         break;
                     }
                     case "contigo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "tu"), 0,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(homonymList, "tu"), 0,
                                 "s tebou"));
                         break;
                     }
                     case "convosco": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(wordList, "vós"), 0,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(com, 0, getWord(homonymList, "vós"), 0,
                                 "s vami"));
                         break;
                     }
                     case "à": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, a, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, a, 3));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, a, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, a, 3));
                         break;
                     }
                     case "ao": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, o, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, o, 2));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(a, 1, o, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(a, 1, o, 2));
                         break;
                     }
                     case "na": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, a, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, a, 3));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, a, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, a, 3));
                         break;
                     }
                     case "no": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, o, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, o, 2));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, o, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(em, 0, o, 2));
                         break;
                     }
                     case "da": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, a, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, a, 3));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, a, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, a, 3));
                         break;
                     }
                     case "do": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, o, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, o, 2));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, o, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(de, 0, o, 2));
                         break;
                     }
                     case "pela": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(por, 0, a, 0));
-                        word.getWordTypes().get(0).getMeanings().get(1).setContraction(new Contraction(por, 0, a, 3));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(por, 0, a, 0));
+                        homonym.getWords().get(0).getMeanings().get(1).setContraction(new Contraction(por, 0, a, 3));
                         break;
                     }
                     case "pelo": { //2
-                        word.getWordTypes().get(1).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(1).getMeanings().get(0).setContraction(new Contraction(por, 0, o, 0));
-                        word.getWordTypes().get(1).getMeanings().get(1).setContraction(new Contraction(por, 0, o, 2));
+                        homonym.getWords().get(1).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(1).getMeanings().get(0).setContraction(new Contraction(por, 0, o, 0));
+                        homonym.getWords().get(1).getMeanings().get(1).setContraction(new Contraction(por, 0, o, 2));
                         break;
                     }
                     case "nisso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isso, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isso, 0));
                         break;
                     }
                     case "nisto": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isto, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, isto, 0));
                         break;
                     }
                     case "naquilo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquilo, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquilo, 0));
                         break;
                     }
                     case "nesse": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, esse, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, esse, 0));
                         break;
                     }
                     case "neste": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, este, 1));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, este, 1));
                         break;
                     }
                     case "naquele": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquele, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, aquele, 0));
                         break;
                     }
                     case "nalgum": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, algum, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(em, 0, algum, 0));
                         break;
                     }
                     case "disso": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isso, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isso, 0));
                         break;
                     }
                     case "disto": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isto, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, isto, 0));
                         break;
                     }
                     case "daquilo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquilo, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquilo, 0));
                         break;
                     }
                     case "desse": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, esse, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, esse, 0));
                         break;
                     }
                     case "deste": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, este, 1));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, este, 1));
                         break;
                     }
                     case "daquele": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquele, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, aquele, 0));
                         break;
                     }
                     case "dalgum": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, algum, 0));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0, algum, 0));
                         break;
                     }
                     case "dali": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0,
-                                getWord(wordList, "ali"), 0, "odtiaľ"));
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0,
+                                getWord(homonymList, "ali"), 0, "odtiaľ"));
                         break;
                     }
                     case "ma": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 1,
                                 "mi ho, mi ju"));
                         break;
                     }
                     case "ta": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, a, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, a, 1,
                                 "ti ho, ti ju"));
                         break;
                     }
                     case "lha": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 1,
                                 "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
                         break;
                     }
                     case "no-la": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, a, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, a, 1,
                                 "nám ju, nám ho"));
                         break;
                     }
                     case "vo-la": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, a, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, a, 1,
                                 "vám ju, vám ho"));
                         break;
                     }
                     case "mo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, o, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, o, 1,
                                 "mi ho, mi ju"));
                         break;
                     }
                     case "to": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, o, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, o, 1,
                                 "ti ho, ti ju"));
                         break;
                     }
                     case "lho": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, o, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, o, 1,
                                 "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
                         break;
                     }
                     case "no-lo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, o, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, o, 1,
                                 "nám ho, nám ju"));
                         break;
                     }
                     case "vo-lo": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, o, 1,
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, o, 1,
                                 "vám ho, vám ju"));
                         break;
                     }
                     case "mas": { //remove plural contraction (only singular are included)
-                        word.getWordTypes().get(1).setWordClass(WordClass.CONTR);
-                        word.getWordTypes().get(1).getMeanings().get(0).setContraction(new Contraction(me, 0, as, 0,
+                        homonym.getWords().get(1).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(1).getMeanings().get(0).setContraction(new Contraction(me, 0, as, 0,
                                 "mi ich"));
                         break;
                     }
@@ -498,16 +498,16 @@ public class PostProcessor {
         }
     }
 
-    public static void updateSkWords(List<Word> wordList) {
+    public static void updateSkWords(List<Homonym> homonymList) {
         impList = loadFile("imp");
         perfList = loadFile("perf");
         impperfList = loadFile("impperf");
         pronimpList = loadFile("pronimp");
         pronperfList = loadFile("pronperf");
 
-        for (Word word: wordList) {
-            if (word.getLang() == Lang.SK) {
-                switch (word.getOrig()) {
+        for (Homonym homonym : homonymList) {
+            if (homonym.getLang() == Lang.SK) {
+                switch (homonym.getOrig()) {
                     case "ako": //2
                     case "aký":
                     case "kedy":
@@ -516,14 +516,14 @@ public class PostProcessor {
                     case "kto":
                     case "čo":
                     case "kde": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
                         break;
                     }
                     case "akýkoľvek":
                     case "ktorýkoľvek":
                     case "ktokoľvek":
                     {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
                         break;
                     }
                     case "každý":
@@ -535,7 +535,7 @@ public class PostProcessor {
                     case "všetko":
                     case "všetci":
                     case "sám": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONQUANT);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
                     case "niekto":
@@ -544,7 +544,7 @@ public class PostProcessor {
                     case "niečí":
                     case "nejaký":
                     case "ktosi": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONINDEF);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
                         break;
 
                     }
@@ -554,73 +554,73 @@ public class PostProcessor {
                     case "my":
                     case "vy":
                     case "oni": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setCaseType(CaseType.NOM);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setCaseType(CaseType.NOM);
                         break;
                     }
                     case "sebe": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setCaseType(CaseType.LOC);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setCaseType(CaseType.LOC);
                         break;
                     }
                     case "ony": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setCaseType(CaseType.NOM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setCaseType(CaseType.NOM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
                         break;
                     }
                     case "môj":
                     case "tvoj":
                     case "svoj": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "jeho": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MNSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MNSG);
                         break;
                     }
                     case "moja":
                     case "tvoja":
                     case "svoja":
                     case "jej": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "moje":
                     case "tvoje": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.NSG);
                         break;
                     }
                     case "svoje": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSGPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.NSGPL);
                         break;
                     }
                     case "náš":
                     case "váš": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MPL);
                         break;
                     }
                     case "naša":
                     case "vaša": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
                         break;
                     }
                     case "naše":
                     case "vaše": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.NPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.NPL);
                         break;
                     }
                     case "ich": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPOSS);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.PL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.PL);
                         break;
                     }
 
@@ -628,38 +628,38 @@ public class PostProcessor {
                     case "tento":
                     case "tamten":
                     case "taký": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "tá":
                     case "táto": { //case "tamtá":
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "to":
                     case "toto":
                     case "tamto": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.NSG);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.NSG);
                         break;
                     }
                     case "tí":
                     case "títo": { //case "tamtí":
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.MPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MPL);
                         break;
                     }
                     case "tie":
                     case "tieto": { //case "tamtie":
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONDEM);
-                        word.getWordTypes().get(0).setNumberGender(NumberGender.FPL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
                         break;
                     }
                     case "vás": {
-                        word.getWordTypes().get(0).setWordClass(WordClass.PRONPESS);
-                        word.getWordTypes().get(0).setCaseType(CaseType.GAL);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
+                        homonym.getWords().get(0).setCaseType(CaseType.GAL);
                         break;
                     }
 
@@ -706,14 +706,14 @@ public class PostProcessor {
                     case "miliarda":
                     case "bilión":
                     {
-                        word.getWordTypes().get(0).setWordClass(WordClass.NUMCARD);
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMCARD);
                         break;
                     }
                     case "desatina":
                     case "stotina":
                     case "tisícina":
                     {
-                        word.getWordTypes().get(0).setWordClass(WordClass.NUMFRAC);
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMFRAC);
                         break;
                     }
                     case "prvý":
@@ -727,13 +727,13 @@ public class PostProcessor {
                     case "deviaty":
                     case "desiaty":
                     {
-                        word.getWordTypes().get(0).setWordClass(WordClass.NUMORD);
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMORD);
                         break;
                     }
                     default:
-                        if (word.getWordTypes().get(0).isVerb() ||
-                                (word.getWordTypes().size() > 1 && word.getWordTypes().get(1).isVerb())) {
-                            updateSkVerb(word);
+                        if (homonym.getWords().get(0).isVerb() ||
+                                (homonym.getWords().size() > 1 && homonym.getWords().get(1).isVerb())) {
+                            updateSkVerb(homonym);
                         }
                 }
             }
@@ -754,21 +754,21 @@ public class PostProcessor {
         return result;
     }
 
-    private static void updateSkVerb(Word verb) {
+    private static void updateSkVerb(Homonym verb) {
         if (impList.contains(verb.getOrig())) {
-            verb.getWordTypes().get(0).setWordClass(WordClass.VIMP);
+            verb.getWords().get(0).setWordClass(WordClass.VIMP);
         } else if (perfList.contains(verb.getOrig())) {
-            verb.getWordTypes().get(0).setWordClass(WordClass.VPERF);
+            verb.getWords().get(0).setWordClass(WordClass.VPERF);
         } else if (impperfList.contains(verb.getOrig())) {
-            verb.getWordTypes().get(0).setWordClass(WordClass.VIMPPERF);
+            verb.getWords().get(0).setWordClass(WordClass.VIMPPERF);
         } else if (pronimpList.contains(verb.getOrig())) {
-            verb.getWordTypes().get(0).setWordClass(WordClass.VPRONIMP);
+            verb.getWords().get(0).setWordClass(WordClass.VPRONIMP);
         } else if (pronperfList.contains(verb.getOrig())) {
-            verb.getWordTypes().get(0).setWordClass(WordClass.VPRONPERF);
+            verb.getWords().get(0).setWordClass(WordClass.VPRONPERF);
         }
     }
 
-    public static WordClass updateWordClass(Word tran, WordType wordType, WordClass dbwc) {
+    public static WordClass updateWordClass(Homonym tran, Word word, WordClass dbwc) {
         //special overwrite for particip. in PT (part - particle (SK), pt - particip (PT))
         if (tran.getLang() == Lang.PT) {
             switch (dbwc) {

@@ -2,8 +2,8 @@ package sk.portugal.leksi.util.helper;
 
 import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.Form;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.Word;
-import sk.portugal.leksi.model.WordType;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.NumberGender;
 import sk.portugal.leksi.model.enums.PhrasemeType;
@@ -13,7 +13,7 @@ import sk.portugal.leksi.model.enums.WordClass;
  */
 public class VariantHelper {
 
-    public static void processVariants(Word w, WordType wt, String var) {
+    public static void processVariants(Homonym w, Word wt, String var) {
         String s = StringUtils.trimToEmpty(var);
         if (StringUtils.isNumeric(StringUtils.substringBefore(s, " "))) {
             wt.setParadigm(StringUtils.substringBefore(s, " "));
@@ -30,6 +30,10 @@ public class VariantHelper {
             wt.setNumberGender(NumberGender.SGPL);
         } else if (StringUtils.startsWith(s, "forma ")) {
             wt.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
+        } else if (StringUtils.startsWith(s, FormType.VREFLSA.getKey())) {
+            wt.addForm(new Form(FormType.VREFLSA, "sa"));
+        } else if (StringUtils.startsWith(s, FormType.VREFLSI.getKey())) {
+            wt.addForm(new Form(FormType.VREFLSI, "si"));
         } else if (StringUtils.startsWithAny(s, "f ", "pl ", "p ", "pp ")) {
             Form f = new Form();
             String[] ss = StringUtils.split(s, ",");

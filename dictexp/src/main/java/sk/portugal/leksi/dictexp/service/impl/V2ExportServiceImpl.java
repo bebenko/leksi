@@ -56,7 +56,7 @@ public class V2ExportServiceImpl implements ExportService {
                 + escapeHtml(str) + StringHelper.RIGHTSQUAREBRACKET + addFmtEnd();
     }
 
-    private String addClassNumGend(WordType wt, Lang explang) {
+    private String addClassNumGend(Word wt, Lang explang) {
         String res = addFmtStart("clng");
         boolean wc = false, ct = false;
         if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
@@ -295,11 +295,22 @@ public class V2ExportServiceImpl implements ExportService {
     }
 
     private String addVerbForm(Form vf, Lang explang) {
-        String res = addTranslation(StringHelper.LEFTSQUAREBRACKET);
-        res += addFmtStart("obli") + escapeHtml(LangHelper.getFormOfVerb(explang)) + addFmtEnd();
+        String lbr = StringHelper.LEFTPARENTHESIS, rbr = StringHelper.RIGHTPARENTHESIS, txt = vf.getType().getPrint(explang);
+        if (vf.getType() == FormType.VERBFORM) {
+            lbr = StringHelper.LEFTSQUAREBRACKET;
+            rbr = StringHelper.RIGHTSQUAREBRACKET;
+            txt = LangHelper.getFormOfVerb(explang);
+        }
+
+        String res = addTranslation(lbr);
+        res += addFmtStart("obli") + escapeHtml(txt) + addFmtEnd();
         res += addTranslation(space());
-        res += addWordReference(vf.getValues());
-        res += addTranslation(StringHelper.RIGHTSQUAREBRACKET);
+        if (vf.getType() == FormType.VERBFORM) {
+            res += addWordReference(vf.getValues());
+        } else {
+            res += addTranslation(vf.getValues());
+        }
+        res += addTranslation(rbr);
         return res;
     }
 
@@ -352,12 +363,12 @@ public class V2ExportServiceImpl implements ExportService {
         return addSectionStart("idioms") + addPhrasemes(idioms, lang, explang, ng) + addSectionEnd();
     }
 
-    private String getFormattedWordWithTranslation(Word w, Lang lang, Lang explang) {
+    private String getFormattedWordWithTranslation(Homonym w, Lang lang, Lang explang) {
         String str = addSectionStart("wrdsect");
 
         str += addSectionStart("wrdline");
 
-        //construct word w/ translations formatting
+        //construct homonym w/ translations formatting
         str += addWord(w.getOrig());
 
         //pronunciation
@@ -368,7 +379,7 @@ public class V2ExportServiceImpl implements ExportService {
 
         int number;
 
-        for (WordType wt: w.getWordTypes()) {
+        for (Word wt: w.getWords()) {
 
             //ignore everything for old orthography
             if (wt.getForms() != null && wt.getForms().get(0).getType() != null
@@ -453,7 +464,7 @@ public class V2ExportServiceImpl implements ExportService {
         return str;
     }
 
-    private String getFormattedWordIdioms(Word w, Lang explang) {
+    private String getFormattedWordIdioms(Homonym w, Lang explang) {
         String str = "";
         str += addSectionStart("idisect");
 
@@ -474,7 +485,7 @@ public class V2ExportServiceImpl implements ExportService {
         return null;
     }
 
-    private String generateInsert(Word w, Lang lang, Lang explang) {
+    private String generateInsert(Homonym w, Lang lang, Lang explang) {
         String sqli = "INSERT INTO `dict_" + getTab(lang, explang) + "` (`ID`, `word`, `nodiacr`, `meaningsfmt`, `idiomsfmt`) " +
                 "VALUES (" + counter++ + ", ";
 
@@ -493,16 +504,16 @@ public class V2ExportServiceImpl implements ExportService {
 
 
     @Override
-    public void generateV2Export(Lang lang, Lang explang, List<Word> words) {
-        if (words == null || words.isEmpty()) return;
+    public void generateV2Export(Lang lang, Lang explang, List<Homonym> homonyms) {
+        if (homonyms == null || homonyms.isEmpty()) return;
 
-        File out = new File("_sqlexports\\export_" + getTab(words.get(0).getLang(), explang) + ".sql");
+        File out = new File("_sqlexports\\export_" + getTab(homonyms.get(0).getLang(), explang) + ".sql");
 
         try {
             FileUtils.writeStringToFile(out, "", "UTF-8", false);
-            for (Word word: words) {
-                if (word.isEnabled())
-                    FileUtils.writeStringToFile(out, generateInsert(word, lang, explang) + "\n", "UTF-8", true);
+            for (Homonym homonym : homonyms) {
+                if (homonym.isEnabled())
+                    FileUtils.writeStringToFile(out, generateInsert(homonym, lang, explang) + "\n", "UTF-8", true);
             }
         } catch (IOException e) {
             e.printStackTrace();

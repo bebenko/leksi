@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.dictexp.service.ExportService;
 import sk.portugal.leksi.loader.service.LoadingService;
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.enums.Lang;
 
 import java.util.List;
@@ -20,18 +20,18 @@ public class DictExport {
         LoadingService loadingService = (LoadingService) ctx.getBean("loadingService");
         ExportService exportService = (ExportService) ctx.getBean("exportService");
 
-        List<Word> words;
+        List<Homonym> homonyms;
 
         for (Lang lang : Lang.getAll()) {
-            words = loadingService.loadAll(lang);
+            homonyms = loadingService.loadAll(lang);
             for (Lang explang : Lang.getAll()) {
-                //Collections.sort(words, new WordComparator());
-                exportService.generateV2Export(lang, explang, words);
-                System.out.println("words (" + lang.getKey() + "/" + explang.getKey() + "): " + words.size());
+                //Collections.sort(homonyms, new WordComparator());
+                exportService.generateV2Export(lang, explang, homonyms);
+                System.out.println("homonyms (" + lang.getKey() + "/" + explang.getKey() + "): " + homonyms.size());
             }
         }
-        //Collections.sort(words, new WordComparator());
+        //Collections.sort(homonyms, new WordComparator());
 
-        //Printer.printWordList(words, false);
+        //Printer.printWordList(homonyms, false);
     }
 }

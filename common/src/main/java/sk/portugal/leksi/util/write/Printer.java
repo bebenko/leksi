@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class Printer {
 
-    public static void printAll(Lang lang, List<Word> words) {
-        for (Word w: words) {
+    public static void printAll(Lang lang, List<Homonym> homonyms) {
+        for (Homonym w: homonyms) {
             print(lang, w);
         }
     }
 
-    public static void print(Lang lang, Word w) {
+    public static void print(Lang lang, Homonym w) {
         System.out.println(getPrint(lang, w));
     }
 
-    public static String getPrint(Lang lang, Word w) {
+    public static String getPrint(Lang lang, Homonym w) {
         String res = w.getOrig();
         res += (w.getPronunciation() != null ? " [" + w.getPronunciation() + "]" : "");
         if (w.getAlternatives() != null) {
@@ -33,7 +33,7 @@ public class Printer {
                         "»";
             }
         }
-        for (WordType wt : w.getWordTypes()) {
+        for (Word wt : w.getWords()) {
             res += " {«" +
                     (wt.getParadigm() != null ? "pdg:" + wt.getParadigm() + ';' : "") +
                     (wt.getNumberGender() != null ? "ng:" + wt.getNumberGender().getPrint(lang) + ";" : "") +
@@ -81,11 +81,11 @@ public class Printer {
         return res;
     }
 
-    public static void printWordList(List<Word> words, boolean withAccents) {
+    public static void printWordList(List<Homonym> homonyms, boolean withAccents) {
         String letter = "A", compLetter;
         System.out.println(letter);
 
-        for (Word w: words) {
+        for (Homonym w: homonyms) {
             if (withAccents) {
                 compLetter = w.getOrig().substring(0, 1).toUpperCase();
             } else {

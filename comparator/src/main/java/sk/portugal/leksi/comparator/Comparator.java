@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.comparator.service.CompareService;
 import sk.portugal.leksi.loader.service.LoadingService;
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.enums.Lang;
 
 import java.io.File;
@@ -30,13 +30,13 @@ public class Comparator {
         }
 
         for (Lang lang: Lang.getAll()) {
-            List<Word> words = loadingService.loadAll(lang);
-            List<Word> words2 = loadingService2.loadAll(lang);
-            //Printer.printAll(words);
-            //System.out.println("words: " + words.size());
+            List<Homonym> homonyms = loadingService.loadAll(lang);
+            List<Homonym> words2 = loadingService2.loadAll(lang);
+            //Printer.printAll(homonyms);
+            //System.out.println("homonyms: " + homonyms.size());
             //System.out.println("words2: " + words2.size());
 
-            compareService.compare(words, words2, out);
+            compareService.compare(homonyms, words2, out);
 
             try {
                 FileUtils.writeStringToFile(out, "\n\n" + StringUtils.repeat("X", 100) + "\n\n", "UTF-8", true);

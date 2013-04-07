@@ -1,6 +1,6 @@
 package sk.portugal.leksi.comparator.service;
 
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 
 import java.io.File;
 import java.util.List;
@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface CompareService {
 
-    public void compare(List<Word> wordList1, List<Word> wordList2, File out);
+    public void compare(List<Homonym> homonymList1, List<Homonym> homonymList2, File out);
 }

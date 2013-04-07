@@ -3,8 +3,9 @@ package sk.portugal.leksi.mirror;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sk.portugal.leksi.mirror.service.DictionaryService;
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.mirror.processing.MirroringProcessor;
+import sk.portugal.leksi.model.enums.Lang;
 import sk.portugal.leksi.util.write.Printer;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class Mirror {
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("config/beans.xml");
         DictionaryService dictionaryService = (DictionaryService) ctx.getBean("surDictionaryService");
-        List<Word> words = dictionaryService.getAllPTWords();
+        List<Homonym> homonyms = dictionaryService.getAllPTWords();
 
 /*        PrintStream out = null;
         try {
@@ -25,18 +26,18 @@ public class Mirror {
         }
         System.setOut(out);*/
 
-        //Printer.printAll(words);
+        //Printer.printAll(homonyms);
 
         //some cleaning over existing translation synonyms
-        MirroringProcessor.cleanseTranslations(words);
-        List<Word> mirroredWords = MirroringProcessor.getMirroredTranslations(words);
+        MirroringProcessor.cleanseTranslations(homonyms);
+        List<Homonym> mirroredHomonyms = MirroringProcessor.getMirroredTranslations(homonyms);
 
         //System.out.println("");System.out.println("");System.out.println("");System.out.println("");
-        //dictionaryService.saveAllSKWords(mirroredWords);
-        Printer.printAll(mirroredWords);
+        //dictionaryService.saveAllSKWords(mirroredHomonyms);
+        Printer.printAll(Lang.PT, mirroredHomonyms);
 
-        System.out.println("words: " + words.size());
-        System.out.println("mirrored words: " + mirroredWords.size());
+        System.out.println("homonyms: " + homonyms.size());
+        System.out.println("mirrored homonyms: " + mirroredHomonyms.size());
     }
 
 }

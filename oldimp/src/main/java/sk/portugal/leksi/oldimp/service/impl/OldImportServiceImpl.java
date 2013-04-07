@@ -7,6 +7,7 @@ import sk.portugal.leksi.oldimp.model.Frazi;
 import sk.portugal.leksi.oldimp.model.Prtbl;
 import sk.portugal.leksi.oldimp.model.Triple;
 import sk.portugal.leksi.oldimp.service.OldImportService;
+import sk.portugal.leksi.util.helper.StringHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,7 +61,9 @@ public class OldImportServiceImpl implements OldImportService {
 
         if (!prtblList.isEmpty()) {
             //printInsert("prvvzn", prtblList.get(0));
-            printDelete("prtbl", prtblList.get(0));
+            //printDelete("prtbl", prtblList.get(0));
+            //printUpdate("prtbl", prtblList.get(0));
+            printDelete("prvvzn", prtblList.get(0));
         }
     }
 
@@ -143,12 +146,19 @@ public class OldImportServiceImpl implements OldImportService {
         sql += "'" + r.getTvar() + "');";
 
         System.out.println(sql);
+    }
 
+    private void printUpdate(String table, Prtbl r) {
+        String sql = "UPDATE `" + table + "` SET `Tvar` = ";
+        sql += "'" + r.getTvar() + "' ";
+        sql += "WHERE `portugal` = '" + r.getPortugal() + "';";
+
+        System.out.println(sql);
     }
 
     private void printDelete(String table, Prtbl r) {
         String sql = "DELETE FROM `" + table + "` ";
-        sql += "WHERE portugal = `" + r.getPortugal() + "`;";
+        sql += "WHERE `portugal` = '" + r.getPortugal() + "';";
 
         System.out.println(sql);
 
@@ -181,7 +191,18 @@ public class OldImportServiceImpl implements OldImportService {
     @Override
     public void generateVPronMerge(List<String> wordList) {
         for (String word: wordList) {
-            mergeVPron(word);
+            //mergeVPron(word);
+            String sql = "DELETE FROM `prvvzn` ";
+            sql += "WHERE `portugal` = '" + StringUtils.substringBeforeLast(word, StringHelper.SPACE) + "';";
+
+            System.out.println(sql);
+
+            sql = "UPDATE `prtbl` SET `tvar` = ";
+            sql += "'vrefl-" + StringUtils.substringAfterLast(word, StringHelper.SPACE) + "' ";
+            sql += "WHERE `portugal` = '" + StringUtils.substringBeforeLast(word, StringHelper.SPACE) + "';";
+
+            //System.out.println(sql);
+
         }
     }
 }

@@ -1,6 +1,6 @@
 package sk.portugal.leksi.mirror.service;
 
-import sk.portugal.leksi.model.Word;
+import sk.portugal.leksi.model.Homonym;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface DictionaryService {
 
-    public abstract List<Word> getAllPTWords();
+    public abstract List<Homonym> getAllPTWords();
 
-    public abstract void saveAllSKWords(List<Word> words);
+    public abstract void saveAllSKWords(List<Homonym> homonyms);
 }

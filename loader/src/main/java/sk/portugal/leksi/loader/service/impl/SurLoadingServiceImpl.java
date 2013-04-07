@@ -36,18 +36,18 @@ public class SurLoadingServiceImpl implements LoadingService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private List<Word> getWords(final Lang lang) {
-        List<Word> result = null;
+    private List<Homonym> getWords(final Lang lang) {
+        List<Homonym> result = null;
 
         String sqlw = "SELECT portugal, popis, popis2, slovak1, skratka1, skratka1b, slovak2, skratka2, skratka2b, " +
                 "slovak3, skratka3, skratka3b, slovak4, skratka4, skratka4b, slovak5, skratka5, skratka5b, " +
                 "slovak6, skratka6, skratka6b, slovak7, skratka7, skratka7b, slovak8, skratka8, skratka8b, " +
                 "slovak9, skratka9, skratka9b, slovak10, skratka10, skratka10b, tvar FROM ";
 
-        RowMapper<Word> wRowMapper = new RowMapper<Word>() {
-            public Word mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Word tran = new Word();
-                WordType wordType = new WordType();
+        RowMapper<Homonym> wRowMapper = new RowMapper<Homonym>() {
+            public Homonym mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Homonym tran = new Homonym();
+                Word word = new Word();
                 //tran.setId(rs.getInt("id"));
                 tran.setLang(lang);
                 String orig = StringEscapeUtils.unescapeHtml4(rs.getString("portugal").trim());
@@ -56,14 +56,14 @@ public class SurLoadingServiceImpl implements LoadingService {
 
                 String wc = rs.getString("popis");
                 if (!isEmpty(wc)) {
-                    wordType.setWordClass(PostProcessor.updateWordClass(tran, wordType, WordClass.valueOf(Integer.valueOf(wc.trim()))));
+                    word.setWordClass(PostProcessor.updateWordClass(tran, word, WordClass.valueOf(Integer.valueOf(wc.trim()))));
                 } else {
-                    wordType.setWordClass(WordClass.NONE);
+                    word.setWordClass(WordClass.NONE);
                 }
                 String ng = rs.getString("popis2");
-                if (!isEmpty(ng)) wordType.setNumberGender(NumberGender.valueOf(Integer.valueOf(ng.trim())));
+                if (!isEmpty(ng)) word.setNumberGender(NumberGender.valueOf(Integer.valueOf(ng.trim())));
                 String va = rs.getString("tvar");
-                if (!isEmpty(va)) VariantHelper.processVariants(tran, wordType, va);
+                if (!isEmpty(va)) VariantHelper.processVariants(tran, word, va);
 
                 List<Meaning> meanings = new ArrayList<>();
                 Meaning s;
@@ -81,8 +81,8 @@ public class SurLoadingServiceImpl implements LoadingService {
                         meanings.add(s);
                     }
                 }
-                wordType.setMeanings(meanings);
-                tran.addWordType(wordType);
+                word.setMeanings(meanings);
+                tran.addWordType(word);
                 return tran;
             }
         };
@@ -99,7 +99,7 @@ public class SurLoadingServiceImpl implements LoadingService {
         result = jdbcTemplate.query(sqlw + "prtbl WHERE 1 " + cond, wRowMapper);
         result = cleanse(result, 0);
 
-        List<Word> result2 = jdbcTemplate.query(sqlw + "prvvzn WHERE 1 " + cond2, wRowMapper);
+        List<Homonym> result2 = jdbcTemplate.query(sqlw + "prvvzn WHERE 1 " + cond2, wRowMapper);
         result = mergeWordTypes(result, cleanse(result2, 0));
 
         result2 = jdbcTemplate.query(sqlw + "drhvzn WHERE 1 " + cond2, wRowMapper);
@@ -121,7 +121,7 @@ public class SurLoadingServiceImpl implements LoadingService {
             public List<Phraseme> mapRow(ResultSet rs, int rowNum) throws SQLException {
                 List<Phraseme> phrasemes = new ArrayList<>();
 
-                //first phraseme will be original word
+                //first phraseme will be original homonym
                 Phraseme ph1 = new Phraseme();
 
                 String orig = StringEscapeUtils.unescapeHtml4(rs.getString("portugal").trim());
@@ -146,7 +146,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                     }
                 }
 
-                if (phrasemes.size() == 1) return null; //only original word added, nothing but empty phrases
+                if (phrasemes.size() == 1) return null; //only original homonym added, nothing but empty phrases
                 return phrasemes;
             }
         };
@@ -161,9 +161,9 @@ public class SurLoadingServiceImpl implements LoadingService {
         return jdbcTemplate.query(sqlf + " WHERE 1 " + cond, pRowMapper);
     }
 
-    public List<Word> loadAll(final Lang lang) {
+    public List<Homonym> loadAll(final Lang lang) {
 
-        List<Word> result = getWords(lang);
+        List<Homonym> result = getWords(lang);
 
         mergeAlternatives(result);
 
@@ -180,81 +180,81 @@ public class SurLoadingServiceImpl implements LoadingService {
         return result;
     }
 
-    private void mergeAlternatives(List<Word> wordList) {
-        List<Word> wordsToRemove = new ArrayList<>();
-        for (Word word: wordList) {
+    private void mergeAlternatives(List<Homonym> homonymList) {
+        List<Homonym> wordsToRemove = new ArrayList<>();
+        for (Homonym homonym : homonymList) {
             //identify alternatives
-            if (word.getWordTypes().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
+            if (homonym.getWords().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
 
-                if (word.getWordTypes().get(0).getForms() == null) { //only old orthography satisfies
-                    if (word.getLang() == Lang.PT) {
-                        word.getWordTypes().get(0).addForm(new Form(FormType.LINK_ORT, ""));
+                if (homonym.getWords().get(0).getForms() == null) { //only old orthography satisfies
+                    if (homonym.getLang() == Lang.PT) {
+                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_ORT, ""));
 
                         Alternative alt = new Alternative();
-                        alt.setValue(word.getOrig());
-                        alt.setNumberGender(word.getWordTypes().get(0).getNumberGender());
-                        alt.setWordClass(word.getWordTypes().get(0).getWordClass());
-                        alt.setType(word.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
-                        Word ww = getWord(wordList, StringUtils.removeStart(word.getWordTypes().get(0).getMeanings().get(0).getSynonyms(),
+                        alt.setValue(homonym.getOrig());
+                        alt.setNumberGender(homonym.getWords().get(0).getNumberGender());
+                        alt.setWordClass(homonym.getWords().get(0).getWordClass());
+                        alt.setType(homonym.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
+                        Homonym ww = getWord(homonymList, StringUtils.removeStart(homonym.getWords().get(0).getMeanings().get(0).getSynonyms(),
                                 StringHelper.LINK + StringHelper.SPACE));
                         if (ww != null) {
                             ww.addAlternative(alt);
                         }
-                        wordsToRemove.add(word);
-                    } else if (word.getLang() == Lang.SK && word.getWordTypes().get(0).isVerb()) {
-                        word.getWordTypes().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
-                        word.getWordTypes().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
-                                word.getWordTypes().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE + StringHelper.PERF);
+                        wordsToRemove.add(homonym);
+                    } else if (homonym.getLang() == Lang.SK && homonym.getWords().get(0).isVerb()) {
+                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
+                        homonym.getWords().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
+                                homonym.getWords().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE + StringHelper.PERF);
                     }
                 }
             }
         }
         if (!ALTERNATIVESASEXTRAWORDS) {
-            wordList.removeAll(wordsToRemove);
+            homonymList.removeAll(wordsToRemove);
         }
     }
 
-    private Word getWord(List<Word> wordList, String wrd) {
-        for (Word w: wordList) {
+    private Homonym getWord(List<Homonym> homonymList, String wrd) {
+        for (Homonym w: homonymList) {
             if (w.getOrig().equals(wrd)) return w;
         }
         return null;
     }
 
-    private List<Word> mergeWordTypes(List<Word> wordList, List<Word> otherWordList) {
-        List<Word> result = new ArrayList<>();
-        for (Word word: wordList) {
-            for (Word word2: otherWordList) {
-                if (word.getOrig().equals(word2.getOrig())) {
-                    if (word2.getWordTypes().get(0).getMeanings() != null
-                            && !word2.getWordTypes().get(0).getMeanings().isEmpty()
-                            && word2.getWordTypes().get(0).getMeanings().get(0).getSynonyms() != null
-                            && word2.getWordTypes().get(0).getMeanings().get(0).getSynonyms().trim().equals("#")) {
+    private List<Homonym> mergeWordTypes(List<Homonym> homonymList, List<Homonym> otherHomonymList) {
+        List<Homonym> result = new ArrayList<>();
+        for (Homonym homonym : homonymList) {
+            for (Homonym homonym2 : otherHomonymList) {
+                if (homonym.getOrig().equals(homonym2.getOrig())) {
+                    if (homonym2.getWords().get(0).getMeanings() != null
+                            && !homonym2.getWords().get(0).getMeanings().isEmpty()
+                            && homonym2.getWords().get(0).getMeanings().get(0).getSynonyms() != null
+                            && homonym2.getWords().get(0).getMeanings().get(0).getSynonyms().trim().equals("#")) {
 
-                        //add alternative 'spelling' to word
+                        //add alternative 'spelling' to homonym
                         Alternative alt = new Alternative();
-                        alt.setValue(word2.getWordTypes().get(0).getForms().get(0).getValues());
-                        alt.setNumberGender(word2.getWordTypes().get(0).getNumberGender());
-                        alt.setWordClass(word2.getWordTypes().get(0).getWordClass());
+                        alt.setValue(homonym2.getWords().get(0).getForms().get(0).getValues());
+                        alt.setNumberGender(homonym2.getWords().get(0).getNumberGender());
+                        alt.setWordClass(homonym2.getWords().get(0).getWordClass());
                         alt.setType(AltType.ALTERNATIVE);
-                        word.addAlternative(alt);
+                        homonym.addAlternative(alt);
                         if (ALTERNATIVESASEXTRAWORDS) {
-                            //add alternative as new word
-                            result.add(Word.createLinkedCopy(word2, word));
+                            //add alternative as new homonym
+                            result.add(Homonym.createLinkedCopy(homonym2, homonym));
                         }
                     } else {
-                        //EXCEPTIONS to accommodate for extra meanings of few words listed
-                        if (word.getWordTypes().size() > 1
-                                && (word2.getOrig().equals("tal") || word2.getOrig().equals("todo") || word2.getOrig().equals("segundo")
-                                || word2.getOrig().equals("certo") || word2.getOrig().equals("que") || word2.getOrig().equals("a")
-                                || word2.getOrig().equals("um"))) {
-                            word.addWordType(word2.getWordTypes().get(0));
-                            List<Meaning> ms = word2.getWordTypes().get(0).getMeanings();
+                        //EXCEPTIONS to accommodate for extra meanings of few homonyms listed
+                        if (homonym.getWords().size() > 1
+                                && (homonym2.getOrig().equals("tal") || homonym2.getOrig().equals("todo") || homonym2.getOrig().equals("segundo")
+                                || homonym2.getOrig().equals("certo") || homonym2.getOrig().equals("que") || homonym2.getOrig().equals("a")
+                                || homonym2.getOrig().equals("um"))) {
+                            homonym.addWordType(homonym2.getWords().get(0));
+                            List<Meaning> ms = homonym2.getWords().get(0).getMeanings();
                             List<Integer> listToRemove = new ArrayList<>();
                             for (int i = 1; i < ms.size(); i++) {
                                 String s = ms.get(i).getSynonyms();
 
-                                WordType wt = new WordType();
+                                Word wt = new Word();
                                 wt.setWordClass(WordClass.valueOfKey(StringUtils.substringBefore(s, StringHelper.SPACE)));
                                 Meaning m = new Meaning();
                                 m.setSynonyms(StringUtils.substringAfter(s, StringHelper.SPACE));
@@ -263,26 +263,26 @@ public class SurLoadingServiceImpl implements LoadingService {
                                 wt.setMeanings(mm);
 
                                 listToRemove.add(i);
-                                word.addWordType(wt);
+                                homonym.addWordType(wt);
                             }
                             removeMarkedLines2(ms, listToRemove);
                         } else {
-                            word.addWordType(word2.getWordTypes().get(0));
+                            homonym.addWordType(homonym2.getWords().get(0));
                         }
                     }
                 }
             }
-            result.add(word);
+            result.add(homonym);
         }
         return result;
     }
 
-    private void mergePhrasemes(List<Word> result, List<List<Phraseme>> phrasemes) {
-        for (Word word: result) {
-            //System.out.println(word.getOrig());
+    private void mergePhrasemes(List<Homonym> result, List<List<Phraseme>> phrasemes) {
+        for (Homonym homonym : result) {
+            //System.out.println(homonym.getOrig());
             for (List<Phraseme> phs: phrasemes) {
                 if (phs != null) {
-                    if (word.getOrig().equals(phs.get(0).getOrig())) { //1st contains the word itself
+                    if (homonym.getOrig().equals(phs.get(0).getOrig())) { //1st contains the homonym itself
                         for (int i = 1; i<phs.size(); i++) {
                             Phraseme ph = phs.get(i);
 
@@ -291,14 +291,14 @@ public class SurLoadingServiceImpl implements LoadingService {
 
                             if (ph.getOrig().matches("^[IV]+[a-j]{1}\\s.*$")) { //is expression
                                 String mloc = ph.getOrig().substring(0, ph.getOrig().indexOf(" ")).trim();
-                                //System.out.println("XXX mergePhrasemes for: " + word.getOrig() + " with: " + ph.getOrig() + " at loc: " + mloc);
-                                if (getWTIndex(mloc) < word.getWordTypes().size()
-                                        && getMnngIndex(mloc) < word.getWordTypes().get(getWTIndex(mloc)).getMeanings().size()) {
+                                //System.out.println("XXX mergePhrasemes for: " + homonym.getOrig() + " with: " + ph.getOrig() + " at loc: " + mloc);
+                                if (getWTIndex(mloc) < homonym.getWords().size()
+                                        && getMnngIndex(mloc) < homonym.getWords().get(getWTIndex(mloc)).getMeanings().size()) {
                                     ph.setOrig(StringUtils.removeStart(ph.getOrig(), mloc).trim());
-                                    word.getWordTypes().get(getWTIndex(mloc)).getMeanings().get(getMnngIndex(mloc)).addExpression(ph);
+                                    homonym.getWords().get(getWTIndex(mloc)).getMeanings().get(getMnngIndex(mloc)).addExpression(ph);
                                 }
                             } else {
-                                word.addIdiom(ph);
+                                homonym.addIdiom(ph);
                             }
                         }
                     }
@@ -353,15 +353,15 @@ public class SurLoadingServiceImpl implements LoadingService {
         return true;
     }
 
-    private List<Word> cleanse(List<Word> wordList, int wType) {
+    private List<Homonym> cleanse(List<Homonym> homonymList, int wType) {
         List<Integer> linesToRemove = new ArrayList<>();
 
         //combine split lines
-        for (Word tr: wordList) {
-            for (int i =  tr.getWordTypes().get(wType).getMeanings().size() - 1; i >= 0; i--) {
-                Meaning se = tr.getWordTypes().get(wType).getMeanings().get(i);
+        for (Homonym tr: homonymList) {
+            for (int i =  tr.getWords().get(wType).getMeanings().size() - 1; i >= 0; i--) {
+                Meaning se = tr.getWords().get(wType).getMeanings().get(i);
                 if (se.getSynonyms().startsWith("##")) {
-                    Meaning prev = tr.getWordTypes().get(wType).getMeanings().get(i - 1);
+                    Meaning prev = tr.getWords().get(wType).getMeanings().get(i - 1);
 
                     //combine, but remove starting "##"
                     prev.setSynonyms(StringUtils.stripEnd(prev.getSynonyms(), null)
@@ -375,31 +375,31 @@ public class SurLoadingServiceImpl implements LoadingService {
             }
         }
 
-        //remove words with empty meanings
-        for (int i = wordList.size() - 1; i >= 0 ; i--) {
-            Word tr = wordList.get(i);
-            if (tr.getWordTypes().get(wType).getMeanings().isEmpty() || !tr.getWordTypes().get(wType).hasNonEmptyMeanings()) {
+        //remove homonyms with empty meanings
+        for (int i = homonymList.size() - 1; i >= 0 ; i--) {
+            Homonym tr = homonymList.get(i);
+            if (tr.getWords().get(wType).getMeanings().isEmpty() || !tr.getWords().get(wType).hasNonEmptyMeanings()) {
                 linesToRemove.add(i);
             }
         }
-        removeMarkedLines(wordList, linesToRemove);
+        removeMarkedLines(homonymList, linesToRemove);
 
-        return wordList;
+        return homonymList;
     }
 
-    private static void removeMarkedLines(Word tr, int wType, List<Integer> linesToRemove) {
+    private static void removeMarkedLines(Homonym tr, int wType, List<Integer> linesToRemove) {
         if (!linesToRemove.isEmpty()) {
             for (Integer ii: linesToRemove) {
-                tr.getWordTypes().get(wType).getMeanings().remove((int)ii);
+                tr.getWords().get(wType).getMeanings().remove((int)ii);
             }
             linesToRemove.clear();
         }
     }
 
-    private static void removeMarkedLines(List<Word> words, List<Integer> linesToRemove) {
+    private static void removeMarkedLines(List<Homonym> homonyms, List<Integer> linesToRemove) {
         if (!linesToRemove.isEmpty()) {
             for (Integer ii: linesToRemove) {
-                words.remove((int)ii);
+                homonyms.remove((int)ii);
             }
             linesToRemove.clear();
         }

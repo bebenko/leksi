@@ -58,7 +58,7 @@ public enum WordClass implements Serializable {
     PRONINT (Integer.valueOf(64), "pronint", "pron. int.", "zám. opyt.", "pron"),
     PRONQUANT (Integer.valueOf(65), "pronquant", "quant.", "zám. vymedz.", "pron"),
     PRONINDEF (Integer.valueOf(66), "pronindef", "pron. indef.", "zám. neurč.", "pron"),
-    //PRONZVR (Integer.valueOf(67), "pron", "pron.", "zám. zvrat."),
+    //PRONREFL (Integer.valueOf(67), "pron", "pron.", "zám. zvrat."),
 
     VIMP (Integer.valueOf(70), "vimp", "v. imp.", "slov. nedok.", "verb"),
     VPERF (Integer.valueOf(71), "vperf", "v. perf.", "slov. dok.", "verb"),

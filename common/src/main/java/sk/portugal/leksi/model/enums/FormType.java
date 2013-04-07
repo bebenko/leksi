@@ -15,6 +15,8 @@ public enum FormType {
 
     PARTVERB (Integer.valueOf(20), "partverb", "v.", "slov."),
     VERBFORM (Integer.valueOf(21), "forma", "forma do verbo", "tvar slovesa"),
+    VREFLSA (Integer.valueOf(22), "vrefl-sa", "refl.", "zvrat."),
+    VREFLSI (Integer.valueOf(23), "vrefl-si", "refl.", "zvrat."),
 
     LINK (Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
     LINK_ORT (Integer.valueOf(91), StringHelper.LINK,

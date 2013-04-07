@@ -1,49 +1,46 @@
 package sk.portugal.leksi.model.extra;
 
+import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.Word;
-import sk.portugal.leksi.model.WordType;
-import sk.portugal.leksi.model.enums.Lang;
-import sk.portugal.leksi.model.enums.PhrasemeType;
-import sk.portugal.leksi.util.helper.StringHelper;
 
 /**
  */
 public class Contraction {
 
-    private Word first;
+    private Homonym first;
     private int firstWordTypeIndex;
 
-    private Word second;
+    private Homonym second;
     private int secondWordTypeIndex;
 
     private String additionalText;
 
-    public Contraction(Word first, int firstWordTypeIndex, Word second, int secondWordTypeIndex) {
+    public Contraction(Homonym first, int firstWordTypeIndex, Homonym second, int secondWordTypeIndex) {
         this.first = first;
         this.firstWordTypeIndex = firstWordTypeIndex;
         this.second = second;
         this.secondWordTypeIndex = secondWordTypeIndex;
     }
 
-    public Contraction(Word first, int firstWordTypeIndex, Word second, int secondWordTypeIndex, String additionalText) {
+    public Contraction(Homonym first, int firstWordTypeIndex, Homonym second, int secondWordTypeIndex, String additionalText) {
         this(first, firstWordTypeIndex, second, secondWordTypeIndex);
         this.additionalText = additionalText;
     }
 
-    public Word getFirstWord() {
+    public Homonym getFirstWord() {
         return first;
     }
 
-    public Word getSecondWord() {
+    public Homonym getSecondWord() {
         return second;
     }
 
-    public WordType getFirstWordType() {
-        return first.getWordTypes().get(firstWordTypeIndex);
+    public Word getFirstWordType() {
+        return first.getWords().get(firstWordTypeIndex);
     }
 
-    public WordType getSecondWordType() {
-        return second.getWordTypes().get(secondWordTypeIndex);
+    public Word getSecondWordType() {
+        return second.getWords().get(secondWordTypeIndex);
     }
 
     public String getAdditionalText() {

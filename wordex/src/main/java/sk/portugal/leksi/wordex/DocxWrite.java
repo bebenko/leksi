@@ -360,14 +360,24 @@ public class DocxWrite {
     }
 
     private static void addVerbForm(XWPFParagraph p, Form vf, String color, Lang explang) {
-        addNormal(p, StringHelper.LEFTSQUAREBRACKET, color);
-        addItalic(p, LangHelper.getFormOfVerb(explang), color);
+        String lbr = StringHelper.LEFTPARENTHESIS, rbr = StringHelper.RIGHTPARENTHESIS, txt = vf.getType().getPrint(explang);
+        if (vf.getType() == FormType.VERBFORM) {
+            lbr = StringHelper.LEFTSQUAREBRACKET;
+            rbr = StringHelper.RIGHTSQUAREBRACKET;
+            txt = LangHelper.getFormOfVerb(explang);
+        }
+        addNormal(p, lbr, color);
+        addItalic(p, txt, color);
         addNormal(p, StringHelper.SPACE);
-        addUnderline(p, vf.getValues(), color);
-        addNormal(p, StringHelper.RIGHTSQUAREBRACKET, color);
+        if (vf.getType() == FormType.VERBFORM) {
+            addUnderline(p, vf.getValues(), color);
+        } else {
+            addNormal(p, vf.getValues(), color);
+        }
+        addNormal(p, rbr, color);
     }
 
-    private static void addClassCaseNumberGender(XWPFParagraph p, WordType wt, String color, Lang explang) {
+    private static void addClassCaseNumberGender(XWPFParagraph p, Word wt, String color, Lang explang) {
         if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
             addSpace(p);
             if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
@@ -388,8 +398,8 @@ public class DocxWrite {
         }
     }
 
-    private static boolean contains(WordClass[] wcs, Word word) {
-        for (WordType wt: word.getWordTypes()) {
+    private static boolean contains(WordClass[] wcs, Homonym homonym) {
+        for (Word wt: homonym.getWords()) {
             for (WordClass wc: wcs) {
                 if (wt.getWordClass() == wc || (wc.isNone() && wt.getWordClass() == null)) return true;
             }
@@ -397,22 +407,22 @@ public class DocxWrite {
         return false;
     }
 
-    public static int fullExport(Lang lang, Lang explang, List<Word> words, WordClass[] wcs) {
-        return genDocx(lang, explang, words, wcs, true);
+    public static int fullExport(Lang lang, Lang explang, List<Homonym> homonyms, WordClass[] wcs) {
+        return genDocx(lang, explang, homonyms, wcs, true);
     }
 
-    public static int export(Lang lang, Lang explang, List<Word> words, WordClass[] wcs) {
-        return genDocx(lang, explang, words, wcs, false);
+    public static int export(Lang lang, Lang explang, List<Homonym> homonyms, WordClass[] wcs) {
+        return genDocx(lang, explang, homonyms, wcs, false);
     }
 
-    private static int genDocx(Lang lang, Lang explang, List<Word> words, WordClass[] wcs, boolean full) {
+    private static int genDocx(Lang lang, Lang explang, List<Homonym> homonyms, WordClass[] wcs, boolean full) {
         XWPFDocument doc = new XWPFDocument();
 
         XWPFParagraph p;
 
         int counter = 0;
 
-        for (Word w: words) {
+        for (Homonym w: homonyms) {
 
             if (w.isEnabled() && contains(wcs, w)) {
                 counter++;
@@ -431,8 +441,8 @@ public class DocxWrite {
 
                 if (full) {
                     //paradigm
-                    if (StringUtils.isNotBlank(w.getWordTypes().get(0).getParadigm())){
-                        addSuper(p, w.getWordTypes().get(0).getParadigm());
+                    if (StringUtils.isNotBlank(w.getWords().get(0).getParadigm())){
+                        addSuper(p, w.getWords().get(0).getParadigm());
                     }
                 }
 
@@ -444,8 +454,8 @@ public class DocxWrite {
                     addRightSquareBracket(p);
                 }
 
-                for (int wti = 0; wti < w.getWordTypes().size(); wti++) {
-                    WordType wt = w.getWordTypes().get(wti);
+                for (int wti = 0; wti < w.getWords().size(); wti++) {
+                    Word wt = w.getWords().get(wti);
 
                     boolean wc, numbering = false; String color = null;
 
@@ -583,8 +593,8 @@ public class DocxWrite {
                             }
                         }
 
-                        //next word type delimiter
-                        if (wti < w.getWordTypes().size() - 1) {
+                        //next homonym type delimiter
+                        if (wti < w.getWords().size() - 1) {
                             addSpace(p);
                             addWordTypeDelimiter(p, color);
                         }
