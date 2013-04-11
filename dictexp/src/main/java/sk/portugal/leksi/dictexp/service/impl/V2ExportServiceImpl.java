@@ -66,6 +66,11 @@ public class V2ExportServiceImpl implements ExportService {
                 res += addWordReference(wt.getForms().get(0).getValues());
             } else {
                 res += escapeHtml(wt.getWordClass().getPrint(explang));
+                if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
+                    res += addFmtEnd() + space();
+                    res += addTranslation(escapeHtml(wt.getWordClass().getAddition(explang)));
+                    res += addFmtStart("clng");
+                }
             }
 
             wc = true;
@@ -142,10 +147,10 @@ public class V2ExportServiceImpl implements ExportService {
                 for (int i = 0; i < sx.length; i++) {
                     sxx = StringUtils.substringBefore(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
                     if ((sng = NumberGender.valueOfKey(sxx.trim())) != NumberGender.UNDEF) sxx = sng.getPrint(explang);
-                    res += addTranslation(sxx + StringHelper.SPACE);
+                    res += addFmtStart("spec") + escapeHtml(sxx) + space() + addFmtEnd();
                     sxx = StringUtils.substringAfter(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
                     sxx = StringUtils.removeStart(StringUtils.removeEnd(sxx, StringHelper.DASH), StringHelper.DASH);
-                    res += addFmtStart("spec") + escapeHtml(sxx) + addFmtEnd();
+                    res += addTranslation(sxx);
                     if (i < sx.length - 1) res += addTranslation(StringHelper.COMMASPACE);
                 }
                 res += addTranslation(StringHelper.RIGHTPARENTHESIS);

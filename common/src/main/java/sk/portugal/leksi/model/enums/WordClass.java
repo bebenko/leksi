@@ -48,8 +48,8 @@ public enum WordClass implements Serializable {
     LOCPREP (Integer.valueOf(53), "locprep", "loc. prep.", "predl. sp.", "colloc"),
     LOCADV (Integer.valueOf(54), "locadv", "loc. adv.", "prísl. sp.", "colloc"),
     LOCCONJ (Integer.valueOf(55), "locconj", "loc. conj.", "spoj. výr.", "colloc"),
-    VPRONSA (Integer.valueOf(56), "pronominal-sa", "v. pron. (-sa)", "zvrat. slov. (-sa)", "verb"),   //
-    VPRONSI (Integer.valueOf(57), "pronominal-si", "v. pron. (-si)", "zvrat. slov. (-si)", "verb"),   //
+    VPRONSA (Integer.valueOf(56), "pronominal-sa", "v. pron.", "zvrat. slov.", "verb", "(sa)", "(sa)"),   //
+    VPRONSI (Integer.valueOf(57), "pronominal-si", "v. pron.", "zvrat. slov.", "verb", "(sa)", "(sa)"),   //
 
     PRONPOSS (Integer.valueOf(60), "pronposs", "poss.", "zám. privl.", "pron"),
     PRONDEM (Integer.valueOf(61), "prondem", "dem.", "zám. ukaz.", "pron"),
@@ -81,6 +81,8 @@ public enum WordClass implements Serializable {
     private String print_pt;
     private String print_sk;
     private String group;
+    private String addition_pt;
+    private String addition_sk;
 
     private WordClass(Integer id, String key, String print_pt, String print_sk) {
         this.id = id;
@@ -92,6 +94,12 @@ public enum WordClass implements Serializable {
     private WordClass(Integer id, String key, String print_pt, String print_sk, String group) {
         this(id, key, print_pt, print_sk);
         this.group = group;
+    }
+
+    private WordClass(Integer id, String key, String print_pt, String print_sk, String group, String addition_pt, String addition_sk) {
+        this(id, key, print_pt, print_sk, group);
+        this.addition_pt = addition_pt;
+        this.addition_sk = addition_sk;
     }
 
     public Integer getId() {
@@ -106,6 +114,12 @@ public enum WordClass implements Serializable {
         if (lang == Lang.NONE) return key;
         if (lang == Lang.SK) return print_sk;
         return print_pt;
+    }
+
+    public String getAddition(Lang lang) {
+        if (lang == Lang.PT) return addition_pt;
+        if (lang == Lang.SK) return addition_sk;
+        return key;
     }
 
     public String getGroup() {

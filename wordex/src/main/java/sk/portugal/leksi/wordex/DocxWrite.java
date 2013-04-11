@@ -245,10 +245,10 @@ public class DocxWrite {
                     for (int i = 0; i < sx.length; i++) {
                         sxx = StringUtils.substringBefore(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
                         if ((sng = NumberGender.valueOfKey(sxx.trim())) != NumberGender.UNDEF) sxx = sng.getPrint(explang);
-                        addNormal(p, sxx + StringHelper.SPACE, color);
+                        addItalic(p, sxx + StringHelper.SPACE, color);
                         sxx = StringUtils.substringAfter(StringUtils.removeStart(sx[i], StringHelper.SPACE), StringHelper.SPACE);
                         sxx = StringUtils.removeStart(StringUtils.removeEnd(sxx, StringHelper.DASH), StringHelper.DASH);
-                        addItalic(p, sxx, color);
+                        addNormal(p, sxx, color);
                         if (i < sx.length - 1) addCommaSpace(p, color);
                     }
                     addNormal(p, StringHelper.RIGHTPARENTHESIS, color);
@@ -386,6 +386,10 @@ public class DocxWrite {
                 addItalicUnderline(p, wt.getForms().get(0).getValues(), color);
             } else {
                 addItalic(p, wt.getWordClass().getPrint(explang), color);
+                if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
+                    addSpace(p);
+                    addNormal(p, wt.getWordClass().getAddition(explang), color);
+                }
             }
         }
         if (wt.getCaseType() != null && StringUtils.isNotBlank(wt.getCaseType().getPrint(explang))) {
