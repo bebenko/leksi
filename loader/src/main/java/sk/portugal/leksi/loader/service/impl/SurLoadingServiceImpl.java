@@ -82,7 +82,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                     }
                 }
                 word.setMeanings(meanings);
-                tran.addWordType(word);
+                tran.addWord(word);
                 return tran;
             }
         };
@@ -188,7 +188,7 @@ public class SurLoadingServiceImpl implements LoadingService {
 
                 if (homonym.getWords().get(0).getForms() == null) { //only old orthography satisfies
                     if (homonym.getLang() == Lang.PT) {
-                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_ORT, ""));
+                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFANT, ""));
 
                         Alternative alt = new Alternative();
                         alt.setValue(homonym.getOrig());
@@ -248,7 +248,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                                 && (homonym2.getOrig().equals("tal") || homonym2.getOrig().equals("todo") || homonym2.getOrig().equals("segundo")
                                 || homonym2.getOrig().equals("certo") || homonym2.getOrig().equals("que") || homonym2.getOrig().equals("a")
                                 || homonym2.getOrig().equals("um"))) {
-                            homonym.addWordType(homonym2.getWords().get(0));
+                            homonym.addWord(homonym2.getWords().get(0));
                             List<Meaning> ms = homonym2.getWords().get(0).getMeanings();
                             List<Integer> listToRemove = new ArrayList<>();
                             for (int i = 1; i < ms.size(); i++) {
@@ -263,11 +263,11 @@ public class SurLoadingServiceImpl implements LoadingService {
                                 wt.setMeanings(mm);
 
                                 listToRemove.add(i);
-                                homonym.addWordType(wt);
+                                homonym.addWord(wt);
                             }
                             removeMarkedLines2(ms, listToRemove);
                         } else {
-                            homonym.addWordType(homonym2.getWords().get(0));
+                            homonym.addWord(homonym2.getWords().get(0));
                         }
                     }
                 }

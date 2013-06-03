@@ -34,7 +34,7 @@ public class VariantHelper {
             wt.addForm(new Form(FormType.VREFLSA, "sa"));
         } else if (StringUtils.startsWith(s, FormType.VREFLSI.getKey())) {
             wt.addForm(new Form(FormType.VREFLSI, "si"));
-        } else if (StringUtils.startsWithAny(s, "f ", "pl ", "p ", "pp ")) {
+        } else if (StringUtils.startsWithAny(s, "m ", "f ", "n ", "pl ", "p ", "pp ")) {
             Form f = new Form();
             String[] ss = StringUtils.split(s, ",");
 

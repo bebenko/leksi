@@ -73,7 +73,7 @@ public class SurDictionaryServiceImpl implements DictionaryService {
                     }
                 }
                 word.setMeanings(meanings);
-                tran.addWordType(word);
+                tran.addWord(word);
                 return tran;
             }
         };

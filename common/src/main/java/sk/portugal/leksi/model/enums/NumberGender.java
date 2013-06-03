@@ -15,21 +15,24 @@ public enum NumberGender implements Serializable {
     MFPL (Integer.valueOf(6), "m/f/pl", "m./f. pl.", "m./ž. mn."),
     PL (Integer.valueOf(7), "pl", "pl.", "mn."),
     N (Integer.valueOf(8), "n", "nt.", "s.", "nt"),
-    NPL (Integer.valueOf(9), "n/pl", "nt./pl.", "s. mn.", "nt/pl"),
+    NPL (Integer.valueOf(9), "n/pl", "nt./pl.", "s. mn.", "nt. pl."),
 
     SG (Integer.valueOf(50), "sg", "sing.", "jedn."),
     MSG (Integer.valueOf(51), "m/sg", "m. sing.", "m. jedn."),
-    FSG (Integer.valueOf(52), "m/sg", "f. sing.", "ž. jedn."),
+    FSG (Integer.valueOf(52), "f/sg", "f. sing.", "ž. jedn."),
     NSG (Integer.valueOf(53), "n/sg", "nt. sing.", "s. jedn."),
     MFSG (Integer.valueOf(54), "m/f/sg", "m./f. sing.", "m./ž. jedn."),
     MNSG (Integer.valueOf(55), "m/n/sg", "m./nt. sing.", "m./s. jedn."),
     FNSG (Integer.valueOf(56), "f/n/sg", "f./nt. sing.", "ž./s. jedn."),
     NSGPL (Integer.valueOf(57), "n/sg/pl", "nt. sing./pl.", "s. jedn./mn."),
-    SGPL (Integer.valueOf(59), "sg/pl", "sing./pl.", "jedn./mn."),
+    SGPL (Integer.valueOf(58), "sg/pl", "sing./pl.", "jedn./mn."),
 
-    INV (Integer.valueOf(60), "inv", "inv.", ""),
+    MFSGPL (Integer.valueOf(60), "m/f/sg/pl", "m./f. sing./pl.", "m./ž. jedn./mn."),
+    FSGMPL (Integer.valueOf(61), "f/sg/m/pl", "f. sing./m. pl.", "ž. jedn./m. mn."),
 
-    CF (Integer.valueOf(70), "cf.", "cf.", "cf."),
+    INV (Integer.valueOf(70), "inv", "inv.", ""),
+
+    CF (Integer.valueOf(80), "cf.", "cf.", "cf."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

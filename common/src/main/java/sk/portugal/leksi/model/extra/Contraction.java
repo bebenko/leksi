@@ -27,19 +27,19 @@ public class Contraction {
         this.additionalText = additionalText;
     }
 
-    public Homonym getFirstWord() {
+    public Homonym getFirstHomonym() {
         return first;
     }
 
-    public Homonym getSecondWord() {
+    public Homonym getSecondHomonym() {
         return second;
     }
 
-    public Word getFirstWordType() {
+    public Word getFirstWord() {
         return first.getWords().get(firstWordTypeIndex);
     }
 
-    public Word getSecondWordType() {
+    public Word getSecondWord() {
         return second.getWords().get(secondWordTypeIndex);
     }
 

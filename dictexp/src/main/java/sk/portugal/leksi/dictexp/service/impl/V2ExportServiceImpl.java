@@ -212,8 +212,50 @@ public class V2ExportServiceImpl implements ExportService {
         return res;
     }
 
+    /*
+    private static String addParenthesesLite(XWPFParagraph p, String str, String color, Lang explang) {
+        String s = str.substring(0, StringHelper.findMatchingBracket(str));
+        if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGS)) {
+            NumberGender nng = NumberGender.valueOfKey(StringUtils.remove(s.substring(1, s.length() - 1), StringHelper.DOT));
+            addItalic(p, nng.getPrint(explang), color);
+        } else {
+            addItalic(p, s, color);
+        }
+        return StringUtils.substring(str, StringHelper.findMatchingBracket(str));
+    }
+
+    private static void addFormattedLite(XWPFParagraph p, String str, String color, Lang explang) {
+        String s = str, ss; boolean afterDelim = false;
+        while (StringUtils.isNotBlank(s)) {
+            if (s.startsWith(StringHelper.LEFTPARENTHESIS)) {
+                if (afterDelim) {
+                    addSpace(p);
+                    afterDelim = false;
+                }
+                s = StringUtils.stripStart(addParenthesesLite(p, s, color, explang), null);
+            } else {
+                ss = StringUtils.substringBefore(s, StringHelper.SPACE);
+                if (!StringUtils.startsWithAny(s, StringHelper.DELIMITERS)) {
+                    addSpace(p);
+                }
+                if (StringUtils.endsWithAny(ss, StringHelper.DELIMITERS)) {
+                    afterDelim = true;
+                }
+                addNormal(p, ss, color);
+                s = StringUtils.stripStart(StringUtils.removeStart(s, ss), null);
+            }
+        }
+    }
+
+     */
+
     private String addSquareBracketsForLang(String str, Lang explang) {
-        if (str.indexOf(StringHelper.COLON) > 0) {
+        if (StringUtils.startsWithAny(str.substring(1), StringHelper.GENDERSTRINGS)) {
+            space();
+            addTranslation(str.substring(0, 1));
+            //TODO finish this addFormattedLite(p, str.substring(1, s.length() - 1), color, explang);
+            addTranslation(str.substring(str.length() - 1));
+        } else if (str.indexOf(StringHelper.COLON) > 0) {
             Lang lang = Lang.valueOfKey(StringUtils.substringBetween(str, StringHelper.LEFTSQUAREBRACKET, StringHelper.COLON));
             if (lang == explang) {
                 return addTranslation(StringUtils.remove(str, lang.getKey() + StringHelper.COLON + StringHelper.SPACE));
@@ -279,19 +321,19 @@ public class V2ExportServiceImpl implements ExportService {
 
     private String addContraction(Contraction c, Lang lang, Lang explang, NumberGender ng) {
         String str = PhrasemeType.CONTR.getPrint(explang) + space()
-                + c.getFirstWordType().getWordClass().getPrint(explang) + space();
+                + c.getFirstWord().getWordClass().getPrint(explang) + space();
         String res = addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
-        res += addWordReference(c.getFirstWord().getOrig());
+        res += addWordReference(c.getFirstHomonym().getOrig());
         str = space() + LangHelper.getAnd(explang) + space()
-                + c.getSecondWordType().getWordClass().getPrint(explang) + space();
-        if (c.getSecondWordType().getCaseType() != null) {
-            str += c.getSecondWordType().getCaseType().getPrint(explang) + space();
+                + c.getSecondWord().getWordClass().getPrint(explang) + space();
+        if (c.getSecondWord().getCaseType(true) != null) {
+            str += c.getSecondWord().getCaseType(true).getPrint(explang) + space();
         }
-        if (c.getSecondWordType().getNumberGender() != null) {
-            str += c.getSecondWordType().getNumberGender().getPrint(explang) + space();
+        if (c.getSecondWord().getNumberGender() != null) {
+            str += c.getSecondWord().getNumberGender().getPrint(explang) + space();
         }
         res += addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
-        res += addWordReference(c.getSecondWord().getOrig());
+        res += addWordReference(c.getSecondHomonym().getOrig());
         if (c.getAdditionalText() != null) {
             res += addTranslation(space() + c.getAdditionalText());
             res += addFormattedLine(c.getAdditionalText(), lang, explang, ng);
@@ -388,7 +430,7 @@ public class V2ExportServiceImpl implements ExportService {
 
             //ignore everything for old orthography
             if (wt.getForms() != null && wt.getForms().get(0).getType() != null
-                    && (wt.getForms().get(0).getType() == FormType.LINK_ORT || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
+                    && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
 
                 if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
                     str += space();
@@ -400,7 +442,7 @@ public class V2ExportServiceImpl implements ExportService {
                 str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang), StringHelper.SPACE + StringHelper.LINK), true, explang, wt.getNumberGender());
 
                 String s;
-                if (wt.getForms().get(0).getType() == FormType.LINK_ORT) {
+                if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT) {
                     s = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(),
                             StringHelper.LINK + space());
                 } else { //wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP

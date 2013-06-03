@@ -13,12 +13,12 @@ public enum Style implements Serializable {
     PREN (Integer.valueOf(4), "pren", "fig.", "pren."),
     PEJOR (Integer.valueOf(5), "pejor", "pej.", "pejor."),
     FAM (Integer.valueOf(6), "fam", "fam.", "fam."),
-    VULG (Integer.valueOf(7), "vulg", "vulg.", "vulg."),
+    VULG (Integer.valueOf(7), "vulg", "gross.", "vulg."),
     EXPR (Integer.valueOf(8), "expr", "expr.", "expr."),
     DETS (Integer.valueOf(9), "dets", "infant.", "dets."),
 
     SLANG (Integer.valueOf(51), "slang", "calão", "slang"),
-    HRUB (Integer.valueOf(52), "hrub", "gross.", "hrub."),
+    //HRUB (Integer.valueOf(52), "hrub", "gross.", "hrub."),
     ODB (Integer.valueOf(53), "odb", "tec.", "odb."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");

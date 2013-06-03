@@ -9,9 +9,11 @@ public enum FormType {
     NONE (Integer.valueOf(0), "n/a", "", ""),
     PP (Integer.valueOf(1), "pp", "particip. pass.", "trp. príč."),
     P (Integer.valueOf(2), "p", "particip.", "príč."),
-    F (Integer.valueOf(3), "f", "f.", "ž."),
-    PL (Integer.valueOf(4), "pl", "pl.", "mn."),
-    PLINV (Integer.valueOf(5), "pl inv", "pl. inv.", "jedn./mn."),
+    M (Integer.valueOf(3), "m", "m.", "m."),
+    F (Integer.valueOf(4), "f", "f.", "ž."),
+    N (Integer.valueOf(5), "n", "nt.", "s."),
+    PL (Integer.valueOf(6), "pl", "pl.", "mn."),
+    PLINV (Integer.valueOf(7), "pl inv", "pl. inv.", "jedn./mn."),
 
     PARTVERB (Integer.valueOf(20), "partverb", "v.", "slov."),
     VERBFORM (Integer.valueOf(21), "forma", "forma do verbo", "tvar slovesa"),
@@ -19,10 +21,13 @@ public enum FormType {
     VREFLSI (Integer.valueOf(23), "vrefl-si", "refl.", "zvrat."),
 
     LINK (Integer.valueOf(90), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
-    LINK_ORT (Integer.valueOf(91), StringHelper.LINK,
+    LINK_GRAFANT (Integer.valueOf(91), StringHelper.LINK,
             StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK,
             StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
-    LINK_SK_VERB_IMP (Integer.valueOf(92), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
+    LINK_DUPL (Integer.valueOf(92), StringHelper.LINK,
+            StringHelper.GRDUPL + StringHelper.SPACE + StringHelper.LINK,
+            StringHelper.DVOJPRAV + StringHelper.SPACE + StringHelper.LINK),
+    LINK_SK_VERB_IMP (Integer.valueOf(93), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

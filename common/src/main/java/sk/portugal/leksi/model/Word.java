@@ -14,6 +14,7 @@ public class Word {
     private NumberGender numberGender;
     private WordClass wordClass;
     private CaseType caseType;
+    private boolean showCaseTypeInContractions;
     private List<Form> forms;
     private String paradigm;
 
@@ -49,11 +50,24 @@ public class Word {
     }
 
     public CaseType getCaseType() {
-        return caseType;
+        return getCaseType(false);
+    }
+
+    public CaseType getCaseType(boolean inContraction) {
+        if (inContraction && showCaseTypeInContractions) {
+            return caseType;
+        } else {
+            return null;
+        }
     }
 
     public void setCaseType(CaseType caseType) {
+        setCaseType(caseType, true);
+    }
+
+    public void setCaseType(CaseType caseType, boolean showCaseTypeInContractions) {
         this.caseType = caseType;
+        this.showCaseTypeInContractions = showCaseTypeInContractions;
     }
 
     public List<Form> getForms() {
@@ -94,7 +108,7 @@ public class Word {
     public boolean hasForms() {
         if (this.forms == null) return false;
         for (Form f : getForms()) {
-            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_ORT
+            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_GRAFANT
                     && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
                     && f.getType() != FormType.LINK_SK_VERB_IMP
                     && f.getType() != FormType.VERBFORM && f.getType() != FormType.VREFLSA && f.getType() != FormType.VREFLSI) {

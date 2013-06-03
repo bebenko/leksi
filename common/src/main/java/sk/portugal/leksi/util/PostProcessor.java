@@ -33,7 +33,7 @@ public class PostProcessor {
             aswt.setWordClass(WordClass.PRONPESS);
             aswt.setNumberGender(NumberGender.FPL);
             aswt.setCaseType(CaseType.ACC);
-            as.addWordType(aswt);
+            as.addWord(aswt);
             homonyms.add(as);
 
         }
@@ -69,7 +69,7 @@ public class PostProcessor {
                         break;
                     }
                     case "certo": { //4
-                        homonym.getWords().get(0).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(2).setNumberGender(NumberGender.SG);
                         break;
                     }
                     case "o quê": {
@@ -168,7 +168,7 @@ public class PostProcessor {
                     case "você":
                     case "vós": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
-                        homonym.getWords().get(0).setCaseType(CaseType.NOM);
+                        homonym.getWords().get(0).setCaseType(CaseType.NOM, false);
                         break;
                     }
                     case "ele": {
@@ -243,9 +243,20 @@ public class PostProcessor {
                         break;
                     }
 
+                    case "porque":
+                    case "quando":
+                    {
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONINT);
+                        break;
+                    }
+                    case "porquê":
+                    {
+                        homonym.getWords().get(1).setWordClass(WordClass.PRONINT);
+                        break;
+                    }
+
                     case "algo":
                     case "alguém":
-                    case "determinado":
                     case "nada":
                     case "ninguém":
                     case "qualquer":
@@ -256,6 +267,7 @@ public class PostProcessor {
                         break;
                     }
                     case "um": { //4
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMCARD);
                         //homonym.getWords().get(3).setWordClass(WordClass.PRONINDEF);
                         homonym.getWords().get(3).setWordClass(WordClass.NONE);
                         break;
@@ -428,31 +440,31 @@ public class PostProcessor {
                     }
                     case "ma": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
-                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 1,
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 2,
                                 "mi ho, mi ju"));
                         break;
                     }
                     case "ta": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
-                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, a, 1,
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(te, 0, a, 2,
                                 "ti ho, ti ju"));
                         break;
                     }
                     case "lha": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
-                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 1,
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 2,
                                 "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
                         break;
                     }
                     case "no-la": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
-                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, a, 1,
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(nos, 0, a, 2,
                                 "nám ju, nám ho"));
                         break;
                     }
                     case "vo-la": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
-                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, a, 1,
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(vos, 0, a, 2,
                                 "vám ju, vám ho"));
                         break;
                     }
@@ -493,6 +505,117 @@ public class PostProcessor {
                         break;
                     }
 
+                    //numbers
+                    case "bilião":
+                    case "catorze":
+                    case "cem":
+                    case "cento":
+                    case "cinco":
+                    case "cinquenta":
+                    case "dez":
+                    case "dezanove":
+                    case "dezasseis":
+                    case "dezassete":
+                    case "dezoito":
+                    case "dois":
+                    case "doze":
+                    case "duzentos":
+                    case "mil":
+                    case "milhão":
+                    case "nove":
+                    case "novecentos":
+                    case "noventa":
+                    case "oitenta":
+                    case "oito":
+                    case "oitocentos":
+                    case "onze":
+                    case "quarenta":
+                    case "quatro":
+                    case "quatrocentos":
+                    case "quinhentos":
+                    case "quinze":
+                    case "seis":
+                    case "seiscentos":
+                    case "sessenta":
+                    case "sete":
+                    case "setecentos":
+                    case "setenta":
+                    case "três":
+                    case "treze":
+                    case "trezentos":
+                    case "trinta":
+                    case "vinte":
+                    case "zero":
+                    {
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMCARD);
+                        break;
+                    }
+                    case "meio":
+                    {
+                        homonym.getWords().get(2).setWordClass(WordClass.NUMFRAC);
+                        break;
+                    }
+                    case "primeiro":
+                    case "segundo":
+                    {
+                        homonym.getWords().get(2).setWordClass(WordClass.NUMORD);
+                        break;
+                    }
+                    case "terceiro":
+                    {
+                        homonym.getWords().get(1).setWordClass(WordClass.NUMORD);
+                        break;
+                    }
+                    case "terço":
+                    {
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMFRAC);
+                        break;
+                    }
+                    case "quarto":
+                    {
+                        homonym.getWords().get(1).setWordClass(WordClass.NUMORD);
+                        homonym.getWords().get(2).setWordClass(WordClass.NUMFRAC);
+                        break;
+                    }
+                    case "milésimo":
+                    {
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMFRAC);
+                        homonym.getWords().get(1).setWordClass(WordClass.NUMORD);
+                        break;
+                    }
+                    case "centésimo":
+                    case "décimo":
+                    case "nonagésimo":
+                    case "nono":
+                    case "oitavo":
+                    case "quinto":
+                    case "sétimo":
+                    case "sexto":
+                    case "octogésimo":
+                    case "trigésimo":
+                    case "quadragésimo":
+                    case "quinquagésimo":
+                    case "vigésimo":
+                    case "septuagésimo":
+                    case "sexagésimo":
+                    {
+                        homonym.getWords().get(0).setWordClass(WordClass.NUMORD);
+                        homonym.getWords().get(1).setWordClass(WordClass.NUMFRAC);
+                        break;
+                    }
+
+                    //extra
+                    case "diabetes": {
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSGMPL);
+                        break;
+                    }
+                    case "cor de rosa": {
+                        homonym.getWords().get(1).setNumberGender(NumberGender.SGPL);
+                        break;
+                    }
+                    case "grátis": {
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MFSGPL);
+                    }
                 }
             }
         }
@@ -522,35 +645,56 @@ public class PostProcessor {
                     case "akýkoľvek":
                     case "ktorýkoľvek":
                     case "ktokoľvek":
+                    //case "ľubovoľný":
                     {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
+                        //homonym.getWords().get(0).setWordClass(null);
                         break;
                     }
                     case "každý":
-                    case "nikto":
+                    //case "nikto":
                     case "nič":
                     case "nijaký":
                     case "žiadny":
                     case "vždy":
-                    case "všetko":
-                    case "všetci":
-                    case "sám": {
+                    case "všetci": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
                         break;
                     }
-                    case "niekto":
-                    case "niektorý":
-                    case "niečo":
-                    case "niečí":
-                    case "nejaký":
-                    case "ktosi": {
+                    case "všetko": {
+                        homonym.getWords().get(0).setWordClass(null);
+                        break;
+                    }
+                    case "veľa": {
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
+                        break;
+                    }
+                    case "sám": {
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONDEM);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.M);
+                        break;
+                    }
+                    case "ktosi":
+                    case "niekto": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
                         break;
-
+                    }
+                    case "niečo":
+                    case "niečí":
+                    case "nikto": {
+                        homonym.getWords().get(0).setWordClass(null);
+                        break;
+                    }
+                    case "niektorý":
+                    case "nejaký": {
+                        //homonym.getWords().get(0).setWordClass(WordClass.PRONINDEF);
+                        homonym.getWords().get(0).setWordClass(WordClass.PRONQUANT);
+                        break;
                     }
                     case "ja":
                     case "ty":
                     case "on":
+                    case "ona":
                     case "my":
                     case "vy":
                     case "oni": {
@@ -566,7 +710,7 @@ public class PostProcessor {
                     case "ony": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
                         homonym.getWords().get(0).setCaseType(CaseType.NOM);
-                        homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
+                        //homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
                         break;
                     }
                     case "môj":
@@ -603,19 +747,19 @@ public class PostProcessor {
                     case "náš":
                     case "váš": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
-                        homonym.getWords().get(0).setNumberGender(NumberGender.MPL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "naša":
                     case "vaša": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
-                        homonym.getWords().get(0).setNumberGender(NumberGender.FPL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
                         break;
                     }
                     case "naše":
                     case "vaše": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPOSS);
-                        homonym.getWords().get(0).setNumberGender(NumberGender.NPL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.N);
                         break;
                     }
                     case "ich": {

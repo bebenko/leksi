@@ -57,7 +57,7 @@ public enum FieldType implements Serializable {
     MED (Integer.valueOf(24), "med", "med.", "med."),
     METEOR (Integer.valueOf(56), "meteor", "meteor.", "meteor."),
     MINER (Integer.valueOf(57), "miner", "min.", "miner."),
-    MOTOR (Integer.valueOf(3), "motor", "aut.", "motor."),
+    MOTOR (Integer.valueOf(3), "motor", "mec.", "motor."),
     MYTOL (Integer.valueOf(58), "mytol", "mitol.", "mytol."),
     NAB (Integer.valueOf(32), "náb", "rel.", "náb."),
     NAMOR (Integer.valueOf(27), "námor", "náut.", "námor."),

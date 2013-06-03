@@ -73,7 +73,7 @@ public class Homonym implements Serializable {
         this.words = words;
     }
 
-    public void addWordType(Word word) {
+    public void addWord(Word word) {
         if (this.words == null) {
             this.words = new ArrayList<>();
         }
