@@ -13,27 +13,27 @@ import sk.portugal.leksi.model.enums.WordClass;
  */
 public class VariantHelper {
 
-    public static void processVariants(Homonym w, Word wt, String var) {
+    public static void processVariants(Homonym h, Word w, String var) {
         String s = StringUtils.trimToEmpty(var);
         if (StringUtils.isNumeric(StringUtils.substringBefore(s, " "))) {
-            wt.setParadigm(StringUtils.substringBefore(s, " "));
-            /*if (wt instanceof Verb) {
-                ((Verb)wt).setParadigm(StringUtils.substringBefore(s, " "));
+            w.setParadigm(StringUtils.substringBefore(s, " "));
+            /*if (w instanceof Verb) {
+                ((Verb)w).setParadigm(StringUtils.substringBefore(s, " "));
             }*/
             s = StringUtils.trimToEmpty(StringUtils.removeStart(s, StringUtils.substringBefore(s, " ")));
         }
         if (StringUtils.startsWith(s, "[")) {
-            w.setPronunciation(StringUtils.substringBefore(s.substring(1), "]"));
-            s = StringUtils.trimToEmpty(StringUtils.removeStart(s, "[" + w.getPronunciation() + "]"));
+            h.setPronunciation(StringUtils.substringBefore(s.substring(1), "]"));
+            s = StringUtils.trimToEmpty(StringUtils.removeStart(s, "[" + h.getPronunciation() + "]"));
         }
         if (StringUtils.equals(s, StringHelper.PLINV)) {
-            wt.setNumberGender(NumberGender.SGPL);
+            w.setNumberGender(addSgPl(w.getNumberGender()));
         } else if (StringUtils.startsWith(s, "forma ")) {
-            wt.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
+            w.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
         } else if (StringUtils.startsWith(s, FormType.VREFLSA.getKey())) {
-            wt.addForm(new Form(FormType.VREFLSA, "sa"));
+            w.addForm(new Form(FormType.VREFLSA, "sa"));
         } else if (StringUtils.startsWith(s, FormType.VREFLSI.getKey())) {
-            wt.addForm(new Form(FormType.VREFLSI, "si"));
+            w.addForm(new Form(FormType.VREFLSI, "si"));
         } else if (StringUtils.startsWithAny(s, "m ", "f ", "n ", "pl ", "p ", "pp ")) {
             Form f = new Form();
             String[] ss = StringUtils.split(s, ",");
@@ -41,7 +41,7 @@ public class VariantHelper {
             //set first
             f.setType(FormType.valueOfKey(StringUtils.substringBefore(ss[0], " ")));
             f.setValues(StringUtils.substringAfter(ss[0], " "));
-            wt.addForm(f);
+            w.addForm(f);
             Form saveLast = f;
 
             for (int i = 1; i < ss.length; i++) {
@@ -49,7 +49,7 @@ public class VariantHelper {
                 if (FormType.valueOfKey(StringUtils.substringBefore(StringUtils.trimToEmpty(ss[i]), " ")) != FormType.UNDEF) {
                     f.setType(FormType.valueOfKey(StringUtils.substringBefore(StringUtils.trimToEmpty(ss[i]), " ")));
                     f.setValues(StringUtils.substringAfter(StringUtils.trimToEmpty(ss[i]), " "));
-                    wt.addForm(f);
+                    w.addForm(f);
                 } else if (StringUtils.isNotBlank(StringUtils.trimToEmpty(ss[i]))) {
                     saveLast.setValues(saveLast.getValues() + ", " + StringUtils.substringAfter(ss[i], " "));
                 }
@@ -58,19 +58,40 @@ public class VariantHelper {
         } else if (StringUtils.isNotBlank(s)) {
             s = StringUtils.trimToEmpty(s);
             if (s.equals(WordClass.VPRON.getKey())) {
-                wt.setWordClass(WordClass.VPRON);
+                w.setWordClass(WordClass.VPRON);
             } else if (s.equals(WordClass.VPRONSA.getKey())) {
-                wt.setWordClass(WordClass.VPRONSA);
+                w.setWordClass(WordClass.VPRONSA);
             } else if (s.equals(WordClass.VPRONSI.getKey())) {
-                wt.setWordClass(WordClass.VPRONSI);
+                w.setWordClass(WordClass.VPRONSI);
             } else if (s.equals("*") || s.equals(".") || s.equals("#")) {
-                //System.out.println(w.getOrig() + " " + s);
-            } else if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
-                wt.addForm(new Form(FormType.PARTVERB, s));
+                //System.out.println(h.getOrig() + " " + s);
+            } else if (w.getWordClass() != null && (w.getWordClass() == WordClass.P || w.getWordClass() == WordClass.PP)) {
+                w.addForm(new Form(FormType.PARTVERB, s));
             } else {
-                wt.addForm(new Form(s));
+                w.addForm(new Form(s));
             }
         }
+    }
+
+    private static NumberGender addSgPl(NumberGender ng) {
+        NumberGender rt;
+        switch (ng) {
+            case F: {
+                rt = NumberGender.FSGPL;
+                break;
+            }
+            case M: {
+                rt = NumberGender.MSGPL;
+                break;
+            }
+            case MF: {
+                rt = NumberGender.MFSGPL;
+                break;
+            }
+            default:
+                rt = NumberGender.SGPL;
+        }
+        return rt;
     }
 
     public static PhrasemeType getPhrasemeType(String orig) {

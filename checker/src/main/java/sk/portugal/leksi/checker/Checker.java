@@ -143,7 +143,7 @@ public class Checker {
         for (Homonym w: homonyms) {
             if (w.getAlternatives() != null) {
                 for (Alternative alt: w.getAlternatives()) {
-                    if (alt.getType() == AltType.OLD_ORTHOGRAPHY) {
+                    if (alt.getType() == AltType.GRAFANT) {
                         ortho.add(alt.getValue());
                     }
                 }

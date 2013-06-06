@@ -24,8 +24,8 @@ public enum FormType {
     LINK_GRAFANT (Integer.valueOf(91), StringHelper.LINK,
             StringHelper.GRAFANT + StringHelper.SPACE + StringHelper.LINK,
             StringHelper.STPRAV + StringHelper.SPACE + StringHelper.LINK),
-    LINK_DUPL (Integer.valueOf(92), StringHelper.LINK,
-            StringHelper.GRDUPL + StringHelper.SPACE + StringHelper.LINK,
+    LINK_GRAFDUPL(Integer.valueOf(92), StringHelper.LINK,
+            StringHelper.GRAFDUPL + StringHelper.SPACE + StringHelper.LINK,
             StringHelper.DVOJPRAV + StringHelper.SPACE + StringHelper.LINK),
     LINK_SK_VERB_IMP (Integer.valueOf(93), StringHelper.LINK, StringHelper.LINK, StringHelper.LINK),
 

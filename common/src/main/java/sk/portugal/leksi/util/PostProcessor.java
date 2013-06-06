@@ -69,7 +69,7 @@ public class PostProcessor {
                         break;
                     }
                     case "certo": { //4
-                        homonym.getWords().get(2).setNumberGender(NumberGender.SG);
+                        homonym.getWords().get(2).setNumberGender(NumberGender.MSG);
                         break;
                     }
                     case "o quê": {
@@ -173,7 +173,7 @@ public class PostProcessor {
                     }
                     case "ele": {
                         homonym.getWords().get(0).setWordClass(WordClass.PRONPESS);
-                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSG, false);
                         break;
                     }
                     case "ela": {
@@ -269,7 +269,7 @@ public class PostProcessor {
                     case "um": { //4
                         homonym.getWords().get(0).setWordClass(WordClass.NUMCARD);
                         //homonym.getWords().get(3).setWordClass(WordClass.PRONINDEF);
-                        homonym.getWords().get(3).setWordClass(WordClass.NONE);
+                        //homonym.getWords().get(3).setWordClass(WordClass.NONE);
                         break;
                     }
                     case "abaixo de":
@@ -438,6 +438,12 @@ public class PostProcessor {
                                 getWord(homonymList, "ali"), 0, "odtiaľ"));
                         break;
                     }
+                    case "daqui": {
+                        homonym.getWords().get(0).setWordClass(WordClass.CONTR);
+                        homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(de, 0,
+                                getWord(homonymList, "aqui"), 0, "odtiaľto"));
+                        break;
+                    }
                     case "ma": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
                         homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(me, 0, a, 2,
@@ -453,7 +459,7 @@ public class PostProcessor {
                     case "lha": {
                         homonym.getWords().get(0).setWordClass(WordClass.CONTR);
                         homonym.getWords().get(0).getMeanings().get(0).setContraction(new Contraction(lhe, 0, a, 2,
-                                "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a você) vám ho, vám ju"));
+                                "(PT: a ele) mu ho, mu ju, (PT: a ela) jej ho, jej ju, (PT: a si) vám ho, vám ju"));
                         break;
                     }
                     case "no-la": {
@@ -579,8 +585,8 @@ public class PostProcessor {
                     }
                     case "milésimo":
                     {
-                        homonym.getWords().get(0).setWordClass(WordClass.NUMFRAC);
                         homonym.getWords().get(1).setWordClass(WordClass.NUMORD);
+                        homonym.getWords().get(2).setWordClass(WordClass.NUMFRAC);
                         break;
                     }
                     case "centésimo":

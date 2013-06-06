@@ -46,24 +46,22 @@ public class SurLoadingServiceImpl implements LoadingService {
 
         RowMapper<Homonym> wRowMapper = new RowMapper<Homonym>() {
             public Homonym mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Homonym tran = new Homonym();
+                Homonym h = new Homonym();
                 Word word = new Word();
-                //tran.setId(rs.getInt("id"));
-                tran.setLang(lang);
+                //h.setId(rs.getInt("id"));
+                h.setLang(lang);
                 String orig = StringEscapeUtils.unescapeHtml4(rs.getString("portugal").trim());
-                tran.setOrig(lang == Lang.SK ? StringUtils.removeStart(orig, SKPREFIX) : orig);
-                //System.out.print(tran.getOrig());
+                h.setOrig(lang == Lang.SK ? StringUtils.removeStart(orig, SKPREFIX) : orig);
+                //System.out.print(h.getOrig());
 
                 String wc = rs.getString("popis");
                 if (!isEmpty(wc)) {
-                    word.setWordClass(PostProcessor.updateWordClass(tran, word, WordClass.valueOf(Integer.valueOf(wc.trim()))));
+                    word.setWordClass(PostProcessor.updateWordClass(h, word, WordClass.valueOf(Integer.valueOf(wc.trim()))));
                 } else {
                     word.setWordClass(WordClass.NONE);
                 }
                 String ng = rs.getString("popis2");
                 if (!isEmpty(ng)) word.setNumberGender(NumberGender.valueOf(Integer.valueOf(ng.trim())));
-                String va = rs.getString("tvar");
-                if (!isEmpty(va)) VariantHelper.processVariants(tran, word, va);
 
                 List<Meaning> meanings = new ArrayList<>();
                 Meaning s;
@@ -82,8 +80,10 @@ public class SurLoadingServiceImpl implements LoadingService {
                     }
                 }
                 word.setMeanings(meanings);
-                tran.addWord(word);
-                return tran;
+                h.addWord(word);
+                String va = rs.getString("tvar");
+                if (!isEmpty(va)) VariantHelper.processVariants(h, word, va);
+                return h;
             }
         };
 
@@ -186,15 +186,21 @@ public class SurLoadingServiceImpl implements LoadingService {
             //identify alternatives
             if (homonym.getWords().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
 
-                if (homonym.getWords().get(0).getForms() == null) { //only old orthography satisfies
+                if (homonym.getWords().get(0).getForms() == null) {
                     if (homonym.getLang() == Lang.PT) {
-                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFANT, ""));
+                        if (StringUtils.startsWithAny(homonym.getOrig(), StringHelper.GRAFIADUPLA)) {
+                            homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFDUPL, ""));
+                        } else {
+                            homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFANT, ""));
+                        }
 
                         Alternative alt = new Alternative();
                         alt.setValue(homonym.getOrig());
                         alt.setNumberGender(homonym.getWords().get(0).getNumberGender());
                         alt.setWordClass(homonym.getWords().get(0).getWordClass());
-                        alt.setType(homonym.getLang() == Lang.PT ? AltType.OLD_ORTHOGRAPHY : AltType.UNDEF);
+                        alt.setType(homonym.getLang() == Lang.PT ?
+                                (StringUtils.startsWithAny(homonym.getOrig(), StringHelper.GRAFIADUPLA) ? AltType.GRAFDUPL : AltType.GRAFANT) :
+                                AltType.UNDEF);
                         Homonym ww = getWord(homonymList, StringUtils.removeStart(homonym.getWords().get(0).getMeanings().get(0).getSynonyms(),
                                 StringHelper.LINK + StringHelper.SPACE));
                         if (ww != null) {

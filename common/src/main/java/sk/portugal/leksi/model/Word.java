@@ -14,7 +14,7 @@ public class Word {
     private NumberGender numberGender;
     private WordClass wordClass;
     private CaseType caseType;
-    private boolean showCaseTypeInContractions;
+    private boolean showNumberGenderAndCaseTypeInContractions;
     private List<Form> forms;
     private String paradigm;
 
@@ -34,11 +34,24 @@ public class Word {
     }
 
     public NumberGender getNumberGender() {
-        return numberGender;
+        return getNumberGender(false);
+    }
+
+    public NumberGender getNumberGender(boolean inContraction) {
+        if (!inContraction || (inContraction && showNumberGenderAndCaseTypeInContractions)) {
+            return numberGender;
+        } else {
+            return null;
+        }
     }
 
     public void setNumberGender(NumberGender numberGender) {
+        setNumberGender(numberGender, true);
+    }
+
+    public void setNumberGender(NumberGender numberGender, boolean showNumberGenderCaseTypeInContractions) {
         this.numberGender = numberGender;
+        this.showNumberGenderAndCaseTypeInContractions = showNumberGenderCaseTypeInContractions;
     }
 
     public WordClass getWordClass() {
@@ -54,7 +67,7 @@ public class Word {
     }
 
     public CaseType getCaseType(boolean inContraction) {
-        if (inContraction && showCaseTypeInContractions) {
+        if (!inContraction || (inContraction && showNumberGenderAndCaseTypeInContractions)) {
             return caseType;
         } else {
             return null;
@@ -65,9 +78,9 @@ public class Word {
         setCaseType(caseType, true);
     }
 
-    public void setCaseType(CaseType caseType, boolean showCaseTypeInContractions) {
+    public void setCaseType(CaseType caseType, boolean showNumberGenderCaseTypeInContractions) {
         this.caseType = caseType;
-        this.showCaseTypeInContractions = showCaseTypeInContractions;
+        this.showNumberGenderAndCaseTypeInContractions = showNumberGenderCaseTypeInContractions;
     }
 
     public List<Form> getForms() {

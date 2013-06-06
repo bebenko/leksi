@@ -42,8 +42,10 @@ public class StringHelper {
     public static final String EXPRSEMIFIX = "expr. semi-fix.";
     public static final String GRAFANT = "graf. ant.";
     public static final String STPRAV = "starý pravopis";
-    public static final String GRDUPL = "graf. dupla";
+    public static final String GRAFDUPL = "graf. dupla";
     public static final String DVOJPRAV = "dvojaký pravopis";
+
+    public static final String[] GRAFIADUPLA = new String[] {"dactilografar", "dactilografia", "caracterizar"};
 
     public static final String PLINV = "pl inv";
 

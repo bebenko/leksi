@@ -8,7 +8,8 @@ public enum AltType  {
 
     NONE (Integer.valueOf(0), "n/a", "", ""),
     ALTERNATIVE (Integer.valueOf(1), "alt", "", ""),
-    OLD_ORTHOGRAPHY(Integer.valueOf(2), "ort", StringHelper.GRAFANT, StringHelper.STPRAV),
+    GRAFANT(Integer.valueOf(2), "ort", StringHelper.GRAFANT, StringHelper.STPRAV),
+    GRAFDUPL(Integer.valueOf(3), "dupl", StringHelper.GRAFDUPL, StringHelper.DVOJPRAV),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

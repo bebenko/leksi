@@ -234,7 +234,7 @@ public class DocxWrite {
                     addSpace(p);
                     addItalic(p, s, color);
                 }
-            } else if (StringHelper.containsTwo(s, StringHelper.DASH)) {
+            } else if (StringHelper.containsTwo(s, StringHelper.DASH) && !StringUtils.startsWith(s, "(!-")) {
                 if (StringUtils.startsWithAny(s, StringHelper.GENDERSTRINGSLEFT)) {
                     s = StringUtils.removeStart(StringUtils.removeEnd(s, StringHelper.RIGHTPARENTHESIS), StringHelper.LEFTPARENTHESIS);
                     addSpace(p);
@@ -269,6 +269,7 @@ public class DocxWrite {
                     addItalic(p, StringHelper.LEFTPARENTHESIS + StringUtils.stripStart(StringUtils.substringAfter(s, StringHelper.COLON), null), color);
                 }
             } else if (print) {
+                s = StringUtils.replaceOnce(s, "(!-", "(");
                 addSpace(p);
                 addItalic(p, s, color);
             }
@@ -386,10 +387,10 @@ public class DocxWrite {
         str = StringHelper.SPACE + LangHelper.getAnd(explang) + StringHelper.SPACE
                 + c.getSecondWord().getWordClass().getPrint(explang) + StringHelper.SPACE;
         if (c.getSecondWord().getCaseType(true) != null && StringUtils.isNotBlank(c.getSecondWord().getCaseType(true).getPrint(explang))) {
-            str += c.getSecondWord().getCaseType().getPrint(explang) + StringHelper.SPACE;
+            str += c.getSecondWord().getCaseType(true).getPrint(explang) + StringHelper.SPACE;
         }
-        if (c.getSecondWord().getNumberGender() != null && StringUtils.isNotBlank(c.getSecondWord().getNumberGender().getPrint(explang))) {
-            str += c.getSecondWord().getNumberGender().getPrint(explang) + StringHelper.SPACE;
+        if (c.getSecondWord().getNumberGender(true) != null && StringUtils.isNotBlank(c.getSecondWord().getNumberGender(true).getPrint(explang))) {
+            str += c.getSecondWord().getNumberGender(true).getPrint(explang) + StringHelper.SPACE;
         }
         addItalic(p, str, color);
         addItalicUnderline(p, c.getSecondHomonym().getOrig(), color);
@@ -479,7 +480,7 @@ public class DocxWrite {
                 p.setSpacingAfterLines(0);
                 p.setSpacingAfter(0);
 
-                //System.out.println(w.getOrig());
+                System.out.println(w.getOrig());
                 addBold(p, w.getOrig());
 
                 if (full) {
@@ -508,7 +509,9 @@ public class DocxWrite {
 
                     //ignore everything for old orthography
                     if (wt.getForms() != null && wt.getForms().get(0).getType() != null
-                            && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
+                            && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT
+                            || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL
+                            || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
 
                         if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
                             addClassCaseNumberGender(p, wt, color, explang);
@@ -517,7 +520,7 @@ public class DocxWrite {
                         addItalic(p, wt.getForms().get(0).getType().getPrint(explang), color);
                         addSpace(p);
                         String str;
-                        if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT) {
+                        if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL) {
                             str = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(),
                                 StringHelper.LINK + StringHelper.SPACE);
                         } else { //wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP

@@ -136,7 +136,7 @@ public class V2ExportServiceImpl implements ExportService {
             if (ng != nng) {
                 return addFmtStart("spec") + escapeHtml(StringHelper.LEFTPARENTHESIS + nng.getPrint(explang) + StringHelper.RIGHTPARENTHESIS) + addFmtEnd();
             }
-        } else if (StringHelper.containsTwo(str, StringHelper.DASH)) {
+        } else if (StringHelper.containsTwo(str, StringHelper.DASH) && !StringUtils.startsWith(str, "(!-")) {
             String res = "";
             if (StringUtils.startsWithAny(str, StringHelper.GENDERSTRINGSLEFT)) {
                 String s = StringUtils.removeStart(StringUtils.removeEnd(str, StringHelper.RIGHTPARENTHESIS), StringHelper.LEFTPARENTHESIS);
@@ -169,7 +169,7 @@ public class V2ExportServiceImpl implements ExportService {
         }
 
         if (print) {
-            return addFmtStart("spec") + escapeHtml(str) + addFmtEnd();
+            return addFmtStart("spec") + escapeHtml(StringUtils.replaceOnce(str, "(!-", "(")) + addFmtEnd();
         }
         return StringHelper.EMPTY;
     }
@@ -329,8 +329,8 @@ public class V2ExportServiceImpl implements ExportService {
         if (c.getSecondWord().getCaseType(true) != null) {
             str += c.getSecondWord().getCaseType(true).getPrint(explang) + space();
         }
-        if (c.getSecondWord().getNumberGender() != null) {
-            str += c.getSecondWord().getNumberGender().getPrint(explang) + space();
+        if (c.getSecondWord().getNumberGender(true) != null) {
+            str += c.getSecondWord().getNumberGender(true).getPrint(explang) + space();
         }
         res += addFmtStart("clng") + escapeHtml(str) + addFmtEnd();
         res += addWordReference(c.getSecondHomonym().getOrig());
@@ -430,7 +430,9 @@ public class V2ExportServiceImpl implements ExportService {
 
             //ignore everything for old orthography
             if (wt.getForms() != null && wt.getForms().get(0).getType() != null
-                    && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
+                    && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT
+                    || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL
+                    || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
 
                 if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
                     str += space();
@@ -439,10 +441,11 @@ public class V2ExportServiceImpl implements ExportService {
 
                 str += addSectionStart("mean");
                 str += addSectionStart("meanln");
-                str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang), StringHelper.SPACE + StringHelper.LINK), true, explang, wt.getNumberGender());
+                str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang),
+                        StringHelper.SPACE + StringHelper.LINK), true, explang, wt.getNumberGender());
 
                 String s;
-                if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT) {
+                if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL) {
                     s = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(),
                             StringHelper.LINK + space());
                 } else { //wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP
