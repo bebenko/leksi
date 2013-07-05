@@ -56,24 +56,38 @@ public class V2ExportServiceImpl implements ExportService {
                 + escapeHtml(str) + StringHelper.RIGHTSQUAREBRACKET + addFmtEnd();
     }
 
-    private String addClassNumGend(Word wt, Lang explang) {
+    private String addClass(Word wt, Lang explang) {
+        String res = null;
+        if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
+            //for particips
+            res += escapeHtml(wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOfVerb(explang) + StringHelper.SPACE);
+            res += addWordReference(wt.getForms().get(0).getValues());
+        } else {
+            res += escapeHtml(wt.getWordClass().getPrint(explang));
+            if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
+                res += addFmtEnd() + space();
+                res += addTranslation(escapeHtml(wt.getWordClass().getAddition(explang)));
+                res += addFmtStart("clng");
+            }
+        }
+        return res;
+    }
+
+    private String addClassCaseNumGend(Word wt, Lang explang) {
         String res = addFmtStart("clng");
         boolean wc = false, ct = false;
         if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
-            if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
-                //for particips
-                res += escapeHtml(wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOf(explang) + StringHelper.SPACE);
-                res += addWordReference(wt.getForms().get(0).getValues());
-            } else {
-                res += escapeHtml(wt.getWordClass().getPrint(explang));
-                if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
-                    res += addFmtEnd() + space();
-                    res += addTranslation(escapeHtml(wt.getWordClass().getAddition(explang)));
-                    res += addFmtStart("clng");
-                }
-            }
-
+            res = addClass(wt, explang);
             wc = true;
+        }
+        if (wt.hasComparison()) {
+            res += space();
+            res += escapeHtml(wt.getComparison().getDegree().getPrint(explang));
+            res += space();
+            res += escapeHtml(LangHelper.getOf(explang));
+            res += space() + addFmtEnd();
+            res += addWordReference(wt.getComparison().getPositive());
+            res += addFmtStart("clng");
         }
         if (wt.getCaseType() != null && StringUtils.isNotBlank(wt.getCaseType().getPrint(explang))) {
             if (wc) {
@@ -87,6 +101,14 @@ public class V2ExportServiceImpl implements ExportService {
                 res += space(); //StringHelper.COMMASPACE;
             }
             res += escapeHtml(wt.getNumberGender().getPrint(explang));
+        }
+        if (wt.hasNumberGender2()) {
+            res += StringHelper.SLASH + space();
+            if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
+                res = addClass(wt, explang);
+                res += space(); //StringHelper.COMMASPACE;
+            }
+            res += escapeHtml(wt.getNumberGender2().getPrint(explang));
         }
         return res + addFmtEnd();
     }
@@ -429,33 +451,32 @@ public class V2ExportServiceImpl implements ExportService {
         for (Word wt: w.getWords()) {
 
             //ignore everything for old orthography
-            if (wt.getForms() != null && wt.getForms().get(0).getType() != null
-                    && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT
-                    || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL
-                    || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
+            if (wt.getForms() != null && wt.hasLinkForms()) {
 
-                if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
-                    str += space();
-                    str += addClassNumGend(wt, explang);
+                if (wt.hasForms()) {
+                    str += addForms(wt.getForms(), explang);
                 }
+
+                str += space();
+                str += addClassCaseNumGend(wt, explang);
 
                 str += addSectionStart("mean");
                 str += addSectionStart("meanln");
-                str += addSpecification(StringUtils.substringBefore(wt.getForms().get(0).getType().getPrint(explang),
+                str += addSpecification(StringUtils.substringBefore(wt.getLinkForm().getType().getPrint(explang),
                         StringHelper.SPACE + StringHelper.LINK), true, explang, wt.getNumberGender());
 
                 String s;
-                if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL) {
+                if (wt.hasGrafForm()) {
                     s = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(),
                             StringHelper.LINK + space());
-                } else { //wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP
+                } else { //form: FormType.LINK_SK_VERB_IMP
                     s = StringUtils.substringBetween(wt.getMeanings().get(0).getSynonyms(),
                             StringHelper.LINK + StringHelper.SPACE,
                             StringHelper.SPACE + StringHelper.LEFTPARENTHESIS + SignificanceType.PERF.getKey());
                 }
                 str += addFmtStart("synonyms") + space() + addWordReference(s) + addFmtEnd() + space();
 
-                if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
+                if (!wt.hasGrafForm()) {
                     String k = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(), s + StringHelper.SPACE);
                     k = StringUtils.removeEnd(k.substring(1, k.length() - 1), StringHelper.DOT);
                     str += addSpecification(StringHelper.LEFTPARENTHESIS
@@ -476,7 +497,7 @@ public class V2ExportServiceImpl implements ExportService {
 
                 if (wt.hasClassOrNumGend(wt)) {
                     str += addSectionStart("wrdclng");
-                    str += addClassNumGend(wt, explang);
+                    str += addClassCaseNumGend(wt, explang);
                     //str += addBreak();
                     str += addSectionEnd();
                 }

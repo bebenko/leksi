@@ -28,7 +28,7 @@ public enum FieldType implements Serializable {
     ETNOGR (Integer.valueOf(66), "etnogr", "", "etnogr."),
     EXPR (Integer.valueOf(88), "expr", "express.", "expr."),
     FARM (Integer.valueOf(54), "farm", "farm.", "farm."),
-    FILM (Integer.valueOf(43), "film", "film.", "film."),
+    FILM (Integer.valueOf(43), "film", "cine.", "film."),
     FILOZ (Integer.valueOf(44), "filoz", "fil.", "filoz."),
     FON (Integer.valueOf(67), "fon", "", "fon."),
     FOT (Integer.valueOf(18), "fot", "fot.", "fot."),
@@ -93,6 +93,8 @@ public enum FieldType implements Serializable {
     ZEL (Integer.valueOf(15), "žel", "", "žel."),
     ZOOL (Integer.valueOf(39), "zool", "zool.", "zool."),
     ZURN (Integer.valueOf(86), "žurn", "jorn.", "žurn."),
+
+    DIVFILM (Integer.valueOf(90), "divfilm", "teatro, cine.", "div., film."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 

@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import sk.portugal.leksi.model.Form;
 import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.Word;
-import sk.portugal.leksi.model.enums.FormType;
-import sk.portugal.leksi.model.enums.NumberGender;
-import sk.portugal.leksi.model.enums.PhrasemeType;
-import sk.portugal.leksi.model.enums.WordClass;
+import sk.portugal.leksi.model.enums.*;
+import sk.portugal.leksi.model.extra.Comparison;
 
 /**
  */
@@ -26,15 +24,20 @@ public class VariantHelper {
             h.setPronunciation(StringUtils.substringBefore(s.substring(1), "]"));
             s = StringUtils.trimToEmpty(StringUtils.removeStart(s, "[" + h.getPronunciation() + "]"));
         }
+        if (StringUtils.startsWith(s, StringHelper.LINK + StringHelper.SPACE + StringHelper.DUPL)) {
+            h.getWords().get(0).addForm(new Form(FormType.LINK_GRAFDUPL, ""));
+        }
         if (StringUtils.equals(s, StringHelper.PLINV)) {
             w.setNumberGender(addSgPl(w.getNumberGender()));
+        } else if (StringUtils.startsWithAny(s, "comp de ", "sup de ")) {
+            w.setComparison(new Comparison(ComparisonDegree.valueOfKey(StringUtils.substringBefore(s, " de ")), StringUtils.substringAfter(s, " de ")));
         } else if (StringUtils.startsWith(s, "forma ")) {
             w.addForm(new Form(FormType.VERBFORM, StringUtils.substringAfter(s, "forma ")));
         } else if (StringUtils.startsWith(s, FormType.VREFLSA.getKey())) {
             w.addForm(new Form(FormType.VREFLSA, "sa"));
         } else if (StringUtils.startsWith(s, FormType.VREFLSI.getKey())) {
             w.addForm(new Form(FormType.VREFLSI, "si"));
-        } else if (StringUtils.startsWithAny(s, "m ", "f ", "n ", "pl ", "p ", "pp ")) {
+        } else if (StringUtils.startsWithAny(s, "m ", "f ", "n ", "pl ", "p ", "pp ", "cf ")) {
             Form f = new Form();
             String[] ss = StringUtils.split(s, ",");
 

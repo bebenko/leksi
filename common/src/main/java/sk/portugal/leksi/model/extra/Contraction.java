@@ -8,22 +8,22 @@ import sk.portugal.leksi.model.Word;
 public class Contraction {
 
     private Homonym first;
-    private int firstWordTypeIndex;
+    private int firstWordIndex;
 
     private Homonym second;
-    private int secondWordTypeIndex;
+    private int secondWordIndex;
 
     private String additionalText;
 
-    public Contraction(Homonym first, int firstWordTypeIndex, Homonym second, int secondWordTypeIndex) {
+    public Contraction(Homonym first, int firstWordIndex, Homonym second, int secondWordIndex) {
         this.first = first;
-        this.firstWordTypeIndex = firstWordTypeIndex;
+        this.firstWordIndex = firstWordIndex;
         this.second = second;
-        this.secondWordTypeIndex = secondWordTypeIndex;
+        this.secondWordIndex = secondWordIndex;
     }
 
-    public Contraction(Homonym first, int firstWordTypeIndex, Homonym second, int secondWordTypeIndex, String additionalText) {
-        this(first, firstWordTypeIndex, second, secondWordTypeIndex);
+    public Contraction(Homonym first, int firstWordIndex, Homonym second, int secondWordIndex, String additionalText) {
+        this(first, firstWordIndex, second, secondWordIndex);
         this.additionalText = additionalText;
     }
 
@@ -36,11 +36,11 @@ public class Contraction {
     }
 
     public Word getFirstWord() {
-        return first.getWords().get(firstWordTypeIndex);
+        return first.getWords().get(firstWordIndex);
     }
 
     public Word getSecondWord() {
-        return second.getWords().get(secondWordTypeIndex);
+        return second.getWords().get(secondWordIndex);
     }
 
     public String getAdditionalText() {

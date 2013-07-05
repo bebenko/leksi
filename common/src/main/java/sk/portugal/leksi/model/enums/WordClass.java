@@ -14,7 +14,7 @@ public enum WordClass implements Serializable {
     ARTINDEF (Integer.valueOf(5), "artindef", "art indef.", "neurč. člen", "artic"),
     ATR (Integer.valueOf(6), "atr", "atr.", ""),
     AUX (Integer.valueOf(7), "aux", "aux.", ""),
-    COMPAR (Integer.valueOf(8), "compar", "comp.", "komp."),
+    COMPAR (Integer.valueOf(8), "compar", "comp.", "druhý st."),
     CONJ (Integer.valueOf(9), "conj", "conj.", "spoj.", "conj"),      //
     ESP (Integer.valueOf(10), "esp", "esp.", ""),
     EJAC(Integer.valueOf(11), "ejac", "excl.", "zvol.", "ejac"),     //
@@ -31,7 +31,7 @@ public enum WordClass implements Serializable {
     PT (Integer.valueOf(22), "pt", "port.", "port."),       //
     SUJ (Integer.valueOf(23), "suj", "suj.", ""),
     SUB (Integer.valueOf(24), "sub", "sub.", ""),
-    SUPERL (Integer.valueOf(25), "superl", "sup.", "superl."),
+    SUPERL (Integer.valueOf(25), "superl", "sup.", "tretí st."),
     TB (Integer.valueOf(26), "tb", "tb.", ""),              //
     VB (Integer.valueOf(27), "vb", "v.", "slov.", "verb"), //vb        //
     VI (Integer.valueOf(28), "vi", "v.", "slov.", "verb"), //vi        //
@@ -42,14 +42,14 @@ public enum WordClass implements Serializable {
     PART (Integer.valueOf(33), "part", "", ""), //EXCEPTION: do not show! (for now)  PART (Integer.valueOf(33), "part", "part.", "čast.")
     P (Integer.valueOf(34), "p", "particip.", "príč.", "part"),
 
-    VPRON (Integer.valueOf(50), "pronominal", "v. pron.", "zvrat. slov.", "verb"),   //
+    VPRON (Integer.valueOf(50), "pronominal", "v. pron.", "zámen. slov.", "verb"),   //
     //PARTICIP (Integer.valueOf(51), "particip", "particip.", "príč."),
     LOC (Integer.valueOf(52), "loc", "loc.", "sp.", "colloc"),
     LOCPREP (Integer.valueOf(53), "locprep", "loc. prep.", "predl. sp.", "colloc"),
     LOCADV (Integer.valueOf(54), "locadv", "loc. adv.", "prísl. sp.", "colloc"),
     LOCCONJ (Integer.valueOf(55), "locconj", "loc. conj.", "spoj. výr.", "colloc"),
-    VPRONSA (Integer.valueOf(56), "pronominal-sa", "v. pron.", "zvrat. slov.", "verb", "(sa)", "(sa)"),   //
-    VPRONSI (Integer.valueOf(57), "pronominal-si", "v. pron.", "zvrat. slov.", "verb", "(sa)", "(sa)"),   //
+    VPRONSA (Integer.valueOf(56), "pronominal-sa", "v. pron.", "zámen. slov.", "verb", "(sa)", "(sa)"),   //
+    VPRONSI (Integer.valueOf(57), "pronominal-si", "v. pron.", "zámen. slov.", "verb", "(sa)", "(sa)"),   //
 
     PRONPOSS (Integer.valueOf(60), "pronposs", "poss.", "zám. privl.", "pron"),
     PRONDEM (Integer.valueOf(61), "prondem", "dem.", "zám. ukaz.", "pron"),
@@ -63,9 +63,9 @@ public enum WordClass implements Serializable {
     VIMP (Integer.valueOf(70), "vimp", "v. imp.", "slov. nedok.", "verb"),
     VPERF (Integer.valueOf(71), "vperf", "v. perf.", "slov. dok.", "verb"),
     VIMPPERF (Integer.valueOf(72), "vimpperf", "v. imp./perf.", "slov. nedok./dok.", "verb"),
-    VPRONIMP (Integer.valueOf(73), "vpronimp", "v. pron. imp.", "zvrat. slov. nedok.", "verb"),
-    VPRONPERF (Integer.valueOf(74), "vpronperf", "v. pron. perf.", "zvrat. slov. dok.", "verb"),
-    VPRONIMPPERF (Integer.valueOf(75), "vpronimpperf", "v. pron. imp./perf.", "zvrat. slov. nedok./dok.", "verb"),
+    VPRONIMP (Integer.valueOf(73), "vpronimp", "v. pron. imp.", "zámen. slov. nedok.", "verb"),
+    VPRONPERF (Integer.valueOf(74), "vpronperf", "v. pron. perf.", "zámen. slov. dok.", "verb"),
+    VPRONIMPPERF (Integer.valueOf(75), "vpronimpperf", "v. pron. imp./perf.", "zámen. slov. nedok./dok.", "verb"),
 
     NUMORD (Integer.valueOf(80), "numord", "num. ord.", "čísl. zákl.", "num"),
     NUMCARD (Integer.valueOf(81), "numcard", "num. card.", "čísl. rad.", "num"),

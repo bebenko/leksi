@@ -57,6 +57,16 @@ public class DocxWrite {
         if (color != null) setColor(r, color);
     }
 
+    private static void addSlash(XWPFParagraph p) {
+        addSlash(p, null);
+    }
+
+    private static void addSlash(XWPFParagraph p, String color) {
+        XWPFRun r = newRun(p);
+        r.setText(StringHelper.SLASH);
+        if (color != null) setColor(r, color);
+    }
+
     private static void addLeftParenthesis(XWPFParagraph p) {
         addLeftParenthesis(p, null);
     }
@@ -417,20 +427,32 @@ public class DocxWrite {
         addNormal(p, rbr, color);
     }
 
+    private static void addClass(XWPFParagraph p, Word wt, String color, Lang explang) {
+        addSpace(p);
+        if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
+            //for particips
+            addItalic(p, wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOfVerb(explang) + StringHelper.SPACE, color);
+            addItalicUnderline(p, wt.getForms().get(0).getValues(), color);
+        } else {
+            addItalic(p, wt.getWordClass().getPrint(explang), color);
+            if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
+                addSpace(p);
+                addNormal(p, wt.getWordClass().getAddition(explang), color);
+            }
+        }
+    }
+
     private static void addClassCaseNumberGender(XWPFParagraph p, Word wt, String color, Lang explang) {
         if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
+            addClass(p, wt, color, explang);
+        }
+        if (wt.hasComparison()) {
             addSpace(p);
-            if (wt.getWordClass() != null && (wt.getWordClass() == WordClass.P || wt.getWordClass() == WordClass.PP)) {
-                //for particips
-                addItalic(p, wt.getWordClass().getPrint(explang) + StringHelper.SPACE + LangHelper.getOf(explang) + StringHelper.SPACE, color);
-                addItalicUnderline(p, wt.getForms().get(0).getValues(), color);
-            } else {
-                addItalic(p, wt.getWordClass().getPrint(explang), color);
-                if (wt.getWordClass() == WordClass.VPRONSA || wt.getWordClass() == WordClass.VPRONSI) {
-                    addSpace(p);
-                    addNormal(p, wt.getWordClass().getAddition(explang), color);
-                }
-            }
+            addItalic(p, wt.getComparison().getDegree().getPrint(explang), color);
+            addSpace(p);
+            addItalic(p, LangHelper.getOf(explang), color);
+            addSpace(p);
+            addUnderline(p, wt.getComparison().getPositive(), color);
         }
         if (wt.getCaseType() != null && StringUtils.isNotBlank(wt.getCaseType().getPrint(explang))) {
             addSpace(p);
@@ -439,6 +461,14 @@ public class DocxWrite {
         if (wt.getNumberGender() != null && StringUtils.isNotBlank(wt.getNumberGender().getPrint(explang))) {
             addSpace(p);
             addItalic(p, wt.getNumberGender().getPrint(explang), color);
+        }
+        if (wt.hasNumberGender2()) {
+            addSlash(p, color);
+            if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
+                addClass(p, wt, color, explang);
+            }
+            addSpace(p);
+            addItalic(p, wt.getNumberGender2().getPrint(explang), color);
         }
     }
 
@@ -508,28 +538,27 @@ public class DocxWrite {
                     }
 
                     //ignore everything for old orthography
-                    if (wt.getForms() != null && wt.getForms().get(0).getType() != null
-                            && (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT
-                            || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL
-                            || wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP)) {
+                    if (wt.getForms() != null && wt.hasLinkForms()) {
 
-                        if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
-                            addClassCaseNumberGender(p, wt, color, explang);
+                        if (wt.hasForms()) {
+                            addForms(p, wt, color, explang);
                         }
+
+                        addClassCaseNumberGender(p, wt, color, explang);
                         addSpace(p);
-                        addItalic(p, wt.getForms().get(0).getType().getPrint(explang), color);
+                        addItalic(p, wt.getLinkForm().getType().getPrint(explang), color);
                         addSpace(p);
                         String str;
-                        if (wt.getForms().get(0).getType() == FormType.LINK_GRAFANT || wt.getForms().get(0).getType() == FormType.LINK_GRAFDUPL) {
+                        if (wt.hasGrafForm()) {
                             str = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(),
                                 StringHelper.LINK + StringHelper.SPACE);
-                        } else { //wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP
+                        } else { //form FormType.LINK_SK_VERB_IMP
                             str = StringUtils.substringBetween(wt.getMeanings().get(0).getSynonyms(),
                                     StringHelper.LINK + StringHelper.SPACE,
                                     StringHelper.SPACE + StringHelper.LEFTPARENTHESIS + SignificanceType.PERF.getKey());
                         }
                         addUnderline(p, str, color);
-                        if (wt.getForms().get(0).getType() == FormType.LINK_SK_VERB_IMP) {
+                        if (!wt.hasGrafForm()) {
                             String k = StringUtils.substringAfter(wt.getMeanings().get(0).getSynonyms(), str + StringHelper.SPACE);
                             k = StringUtils.removeEnd(k.substring(1, k.length() - 1), StringHelper.DOT);
                             addItalic(p, StringHelper.SPACE + StringHelper.LEFTPARENTHESIS
@@ -540,22 +569,7 @@ public class DocxWrite {
                     } else { //proceed with normal formatting
 
                         if (wt.hasForms()) {
-                            addSpace(p);
-                            addLeftParenthesis(p, color);
-                            for (int i = 0; i < wt.getForms().size(); i++) {
-                                Form f = wt.getForms().get(i);
-                                if (f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB) {
-                                    addItalic(p, f.getType().getPrint(explang));
-                                    if (StringUtils.isNotBlank(f.getValues())) {
-                                        addSpace(p);
-                                        addBold(p, f.getValues(), color);
-                                    }
-                                    if (i < wt.getForms().size() - 1) {
-                                        addCommaSpace(p);
-                                    }
-                                }
-                            }
-                            addRightParenthesis(p, color);
+                            addForms(p, wt, color, explang);
                         }
 
                         addClassCaseNumberGender(p, wt, color, explang);
@@ -684,6 +698,26 @@ public class DocxWrite {
             }
         }
         return counter;
+    }
+
+    private static void addForms(XWPFParagraph p, Word wt, String color, Lang explang) {
+        addSpace(p);
+        addLeftParenthesis(p, color);
+        for (int i = 0; i < wt.getForms().size(); i++) {
+            Form f = wt.getForms().get(i);
+            if (f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
+                    && f.getType() != FormType.LINK_GRAFDUPL && f.getType() != FormType.LINK_GRAFANT && f.getType() != FormType.LINK_SK_VERB_IMP) {
+                addItalic(p, f.getType().getPrint(explang));
+                if (StringUtils.isNotBlank(f.getValues())) {
+                    addSpace(p);
+                    addBold(p, f.getValues(), color);
+                }
+                if (i < wt.getFormsSize() - 1) {
+                    addCommaSpace(p);
+                }
+            }
+        }
+        addRightParenthesis(p, color);
     }
 
 }

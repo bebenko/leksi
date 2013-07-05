@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SurLoadingServiceImpl implements LoadingService {
 
-    private static final String FILTER = ""; // " AND portugal in ('outrem')";
+    private static final String FILTER = ""; // " AND portugal in ('colecção', 'coleção')";
     private static final String SKPREFIX = "SK ";
 
     private static final boolean ALTERNATIVESASEXTRAWORDS = true;
@@ -186,33 +186,31 @@ public class SurLoadingServiceImpl implements LoadingService {
             //identify alternatives
             if (homonym.getWords().get(0).getMeanings().get(0).getSynonyms().startsWith(StringHelper.LINK)) {
 
-                if (homonym.getWords().get(0).getForms() == null) {
-                    if (homonym.getLang() == Lang.PT) {
-                        if (StringUtils.startsWithAny(homonym.getOrig(), StringHelper.GRAFIADUPLA)) {
-                            homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFDUPL, ""));
-                        } else {
-                            homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFANT, ""));
-                        }
-
-                        Alternative alt = new Alternative();
-                        alt.setValue(homonym.getOrig());
-                        alt.setNumberGender(homonym.getWords().get(0).getNumberGender());
-                        alt.setWordClass(homonym.getWords().get(0).getWordClass());
-                        alt.setType(homonym.getLang() == Lang.PT ?
-                                (StringUtils.startsWithAny(homonym.getOrig(), StringHelper.GRAFIADUPLA) ? AltType.GRAFDUPL : AltType.GRAFANT) :
-                                AltType.UNDEF);
-                        Homonym ww = getWord(homonymList, StringUtils.removeStart(homonym.getWords().get(0).getMeanings().get(0).getSynonyms(),
-                                StringHelper.LINK + StringHelper.SPACE));
-                        if (ww != null) {
-                            ww.addAlternative(alt);
-                        }
-                        wordsToRemove.add(homonym);
-                    } else if (homonym.getLang() == Lang.SK && homonym.getWords().get(0).isVerb()) {
-                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
-                        homonym.getWords().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
-                                homonym.getWords().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE + StringHelper.PERF);
+                //if (homonym.getWords().get(0).getForms() == null) {
+                if (homonym.getLang() == Lang.PT) {
+                    if (!homonym.getWords().get(0).hasGrafDuplForm()) {
+                        homonym.getWords().get(0).addForm(new Form(FormType.LINK_GRAFANT, ""));
                     }
+
+                    Alternative alt = new Alternative();
+                    alt.setValue(homonym.getOrig());
+                    alt.setNumberGender(homonym.getWords().get(0).getNumberGender());
+                    alt.setWordClass(homonym.getWords().get(0).getWordClass());
+                    alt.setType(homonym.getLang() == Lang.PT ?
+                            (!homonym.getWords().get(0).hasGrafDuplForm() ? AltType.GRAFDUPL : AltType.GRAFANT) :
+                            AltType.UNDEF);
+                    Homonym ww = getWord(homonymList, StringUtils.removeStart(homonym.getWords().get(0).getMeanings().get(0).getSynonyms(),
+                            StringHelper.LINK + StringHelper.SPACE));
+                    if (ww != null) {
+                        ww.addAlternative(alt);
+                    }
+                    wordsToRemove.add(homonym);
+                } else if (homonym.getLang() == Lang.SK && homonym.getWords().get(0).isVerb()) {
+                    homonym.getWords().get(0).addForm(new Form(FormType.LINK_SK_VERB_IMP, ""));
+                    homonym.getWords().get(0).getMeanings().get(0).setSynonyms( //hack to add PERF info to the verb in link
+                            homonym.getWords().get(0).getMeanings().get(0).getSynonyms() + StringHelper.SPACE + StringHelper.PERF);
                 }
+                //}
             }
         }
         if (!ALTERNATIVESASEXTRAWORDS) {
@@ -253,7 +251,7 @@ public class SurLoadingServiceImpl implements LoadingService {
                         if (homonym.getWords().size() > 1
                                 && (homonym2.getOrig().equals("tal") || homonym2.getOrig().equals("todo") || homonym2.getOrig().equals("segundo")
                                 || homonym2.getOrig().equals("certo") || homonym2.getOrig().equals("que") || homonym2.getOrig().equals("a")
-                                || homonym2.getOrig().equals("um"))) {
+                                || homonym2.getOrig().equals("um") || homonym2.getOrig().equals("meio"))) {
                             homonym.addWord(homonym2.getWords().get(0));
                             List<Meaning> ms = homonym2.getWords().get(0).getMeanings();
                             List<Integer> listToRemove = new ArrayList<>();

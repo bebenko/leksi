@@ -4,6 +4,7 @@ import sk.portugal.leksi.model.enums.CaseType;
 import sk.portugal.leksi.model.enums.FormType;
 import sk.portugal.leksi.model.enums.NumberGender;
 import sk.portugal.leksi.model.enums.WordClass;
+import sk.portugal.leksi.model.extra.Comparison;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class Word {
     private boolean showNumberGenderAndCaseTypeInContractions;
     private List<Form> forms;
     private String paradigm;
+    private NumberGender numberGender2;
+    private Comparison comparison;
 
     public Word() {}
 
@@ -52,6 +55,18 @@ public class Word {
     public void setNumberGender(NumberGender numberGender, boolean showNumberGenderCaseTypeInContractions) {
         this.numberGender = numberGender;
         this.showNumberGenderAndCaseTypeInContractions = showNumberGenderCaseTypeInContractions;
+    }
+
+    public boolean hasNumberGender2() {
+        return this.numberGender2 != null;
+    }
+
+    public NumberGender getNumberGender2() {
+        return numberGender2;
+    }
+
+    public void setNumberGender2(NumberGender numberGender2) {
+        this.numberGender2 = numberGender2;
     }
 
     public WordClass getWordClass() {
@@ -101,12 +116,29 @@ public class Word {
         return wordClass.isVerb();
     }
 
+    public boolean isAdjective() {
+        if (wordClass == null) return false;
+        return wordClass.isAdjective();
+    }
+
     public String getParadigm() {
         return paradigm;
     }
 
     public void setParadigm(String paradigm) {
         this.paradigm = paradigm;
+    }
+
+    public boolean hasComparison() {
+        return comparison != null;
+    }
+
+    public Comparison getComparison() {
+        return comparison;
+    }
+
+    public void setComparison(Comparison comparison) {
+        this.comparison = comparison;
     }
 
     public boolean hasNonEmptyMeanings() {
@@ -121,7 +153,7 @@ public class Word {
     public boolean hasForms() {
         if (this.forms == null) return false;
         for (Form f : getForms()) {
-            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_GRAFANT
+            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_GRAFANT && f.getType() != FormType.LINK_GRAFDUPL
                     && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
                     && f.getType() != FormType.LINK_SK_VERB_IMP
                     && f.getType() != FormType.VERBFORM && f.getType() != FormType.VREFLSA && f.getType() != FormType.VREFLSI) {
@@ -131,10 +163,63 @@ public class Word {
         return false;
     }
 
+    public int getFormsSize() {
+        int cnt = 0;
+        for (Form f : getForms()) {
+            if (f.getType() != null && f.getType() != FormType.LINK && f.getType() != FormType.LINK_GRAFANT && f.getType() != FormType.LINK_GRAFDUPL
+                    && f.getType() != FormType.UNDEF && f.getType() != FormType.PARTVERB
+                    && f.getType() != FormType.LINK_SK_VERB_IMP
+                    && f.getType() != FormType.VERBFORM && f.getType() != FormType.VREFLSA && f.getType() != FormType.VREFLSI) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
     public boolean hasVerbForm() {
         if (this.forms == null) return false;
         for (Form f : getForms()) {
             if (f.getType() == FormType.VERBFORM || f.getType() == FormType.VREFLSA || f.getType() == FormType.VREFLSI) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasLinkForms() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.LINK_GRAFDUPL || f.getType() == FormType.LINK_GRAFANT || f.getType() == FormType.LINK_SK_VERB_IMP) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Form getLinkForm() {
+        if (this.forms == null) return null;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.LINK_GRAFDUPL || f.getType() == FormType.LINK_GRAFANT || f.getType() == FormType.LINK_SK_VERB_IMP) {
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasGrafForm() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.LINK_GRAFDUPL || f.getType() == FormType.LINK_GRAFANT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasGrafDuplForm() {
+        if (this.forms == null) return false;
+        for (Form f : getForms()) {
+            if (f.getType() == FormType.LINK_GRAFDUPL) {
                 return true;
             }
         }

@@ -14,6 +14,7 @@ public enum FormType {
     N (Integer.valueOf(5), "n", "nt.", "s."),
     PL (Integer.valueOf(6), "pl", "pl.", "mn."),
     PLINV (Integer.valueOf(7), "pl inv", "pl. inv.", "jedn./mn."),
+    CF (Integer.valueOf(9), "cf", "cf.", "cf."),
 
     PARTVERB (Integer.valueOf(20), "partverb", "v.", "slov."),
     VERBFORM (Integer.valueOf(21), "forma", "forma do verbo", "tvar slovesa"),

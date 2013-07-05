@@ -3,10 +3,7 @@ package sk.portugal.leksi.util;
 import org.apache.commons.io.FileUtils;
 import sk.portugal.leksi.model.Homonym;
 import sk.portugal.leksi.model.Word;
-import sk.portugal.leksi.model.enums.CaseType;
-import sk.portugal.leksi.model.enums.Lang;
-import sk.portugal.leksi.model.enums.NumberGender;
-import sk.portugal.leksi.model.enums.WordClass;
+import sk.portugal.leksi.model.enums.*;
 import sk.portugal.leksi.model.extra.Contraction;
 import sk.portugal.leksi.util.helper.StringHelper;
 
@@ -612,7 +609,8 @@ public class PostProcessor {
 
                     //extra
                     case "diabetes": {
-                        homonym.getWords().get(0).setNumberGender(NumberGender.FSGMPL);
+                        homonym.getWords().get(0).setNumberGender(NumberGender.FSG);
+                        homonym.getWords().get(0).setNumberGender2(NumberGender.MPL);
                         break;
                     }
                     case "cor de rosa": {
@@ -621,6 +619,16 @@ public class PostProcessor {
                     }
                     case "grátis": {
                         homonym.getWords().get(0).setNumberGender(NumberGender.MFSGPL);
+                        break;
+                    }
+                    case "salva-vidas": {
+                        homonym.getWords().get(0).setNumberGender(NumberGender.MSGPL);
+                        break;
+                    }
+                    case "caraterizar":
+                    case "elenco": {
+                        homonym.getWords().get(0).getMeanings().get(1).setFieldType(FieldType.DIVFILM);
+                        break;
                     }
                 }
             }
