@@ -27,7 +27,7 @@ public class StringHelper {
     public static final String LEFTPARENDASH = LEFTPARENTHESIS + DASH;
 
     public static final String[] DELIMITERS = new String[] {DOT, COMMA, COLON, SEMICOLON};
-    public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)", "(n)", "(nt)", "(n/pl)"};
+    public static final String[] GENDERSTRINGS = new String[] {"(f)", "(m)", "(m/f)", "(f/pl)", "(m/pl)", "(pl)", "(n)", "(nt)", "(n/pl)", "(nt/pl)"};
     public static final String[] GENDERSTRINGSLEFT = new String[] {"(f ", "(m ", "(pl ", "(n ", "(nt ", "(cf. "};
 
     public static final char LEFTPARENTHESISCHAR = '(';

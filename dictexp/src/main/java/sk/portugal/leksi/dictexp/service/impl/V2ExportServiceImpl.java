@@ -80,15 +80,6 @@ public class V2ExportServiceImpl implements ExportService {
             res = addClass(wt, explang);
             wc = true;
         }
-        if (wt.hasComparison()) {
-            res += space();
-            res += escapeHtml(wt.getComparison().getDegree().getPrint(explang));
-            res += space();
-            res += escapeHtml(LangHelper.getOf(explang));
-            res += space() + addFmtEnd();
-            res += addWordReference(wt.getComparison().getPositive());
-            res += addFmtStart("clng");
-        }
         if (wt.getCaseType() != null && StringUtils.isNotBlank(wt.getCaseType().getPrint(explang))) {
             if (wc) {
                 res += space(); //StringHelper.COMMASPACE;
@@ -110,7 +101,16 @@ public class V2ExportServiceImpl implements ExportService {
             }
             res += escapeHtml(wt.getNumberGender2().getPrint(explang));
         }
-        return res + addFmtEnd();
+        res += addFmtEnd();
+        if (wt.hasComparison()) {
+            res += space();
+            res += escapeHtml(wt.getComparison().getDegree().getPrint(explang));
+            res += space();
+            res += escapeHtml(LangHelper.getOf(explang));
+            res += space() + addFmtEnd();
+            res += addWordReference(wt.getComparison().getPositive());
+        }
+        return res;
     }
 
     private String addNumber(String str) {

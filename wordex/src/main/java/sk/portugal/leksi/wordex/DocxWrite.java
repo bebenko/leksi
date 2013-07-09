@@ -446,14 +446,6 @@ public class DocxWrite {
         if (wt.getWordClass() != null && StringUtils.isNotBlank(wt.getWordClass().getPrint(explang))) {
             addClass(p, wt, color, explang);
         }
-        if (wt.hasComparison()) {
-            addSpace(p);
-            addItalic(p, wt.getComparison().getDegree().getPrint(explang), color);
-            addSpace(p);
-            addItalic(p, LangHelper.getOf(explang), color);
-            addSpace(p);
-            addUnderline(p, wt.getComparison().getPositive(), color);
-        }
         if (wt.getCaseType() != null && StringUtils.isNotBlank(wt.getCaseType().getPrint(explang))) {
             addSpace(p);
             addItalic(p, wt.getCaseType().getPrint(explang), color);
@@ -469,6 +461,14 @@ public class DocxWrite {
             }
             addSpace(p);
             addItalic(p, wt.getNumberGender2().getPrint(explang), color);
+        }
+        if (wt.hasComparison()) {
+            addSpace(p);
+            addItalic(p, wt.getComparison().getDegree().getPrint(explang), color);
+            addSpace(p);
+            addItalic(p, LangHelper.getOf(explang), color);
+            addSpace(p);
+            addUnderline(p, wt.getComparison().getPositive(), color);
         }
     }
 

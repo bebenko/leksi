@@ -20,10 +20,10 @@ public enum FieldType implements Serializable {
     BRAZ (Integer.valueOf(7), "braz", "bras.", "braz."),
     CHEM (Integer.valueOf(31), "chem", "quím.", "chem."),
     CIRK (Integer.valueOf(63), "cirk", "relig.", "cirk."),
-    DIV (Integer.valueOf(48), "div", "teatro", "div."),
+    DIV (Integer.valueOf(48), "div", "teat.", "div."),
     DOPR (Integer.valueOf(64), "dopr", "", "dopr."),
     EKOL (Integer.valueOf(65), "ekol", "", "ekol."),
-    EKON (Integer.valueOf(12), "ekon", "econ", "ekon."),
+    EKON (Integer.valueOf(12), "ekon", "econ.", "ekon."),
     ELEKTR (Integer.valueOf(14), "elektr", "eletr.", "elektr."),
     ETNOGR (Integer.valueOf(66), "etnogr", "", "etnogr."),
     EXPR (Integer.valueOf(88), "expr", "express.", "expr."),
@@ -72,7 +72,7 @@ public enum FieldType implements Serializable {
     POLYGR3 (Integer.valueOf(37), "polygr", "tip.", "polygr."),
     PORT (Integer.valueOf(30), "port", "", "port."),
     POST (Integer.valueOf(78), "pošt", "", "pošt."),
-    PRAV (Integer.valueOf(21), "práv", "jur.", "práv."),
+    PRAV (Integer.valueOf(21), "práv", "dir.", "práv."),
     PSYCH (Integer.valueOf(29), "psych", "psic.", "psych."),
     REG (Integer.valueOf(79), "reg", "reg.", "reg."),
     SLANG (Integer.valueOf(89), "slang", "calão", "slang."),
@@ -94,7 +94,7 @@ public enum FieldType implements Serializable {
     ZOOL (Integer.valueOf(39), "zool", "zool.", "zool."),
     ZURN (Integer.valueOf(86), "žurn", "jorn.", "žurn."),
 
-    DIVFILM (Integer.valueOf(90), "divfilm", "teatro, cine.", "div., film."),
+    DIVFILM (Integer.valueOf(90), "divfilm", "teat., cine.", "div., film."),
 
     UNDEF (Integer.valueOf(99), "undef", "", "");
 
